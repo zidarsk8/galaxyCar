@@ -1,0 +1,39 @@
+Bluetooth app
+    zloada CSV v textarea
+    sprejema start/stop signal
+    sprejema requeste in se odziva nanje
+        se sprehaja po CSV na par ms
+    
+    ? a to opensourcamo za vse?
+
+Android app
+    3D grafika
+        risanje črte za avtom
+            črta počasi bledi
+            ? ali imamo podatek o tem ali avto zaznava črto? lahko ima bl sivo črto or something če ne zaznava
+        avto
+            1 kocka, ki se obrača glede na podatke
+            2 škatlast avto
+            3 dober model avta
+                ? jim pošljemo mail da poslikajo avto in a je taktično to čimkasnej možno poslat?
+            4 avto obrača gume po podatkih volana
+                [una webgl formula]
+        ? a puščice od akcelerometra rišemo kr direkt iz avta
+
+    2D grafika
+        start/stop gumb
+        speed-o-meter
+        volan
+        mini graf, ki ga lahko povečamo
+    
+    Kaj vse lahko počne user
+        vžge avto
+        prikaže/skrije detail graf
+        ? spreminja 3D view s prstom
+            levo/desno okrog avta
+            gor/dol zoom al rajš tko čez avto?
+        
+    Fancy stuff
+        algoritem, ki zazna krog in meri še lap-time
+        vibra, če zazna spike na Y osi
+        zvok+vibra ko vžge avto
