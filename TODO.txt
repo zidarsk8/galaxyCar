@@ -1,3 +1,6 @@
+Brainstorm/Latest verzija: http://piratepad.net/xlfYyOFa4T
+(Občasno copypaste nazaj sem)
+
 Simulator app
     zloada CSV v textarea
     tablca in program se pairata čez bluetooth
