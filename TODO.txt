@@ -1,11 +1,11 @@
-Bluetooth app
+Simulator app
     zloada CSV v textarea
+    tablca in program se pairata čez bluetooth
     sprejema start/stop signal
     sprejema requeste in se odziva nanje
         se sprehaja po CSV na par ms
-    
     ? a to opensourcamo za vse?
-
+    
 Android app
     3D grafika
         risanje črte za avtom
@@ -17,23 +17,27 @@ Android app
             3 dober model avta
                 ? jim pošljemo mail da poslikajo avto in a je taktično to čimkasnej možno poslat?
             4 avto obrača gume po podatkih volana
-                [una webgl formula]
+            [http://helloracer.com/webgl/]
         ? a puščice od akcelerometra rišemo kr direkt iz avta
-
+    
     2D grafika
         start/stop gumb
         speed-o-meter
         volan
         mini graf, ki ga lahko povečamo
     
-    Kaj vse lahko počne user
+    Bluetooth
+        sender/reciever, lahko reusamo pri desktop appu
+        ? na koliko časa je kul requestat podatke
+    
+    Kaj vse lahko počne user (use cases)
         vžge avto
         prikaže/skrije detail graf
         ? spreminja 3D view s prstom
             levo/desno okrog avta
             gor/dol zoom al rajš tko čez avto?
-        
+    
     Fancy stuff
         algoritem, ki zazna krog in meri še lap-time
         vibra, če zazna spike na Y osi
-        zvok+vibra ko vžge avto
+        zvok+vibra ko vžgeš avto
