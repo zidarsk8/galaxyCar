@@ -41,6 +41,8 @@ built application files
 
 # Local configuration file (sdk path, etc)
 local.properties
+ant.properties
+build.xml
 
 galaxyCar/bin/*
 galaxyCar/gen/*
