@@ -18,7 +18,7 @@ import android.opengl.GLU;
 public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private AssetManager mAssets;
-	private FloatBuffer triangleVB;
+	private FloatBuffer triangleVB[];
 	private FloatBuffer triangleCB;
 	private ColladaHandler mHandler;
 	private ArrayList<ColladaObject> mObjectArray;
@@ -49,20 +49,23 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		gl.glTranslatef(0.0f, -1.2f, -7.0f);
-		gl.glRotatef(rot , 0.0f, 0.0f, 1.0f);
+		gl.glRotatef(rot , 1.0f, 1.0f, 1.0f);
 		// Set the face rotation
 		gl.glFrontFace(GL10.GL_CW);
 		rot += 0.2f;
 		// Point to our buffers
-		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, triangleVB);
-		//gl.glColorPointer(4, GL10.GL_FLOAT, 0, triangleCB);
-
+		
 		// Enable the vertex and color state
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		//gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
-
-		// Draw the vertices as triangles
-		gl.glDrawArrays(GL10.GL_TRIANGLES, 0, triangleCoords.length / 3);
+		for (int i=0; i<triangleVB.length;i++) {
+			gl.glColor4f(1.0f, i%2, 0.0f, 1.0f);
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, triangleVB[i]);
+			//gl.glColorPointer(4, GL10.GL_FLOAT, 0, triangleCB);
+			
+			// Draw the vertices as triangles
+			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, Cone.v[i].length / 3);
+		}
 
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
@@ -124,8 +127,19 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 //				-1.0f, -1.0f, 1.0f // Right Of Triangle (Left)
 //		};
 
-		triangleCoords = Cone.v[0];
-
+		triangleVB = new FloatBuffer[Cone.v.length];
+		for (int i=0; i < Cone.v.length; i++) {
+			ByteBuffer vbb = ByteBuffer.allocateDirect(
+					// (# of coordinate values * 4 bytes per float)
+					Cone.v[i].length * 4);
+			vbb.order(ByteOrder.nativeOrder());// use the device hardware's native
+			// byte order
+			triangleVB[i] = vbb.asFloatBuffer(); // create a floating point buffer from
+			// the ByteBuffer
+			triangleVB[i].put(Cone.v[i]); // add the coordinates to the
+			// FloatBuffer
+			triangleVB[i].position(0); // set the buffer to read the first coordinate
+		}
 		// float triangleCoords[] = {
 		// // X, Y, Z
 		// -0.5f, -0.25f, 0,
@@ -134,16 +148,6 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		// };
 
 		// initialize vertex Buffer for triangle
-		ByteBuffer vbb = ByteBuffer.allocateDirect(
-		// (# of coordinate values * 4 bytes per float)
-				triangleCoords.length * 4);
-		vbb.order(ByteOrder.nativeOrder());// use the device hardware's native
-											// byte order
-		triangleVB = vbb.asFloatBuffer(); // create a floating point buffer from
-											// the ByteBuffer
-		triangleVB.put(triangleCoords); // add the coordinates to the
-										// FloatBuffer
-		triangleVB.position(0); // set the buffer to read the first coordinate
 		
 		// initialize vertex Buffer for triangle
 //		vbb = ByteBuffer.allocateDirect(
