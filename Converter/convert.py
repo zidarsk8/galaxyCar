@@ -13,7 +13,7 @@ m = open(sys.argv[1][:-3] + "mtl", 'r')
 
 def parse_xyz(str):
     arr = l[2:].strip().split(' ')
-    return {'x':float(arr[0]), 'y':float(arr[1]), 'z':float(arr[2])}
+    return [float(arr[0]), float(arr[1]), float(arr[2])]
 
 materials = []
 for l in m:
@@ -30,8 +30,7 @@ obj = {'name': "", 'vertices': [], 'normals': [], 'faces':[],'materials': materi
 output = ""
 material = ""
 material_index = 0
-for l in f:
-    
+for l in f: 
     if l[0] == 'u':
         material = l[7:-1]
         for i in range(len(materials)):
@@ -65,18 +64,27 @@ for l in f:
         obj["faces"].append(face)
         
     if l[0] == 'n':
-        output += ""     
+        output += ""
 
-# Put those with highest alpha to the top:
-#obj['faces'] = sorted(obj['faces'], key=lambda face: obj['materials'][face['material']]['alpha'], reverse=True)
+arr = "public class Mesh {\n"  
+arr += "\t public static float[][][] v = {"
+for m in xrange(len(obj['materials'])):
+    arr += '{'
+    for f in obj['faces']:
+        if f['material'] != m:
+            continue
+        arr += '{'
+        
+        for v in f['vertices']:
+            for p in obj['vertices'][v]:
+                arr += str(p) + 'f,'
+        arr += "},\n\t\t"
+    arr += '},'
+arr += '};'
+arr += "\n}"
 
-# Return json
-json.dump(obj, open(sys.argv[2], 'w')), indent=4)
-
-# Prepend object name
-import fileinput
-for n,line in enumerate(fileinput.FileInput(sys.argv[2],inplace=1)):
-    if n == 0: print sys.argv[2][:-3] + " = "
-    print line
+f = open(sys.argv[2], 'w')
+f.write(arr)
+f.close()
 
 print "Done"
