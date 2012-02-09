@@ -70,7 +70,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	private void initShapes() {
 
 		try {
-			mObjectArray = mHandler.parseFile(mAssets.open("model.dae"));
+			mObjectArray = mHandler.parseFile(mAssets.open("blend.dae"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
