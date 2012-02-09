@@ -66,19 +66,18 @@ for l in f:
     if l[0] == 'n':
         output += ""
 
-arr = "public class "+ sys.argv[2] +"{\n"  
-arr += "\t public static float[][][] v = {"
+arr = "package org.psywerx.car;\n\npublic class "+ sys.argv[2] +"{\n"  
+arr += "\t public static float[][] v = {"
 for m in xrange(len(obj['materials'])):
     arr += '{'
     for f in obj['faces']:
         if f['material'] != m:
             continue
-        arr += '{'
         
         for v in f['vertices']:
             for p in obj['vertices'][v]:
                 arr += str(p) + 'f,'
-        arr += "},\n\t\t"
+        arr += "\n\t\t"
     arr += '},'
 arr += '};'
 arr += "\n}"
