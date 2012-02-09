@@ -5,7 +5,7 @@ import json
 from pprint import pprint
 
 if len(sys.argv) != 3:
-    print "use like this: ./convert.py input_file output_file"
+    print "use like this: ./convert.py class_name"
     exit(1)
     
 f = open(sys.argv[1], 'r')
@@ -66,7 +66,7 @@ for l in f:
     if l[0] == 'n':
         output += ""
 
-arr = "public class Mesh {\n"  
+arr = "public class "+ sys.argv[2] +"{\n"  
 arr += "\t public static float[][][] v = {"
 for m in xrange(len(obj['materials'])):
     arr += '{'
@@ -83,7 +83,7 @@ for m in xrange(len(obj['materials'])):
 arr += '};'
 arr += "\n}"
 
-f = open(sys.argv[2], 'w')
+f = open(sys.argv[2] + '.java', 'w')
 f.write(arr)
 f.close()
 
