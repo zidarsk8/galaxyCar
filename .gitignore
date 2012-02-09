@@ -8,9 +8,9 @@
 *.pydevproject
 .project
 .metadata
-bin/**
-tmp/**
-tmp/**/*
+gen/
+bin/
+tmp/
 *.tmp
 *.bak
 *.swp
@@ -43,7 +43,3 @@ built application files
 local.properties
 ant.properties
 build.xml
-
-**/bin/**
-**/gen/**
-
