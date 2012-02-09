@@ -44,6 +44,6 @@ local.properties
 ant.properties
 build.xml
 
-galaxyCar/bin/*
-galaxyCar/gen/*
+**/bin/**
+**/gen/**
 
