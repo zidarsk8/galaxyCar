@@ -3,13 +3,13 @@ package org.psywerx.car;
 import android.util.Log;
 
 public class Debugger {
-	private static final String DBGATAG = "VERBOSE ";
-	private static final String DBGITAG = "INFO    ";
-	private static final String DBGETAG = "ERROR   ";
-	private static final String DBGSTAG = "STACK   ";
-	protected static boolean showDBGV = false;
-	protected static boolean showDBGI = false;
-	protected static boolean showDBGE = false;
+	private static final String DBGATAG = "cVERBOSE ";
+	private static final String DBGITAG = "cINFO    ";
+	private static final String DBGETAG = "cERROR   ";
+	private static final String DBGSTAG = "cSTACK   ";
+	protected static boolean showDBGV = true;
+	protected static boolean showDBGI = true;
+	protected static boolean showDBGE = true;
 	protected static boolean showFullClassName = false;
 
 
