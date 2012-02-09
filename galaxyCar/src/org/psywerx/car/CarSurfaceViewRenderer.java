@@ -64,7 +64,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 			//gl.glColorPointer(4, GL10.GL_FLOAT, 0, triangleCB);
 			
 			// Draw the vertices as triangles
-			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, Cone.v[i].length / 3);
+			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, Colors.v[i].length / 3);
 		}
 
 		// Disable the client state before leaving
@@ -127,16 +127,16 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 //				-1.0f, -1.0f, 1.0f // Right Of Triangle (Left)
 //		};
 
-		triangleVB = new FloatBuffer[Cone.v.length];
-		for (int i=0; i < Cone.v.length; i++) {
+		triangleVB = new FloatBuffer[Colors.v.length];
+		for (int i=0; i < Colors.v.length; i++) {
 			ByteBuffer vbb = ByteBuffer.allocateDirect(
 					// (# of coordinate values * 4 bytes per float)
-					Cone.v[i].length * 4);
+					Colors.v[i].length * 4);
 			vbb.order(ByteOrder.nativeOrder());// use the device hardware's native
 			// byte order
 			triangleVB[i] = vbb.asFloatBuffer(); // create a floating point buffer from
 			// the ByteBuffer
-			triangleVB[i].put(Cone.v[i]); // add the coordinates to the
+			triangleVB[i].put(Colors.v[i]); // add the coordinates to the
 			// FloatBuffer
 			triangleVB[i].position(0); // set the buffer to read the first coordinate
 		}
