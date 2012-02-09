@@ -4,19 +4,60 @@
 	android:layout_height="fill_parent"
 	android:orientation="vertical" >
 
-	<TextView
-		android:id="@+id/helloText"
-		android:layout_width="100dp"
-		android:layout_height="20dp"
-		android:text="@string/hello" />
-	<TextView
-		android:id="@+id/helloTextw"
-		android:layout_width="100dp"
-		android:layout_height="20dp"
-		android:text="@string/hello" />
-	<android.opengl.GLSurfaceView
-		android:id="@+id/glSurface"
-		android:layout_width="300dp"
-		android:layout_height="300dp" />
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/helloText"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/hello" />
+
+        <TextView
+            android:id="@+id/helloTextw"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/hello" />
+
+        <android.opengl.GLSurfaceView
+            android:id="@+id/glSurface"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_weight="1"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
 
 </LinearLayout>
