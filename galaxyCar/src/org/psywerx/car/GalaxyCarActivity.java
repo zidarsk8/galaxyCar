@@ -13,11 +13,11 @@ import android.view.WindowManager;
 public class GalaxyCarActivity extends Activity {
 
 	private GLSurfaceView mGlView;
+	private WakeLock wl;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		Context context = getApplicationContext();
 		
 		// Enable full screen mode:
@@ -27,8 +27,8 @@ public class GalaxyCarActivity extends Activity {
 
 		// Get wake lock:
 		PowerManager pm = (PowerManager) context
-				.getSystemService(context.POWER_SERVICE);
-		WakeLock wl = pm.newWakeLock(pm.FULL_WAKE_LOCK, "Sandboc lock");
+				.getSystemService(Context.POWER_SERVICE);
+		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Sandboc lock");
 		wl.acquire();
 
 		setContentView(R.layout.main);
@@ -45,14 +45,14 @@ public class GalaxyCarActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		wl.acquire();
 		mGlView.onResume();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-
+		wl.release();
 		mGlView.onPause();
 	}
 

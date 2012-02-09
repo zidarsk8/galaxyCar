@@ -75,7 +75,6 @@ public class ColladaHandler extends DefaultHandler {
  
     public ArrayList<ColladaObject> parseFile(InputStream input) {
         try {
-            
             SAXParserFactory spf = SAXParserFactory.newInstance();
             SAXParser sp = spf.newSAXParser();
             XMLReader xr = sp.getXMLReader();
@@ -83,7 +82,7 @@ public class ColladaHandler extends DefaultHandler {
             xr.parse(new InputSource(input));
            
         } catch (Exception e){
-        	//fail
+        	e.printStackTrace();
         }
         
         ArrayList<ColladaObject> result = new ArrayList<ColladaObject>();
