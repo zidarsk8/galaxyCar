@@ -67,33 +67,30 @@ for l in f:
     if l[0] == 'n':
         output += ""
 
-cl = "package org.psywerx.car.generated;\n\npublic class "+ sys.argv[2] +"{\n"  
-arr = "\t public static float[][] v = {"
-clr = "\t public static float[][] c = {"
+arr = ""
+clr = ""
 for m in range(len(obj['materials'])):
-    arr += '{'
     for f in obj['faces']:
         if f['material'] != m:
             continue
         
         for v in f['vertices']:
             for p in obj['vertices'][v]:
-                arr += str(p) + 'f,'
-        arr += "\n\t\t"
-    arr += '},'
+                arr += str(p) + ','
+    arr = arr[:-1] + "\n"
 
-    clr += "{"
     for c in obj['materials'][m]['color']:
-        clr += c + "f,"
-    clr += "},\n\t\t"
-clr += '};'
-arr += '};'
-cl += arr + "\n"
-cl += clr
-cl += "\n}"
+        clr += c + ","
+    
+    clr = clr[:-1] + "\n"
 
-f = open('../galaxyCar/src/org/psywerx/car/generated/' + sys.argv[2] + '.java', 'w')
-f.write(cl)
+f = open('../galaxyCar/assets/' + sys.argv[2] + '.v.csv', 'w')
+f.write(arr)
+f.close()
+
+
+f = open('../galaxyCar/assets/' + sys.argv[2] + '.c.csv', 'w')
+f.write(clr)
 f.close()
 
 print("Done")
