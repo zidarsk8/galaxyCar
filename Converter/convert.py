@@ -5,7 +5,7 @@ import json
 from pprint import pprint
 
 if len(sys.argv) != 3:
-    print "use like this: ./convert.py class_name"
+    print("use like this: ./convert.py class_name")
     exit(1)
     
 f = open(sys.argv[1], 'r')
@@ -70,7 +70,7 @@ for l in f:
 cl = "package org.psywerx.car.gen;\n\npublic class "+ sys.argv[2] +"{\n"  
 arr = "\t public static float[][] v = {"
 clr = "\t public static float[][] c = {"
-for m in xrange(len(obj['materials'])):
+for m in range(len(obj['materials'])):
     arr += '{'
     for f in obj['faces']:
         if f['material'] != m:
@@ -96,4 +96,4 @@ f = open('../galaxyCar/src/org/psywerx/car/gen/' + sys.argv[2] + '.java', 'w')
 f.write(cl)
 f.close()
 
-print "Done"
+print("Done")
