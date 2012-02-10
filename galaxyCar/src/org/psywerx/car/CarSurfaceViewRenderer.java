@@ -14,16 +14,15 @@ import android.opengl.GLU;
 public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private AssetManager mAssets;
-	private FloatBuffer triangleVB[];
-	private FloatBuffer triangleNB[];
-	private Models mModels;
+
+	private ModelLoader mModels;
 	private float rot = 0.0f;
 	
     float[] LightAmbient=		{ 0.1f, 0.1f, 0.1f, 1.0f };
     float[] LightDiffuse=		{ 0.9f, 0.9f, 0.9f, 1.0f };
     float[] LightPosition=	    { 0.0f, 0.0f, 2.0f, 1.0f };
 
-	public CarSurfaceViewRenderer(AssetManager asm, Models m) {
+	public CarSurfaceViewRenderer(AssetManager asm, ModelLoader m) {
 		mModels = m;
 		mAssets = asm;
 	}
@@ -43,33 +42,10 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		// Point to our buffers
 		
 		// Enable the vertex and color state
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		//gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
-		for (int i=0; i<triangleVB.length;i++) {
-			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
-			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, triangleVB[i]);
-			gl.glNormalPointer(GL10.GL_FLOAT, 0, triangleNB[i]);
-			gl.glColor4f(mModels.mColors[i][0],
-					mModels.mColors[i][1],
-					mModels.mColors[i][2],1);
-			// Draw the vertices as triangles
-			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, mModels.mModels[i].length  / 3);
-		}
+
 		gl.glLoadIdentity();
 		gl.glTranslatef(0.0f, 1.0f, -9.0f);
 		
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		//gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
-		for (int i=0; i<triangleVB.length;i++) {
-			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
-			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, triangleVB[i]);
-			gl.glNormalPointer(GL10.GL_FLOAT, 0, triangleNB[i]);
-			gl.glColor4f(mModels.mColors[i][0],
-					mModels.mColors[i][1],
-					mModels.mColors[i][2],1);
-			// Draw the vertices as triangles
-			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, mModels.mModels[i].length  / 3);
-		}
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
@@ -116,36 +92,8 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	}
 
 	private void initShapes() {
+		
 
-		int modelsLen = mModels.mModels.length;
-		triangleVB = new FloatBuffer[modelsLen];
-		triangleNB = new FloatBuffer[modelsLen];
-		for (int i=0; i < modelsLen; i++) {
-			ByteBuffer vbb = ByteBuffer.allocateDirect(
-					// (# of coordinate values * 4 bytes per float)
-					mModels.mModels[i].length * 4);
-			// use the device hardware's native byte order
-			vbb.order(ByteOrder.nativeOrder());
-			// create a floating point buffer from the ByteBuffer
-			triangleVB[i] = vbb.asFloatBuffer(); 
-			// add the coordinates to the FloatBuffer
-			triangleVB[i].put(mModels.mModels[i]); 
-			// set the buffer to read the first coordinate
-			triangleVB[i].position(0); 
-			
-			vbb = ByteBuffer.allocateDirect(
-					// (# of coordinate values * 4 bytes per float)
-					mModels.mNormals[i].length * 4);
-			// use the device hardware's native byte order
-			vbb.order(ByteOrder.nativeOrder());
-			
-			triangleNB[i] = vbb.asFloatBuffer(); 
-			// add the coordinates to the FloatBuffer
-			triangleNB[i].put(mModels.mNormals[i]); 
-			// set the buffer to read the first coordinate
-			triangleNB[i].position(0); 
-			
-		}
 
 	}
 

@@ -37,7 +37,7 @@ public class GalaxyCarActivity extends Activity {
 			this.mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 			this.mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 			this.mGlView.setRenderer(new CarSurfaceViewRenderer(getResources()
-					.getAssets(),new Models(this)));
+					.getAssets(),new ModelLoader(this)));
 			this.mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 		}
 	}
