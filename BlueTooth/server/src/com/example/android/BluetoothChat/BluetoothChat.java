@@ -16,10 +16,16 @@
 
 package com.example.android.BluetoothChat;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -79,13 +85,16 @@ public class BluetoothChat extends Activity {
     private BluetoothAdapter mBluetoothAdapter = null;
     // Member object for the chat services
     private BluetoothChatService mChatService = null;
-
+    
+    private Context mContext = null;
+    
+    private String mCurrentLine = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(D) Log.e(TAG, "+++ ON CREATE +++");
-
+        mContext = this;
         // Set up the window layout
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.main);
@@ -105,6 +114,26 @@ public class BluetoothChat extends Activity {
             finish();
             return;
         }
+        
+        new Thread(){
+        	@Override
+        	public synchronized void run() {
+        		try {
+        			InputStreamReader is = new InputStreamReader(mContext.getAssets().open("circlelog.csv"));
+        			BufferedReader br = new BufferedReader(is);
+        			while (true){
+        				mCurrentLine = br.readLine();
+        				Log.v("Thread read line:", mCurrentLine);
+        				Thread.sleep(1000);
+        			}
+        		} catch (InterruptedException e) {
+    				Log.e("Thread read:", e.toString());
+        		} catch (IOException e) {
+    				Log.e("Thread read:", e.toString());
+        		}
+        	};
+        }.start();
+        
     }
 
     @Override
@@ -263,13 +292,31 @@ public class BluetoothChat extends Activity {
                 byte[] writeBuf = (byte[]) msg.obj;
                 // construct a string from the buffer
                 String writeMessage = new String(writeBuf);
+                //majcn: tuki se posilja
                 mConversationArrayAdapter.add("Me:  " + writeMessage);
                 break;
             case MESSAGE_READ:
                 byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
-                mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
+                //majcn: tuki se prejema
+				Log.v("Read message :", readMessage);
+
+                if(readMessage.equals("start")){
+    				Log.v("Read message :", "sending start");
+                	mChatService.write("start pressed".getBytes());
+                }
+                if(readMessage.equals("stop")){
+    				Log.v("Read message :", "sending stop");
+                	mChatService.write("stop pressed".getBytes());
+                }
+                if(readMessage.equals("podatki")){
+    				Log.v("Read message :", "sending data");
+					/*for (String s: mCurrentLine.split(","))
+						mChatService.write(s.getBytes());
+                	*/
+                	mChatService.write(mCurrentLine.getBytes());
+                }
                 break;
             case MESSAGE_DEVICE_NAME:
                 // save the connected device's name
