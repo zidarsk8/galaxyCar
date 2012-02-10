@@ -1,16 +1,11 @@
 package org.psywerx.car;
 
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
-import org.psywerx.car.collada.ColladaHandler;
-import org.psywerx.car.collada.ColladaObject;
 
 import android.content.res.AssetManager;
 import android.opengl.GLSurfaceView;
@@ -37,9 +32,10 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	public void onDrawFrame(GL10 gl) {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
-		gl.glEnable(GL10.GL_LIGHTING);
 		gl.glEnable(GL10.GL_COLOR_MATERIAL);
-		gl.glTranslatef(0.0f, 0f, -7.0f);
+		gl.glEnable(GL10.GL_LIGHTING);
+		gl.glTranslatef(0.0f, 0f, -9.0f);
+		
 		gl.glRotatef(rot , 1.0f, 1.0f, 1.0f);
 		// Set the face rotation
 		gl.glFrontFace(GL10.GL_CW);
@@ -59,7 +55,21 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 			// Draw the vertices as triangles
 			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, mModels.mModels[i].length  / 3);
 		}
-
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.0f, 1.0f, -9.0f);
+		
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		//gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
+		for (int i=0; i<triangleVB.length;i++) {
+			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, triangleVB[i]);
+			gl.glNormalPointer(GL10.GL_FLOAT, 0, triangleNB[i]);
+			gl.glColor4f(mModels.mColors[i][0],
+					mModels.mColors[i][1],
+					mModels.mColors[i][2],1);
+			// Draw the vertices as triangles
+			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, mModels.mModels[i].length  / 3);
+		}
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
