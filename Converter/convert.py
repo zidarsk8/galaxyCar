@@ -43,7 +43,7 @@ for l in f:
     if l[0] == 'o':
         obj["name"] = l[2:].strip()
         
-    if l[0] == 'v':
+    if l[0:2] == 'v ':
         obj['vertices'].append(parse_xyz(l[2:]))
         
     if l[0:2] == 'vn':
@@ -55,9 +55,8 @@ for l in f:
         face["type"] = len(arr)
         
         face["material"] = material_index
-        
         for i in arr:
-            n = i.split('//')
+            n = i.split('/')
             face["vertices"].append(int(n[0])-1)
             
             if len(n) == 2:
