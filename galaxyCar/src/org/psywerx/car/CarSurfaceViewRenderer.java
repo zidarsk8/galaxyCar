@@ -22,26 +22,13 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	private FloatBuffer triangleCB;
 	private ColladaHandler mHandler;
 	private ArrayList<ColladaObject> mObjectArray;
+	private Models mModels;
 	private float triangleCoords[];
 	private float rot = 0.0f;
-	private float colors[] = {
-    		1.0f, 0.0f, 0.0f, 1.0f, //Red
-    		0.0f, 1.0f, 0.0f, 1.0f, //Green
-    		0.0f, 0.0f, 1.0f, 1.0f, //Blue
-    		1.0f, 0.0f, 0.0f, 1.0f, //Red
-    		0.0f, 0.0f, 1.0f, 1.0f, //Blue
-    		0.0f, 1.0f, 0.0f, 1.0f, //Green
-    		1.0f, 0.0f, 0.0f, 1.0f, //Red
-    		0.0f, 1.0f, 0.0f, 1.0f, //Green
-    		0.0f, 0.0f, 1.0f, 1.0f, //Blue
-    		1.0f, 0.0f, 0.0f, 1.0f, //Red
-    		0.0f, 0.0f, 1.0f, 1.0f, //Blue
-    		0.0f, 1.0f, 0.0f, 1.0f 	//Green
-			    					};
-	
 
-	public CarSurfaceViewRenderer(AssetManager asm) {
-		this.mAssets = asm;
+	public CarSurfaceViewRenderer(AssetManager asm, Models m) {
+		mModels = m;
+		mAssets = asm;
 	}
 
 	@Override
@@ -59,11 +46,13 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		//gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 		for (int i=0; i<triangleVB.length;i++) {
-			gl.glColor4f(0.3f,0.99f,0.0f,1);
+			gl.glColor4f(mModels.mColors[i][0],
+					mModels.mColors[i][1],
+					mModels.mColors[i][2],1);
 			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, triangleVB[i]);
 			
 			// Draw the vertices as triangles
-			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, triangleCoords.length  / 3);
+			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, mModels.mModels[i].length  / 3);
 		}
 
 		// Disable the client state before leaving
@@ -106,54 +95,22 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private void initShapes() {
 
-		triangleCoords = new float[] { 0.0f, 1.0f, 0.0f, // Top Of Triangle (Front)
-				-1.0f, -1.0f, 1.0f, // Left Of Triangle (Front)
-				1.0f, -1.0f, 1.0f, // Right Of Triangle (Front)
-				0.0f, 1.0f, 0.0f, // Top Of Triangle (Right)
-				1.0f, -1.0f, 1.0f, // Left Of Triangle (Right)
-				1.0f, -1.0f, -1.0f, // Right Of Triangle (Right)
-				0.0f, 1.0f, 0.0f, // Top Of Triangle (Back)
-				1.0f, -1.0f, -1.0f, // Left Of Triangle (Back)
-				-1.0f, -1.0f, -1.0f, // Right Of Triangle (Back)
-				0.0f, 1.0f, 0.0f, // Top Of Triangle (Left)
-				-1.0f, -1.0f, -1.0f, // Left Of Triangle (Left)
-				-1.0f, -1.0f, 1.0f // Right Of Triangle (Left)
-		};
+		int modelsLen = mModels.mModels.length;
+		triangleVB = new FloatBuffer[modelsLen];
+		for (int i=0; i < modelsLen; i++) {
+			ByteBuffer vbb = ByteBuffer.allocateDirect(
+					// (# of coordinate values * 4 bytes per float)
+					mModels.mModels[i].length * 4);
+			// use the device hardware's native byte order
+			vbb.order(ByteOrder.nativeOrder());
+			// create a floating point buffer from the ByteBuffer
+			triangleVB[i] = vbb.asFloatBuffer(); 
+			// add the coordinates to the FloatBuffer
+			triangleVB[i].put(mModels.mModels[i]); 
+			// set the buffer to read the first coordinate
+			triangleVB[i].position(0); 
+		}
 
-		triangleVB = new FloatBuffer[1];
-		//for (int i=0; i < Colors.v.length; i++) {
-		ByteBuffer vbb = ByteBuffer.allocateDirect(
-				// (# of coordinate values * 4 bytes per float)
-				triangleCoords.length * 4);
-		vbb.order(ByteOrder.nativeOrder());// use the device hardware's native
-		// byte order
-		triangleVB[0] = vbb.asFloatBuffer(); // create a floating point buffer from
-		// the ByteBuffer
-		triangleVB[0].put(triangleCoords); // add the coordinates to the
-		// FloatBuffer
-		triangleVB[0].position(0); // set the buffer to read the first coordinate
-		//}
-		// float triangleCoords[] = {
-		// // X, Y, Z
-		// -0.5f, -0.25f, 0,
-		// 0.5f, -0.25f, 0,
-		// 0.0f, 0.559016994f, 0
-		// };
-
-		// initialize vertex Buffer for triangle
-		
-		// initialize vertex Buffer for triangle
-//		vbb = ByteBuffer.allocateDirect(
-//		// (# of coordinate values * 4 bytes per float)
-//				colors.length * 4);
-//		vbb.order(ByteOrder.nativeOrder());// use the device hardware's native
-//											// byte order
-//		triangleCB = vbb.asFloatBuffer(); // create a floating point buffer from
-//											// the ByteBuffer
-//		triangleCB.put(triangleCoords); // add the coordinates to the
-//										// FloatBuffer
-//		triangleCB.position(0); // set the buffer to read the first coordinate
-		/**/
 	}
 
 }

@@ -11,9 +11,9 @@ import org.psywerx.car.Debugger;
 public class Models{
 	
 	private float[] mTh; //track history
-	private float mTrackWidth = 0.2f;
-	private float[][] mModels;
-	private float[] mColors;
+	protected float mTrackWidth = 0.2f;
+	protected float[][] mModels;
+	protected float[][] mColors;
 
 
 	public Models(Context ctx){
@@ -28,15 +28,22 @@ public class Models{
 			String line;
 			String concat = "";
 			int lineCount = 0;
-			int i = 0;
 			while ((line = brc.readLine()) != null){
 				lineCount++;
-				concat+=line+",";
+				concat += line+";";
 			}
-			String[] modString = concat.split(",");
-			mColors = new float[modString.length];
-			for (String a : modString){
-				mColors[i++] = Float.parseFloat(a);
+
+			int i = 0;
+			mColors = new float[lineCount][];
+			String[] concatSplit = concat.split(";");
+			for (String con : concatSplit){
+				String[] modString = con.split(",");
+				mColors[i] = new float[modString.length];
+				int j = 0;
+				for (String a : modString){
+					mColors[i][j++] = Float.parseFloat(a);
+				}
+				i++;
 			}
 
 			src = new InputStreamReader(ctx.getAssets().open(model+".v.csv",AssetManager.ACCESS_STREAMING));
@@ -44,7 +51,7 @@ public class Models{
 			mModels = new float[lineCount][];
 			i = 0;
 			while((line = brc.readLine()) != null){
-				modString = line.split(",");
+				String[] modString = line.split(",");
 				mModels[i] = new float[modString.length];
 				int j = 0;
 				for (String a : modString){
