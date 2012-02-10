@@ -59,8 +59,8 @@ for l in f:
             n = i.split('/')
             face["vertices"].append(int(n[0])-1)
             
-            if len(n) == 2:
-                face["normals"].append(int(int(n[1])-1))
+            if len(n) == 3:
+                face["normals"].append(int(int(n[2])-1))
                
         obj["faces"].append(face)
         
@@ -69,6 +69,7 @@ for l in f:
 
 arr = ""
 clr = ""
+nor = ""
 for m in range(len(obj['materials'])):
     for f in obj['faces']:
         if f['material'] != m:
@@ -77,7 +78,11 @@ for m in range(len(obj['materials'])):
         for v in f['vertices']:
             for p in obj['vertices'][v]:
                 arr += str(p) + ','
+        for n in f['normals']:
+            for k in obj['normals'][n]:
+                nor += str(k) + ','
     arr = arr[:-1] + "\n"
+    nor = nor[:-1] + "\n"
 
     for c in obj['materials'][m]['color']:
         clr += c + ","
@@ -91,6 +96,11 @@ f.close()
 
 f = open('../galaxyCar/assets/' + sys.argv[2] + '.c.csv', 'w')
 f.write(clr)
+f.close()
+
+
+f = open('../galaxyCar/assets/' + sys.argv[2] + '.n.csv', 'w')
+f.write(nor)
 f.close()
 
 print("Done")
