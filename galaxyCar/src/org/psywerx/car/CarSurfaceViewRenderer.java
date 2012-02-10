@@ -24,8 +24,8 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	private Models mModels;
 	private float rot = 0.0f;
 	
-    float[] LightAmbient=		{ 0.5f, 0.5f, 0.5f, 1.0f };
-    float[] LightDiffuse=		{ 1.0f, 1.0f, 1.0f, 1.0f };
+    float[] LightAmbient=		{ 0.1f, 0.1f, 0.1f, 1.0f };
+    float[] LightDiffuse=		{ 0.9f, 0.9f, 0.9f, 1.0f };
     float[] LightPosition=	    { 0.0f, 0.0f, 2.0f, 1.0f };
 
 	public CarSurfaceViewRenderer(AssetManager asm, Models m) {
@@ -37,6 +37,8 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	public void onDrawFrame(GL10 gl) {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
+		gl.glEnable(GL10.GL_LIGHTING);
+		gl.glEnable(GL10.GL_COLOR_MATERIAL);
 		gl.glTranslatef(0.0f, 0f, -7.0f);
 		gl.glRotatef(rot , 1.0f, 1.0f, 1.0f);
 		// Set the face rotation
@@ -48,19 +50,20 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		//gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 		for (int i=0; i<triangleVB.length;i++) {
+			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, triangleVB[i]);
+			gl.glNormalPointer(GL10.GL_FLOAT, 0, triangleNB[i]);
 			gl.glColor4f(mModels.mColors[i][0],
 					mModels.mColors[i][1],
 					mModels.mColors[i][2],1);
-			gl.glNormalPointer(GL10.GL_FLOAT, 0, triangleNB[i]);
-			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
-			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, triangleVB[i]);
 			// Draw the vertices as triangles
 			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, mModels.mModels[i].length  / 3);
 		}
 
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-		//gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
+		gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
+		gl.glDisableClientState(GL10.GL_NORMAL_ARRAY);
 
 	}
 
