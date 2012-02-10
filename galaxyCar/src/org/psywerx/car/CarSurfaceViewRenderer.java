@@ -10,7 +10,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.psywerx.car.collada.ColladaHandler;
 import org.psywerx.car.collada.ColladaObject;
-import org.psywerx.car.generated.Colors;
 
 import android.content.res.AssetManager;
 import android.opengl.GLSurfaceView;
@@ -60,12 +59,11 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		//gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 		for (int i=0; i<triangleVB.length;i++) {
-			gl.glColor4f(Colors.c[i][0], Colors.c[i][1], Colors.c[i][2], 1.0f);
+			gl.glColor4f(0.3f,0.99f,0.0f,1);
 			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, triangleVB[i]);
-			//gl.glColorPointer(4, GL10.GL_FLOAT, 0, triangleCB);
 			
 			// Draw the vertices as triangles
-			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, Colors.v[i].length / 3);
+			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, triangleCoords.length  / 3);
 		}
 
 		// Disable the client state before leaving
@@ -108,39 +106,33 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private void initShapes() {
 
-		try {
-			//mObjectArray = mHandler.parseFile(mAssets.open("model.dae"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		triangleCoords = new float[] { 0.0f, 1.0f, 0.0f, // Top Of Triangle (Front)
+				-1.0f, -1.0f, 1.0f, // Left Of Triangle (Front)
+				1.0f, -1.0f, 1.0f, // Right Of Triangle (Front)
+				0.0f, 1.0f, 0.0f, // Top Of Triangle (Right)
+				1.0f, -1.0f, 1.0f, // Left Of Triangle (Right)
+				1.0f, -1.0f, -1.0f, // Right Of Triangle (Right)
+				0.0f, 1.0f, 0.0f, // Top Of Triangle (Back)
+				1.0f, -1.0f, -1.0f, // Left Of Triangle (Back)
+				-1.0f, -1.0f, -1.0f, // Right Of Triangle (Back)
+				0.0f, 1.0f, 0.0f, // Top Of Triangle (Left)
+				-1.0f, -1.0f, -1.0f, // Left Of Triangle (Left)
+				-1.0f, -1.0f, 1.0f // Right Of Triangle (Left)
+		};
 
-//		triangleCoords = new float[] { 0.0f, 1.0f, 0.0f, // Top Of Triangle (Front)
-//				-1.0f, -1.0f, 1.0f, // Left Of Triangle (Front)
-//				1.0f, -1.0f, 1.0f, // Right Of Triangle (Front)
-//				0.0f, 1.0f, 0.0f, // Top Of Triangle (Right)
-//				1.0f, -1.0f, 1.0f, // Left Of Triangle (Right)
-//				1.0f, -1.0f, -1.0f, // Right Of Triangle (Right)
-//				0.0f, 1.0f, 0.0f, // Top Of Triangle (Back)
-//				1.0f, -1.0f, -1.0f, // Left Of Triangle (Back)
-//				-1.0f, -1.0f, -1.0f, // Right Of Triangle (Back)
-//				0.0f, 1.0f, 0.0f, // Top Of Triangle (Left)
-//				-1.0f, -1.0f, -1.0f, // Left Of Triangle (Left)
-//				-1.0f, -1.0f, 1.0f // Right Of Triangle (Left)
-//		};
-
-		triangleVB = new FloatBuffer[Colors.v.length];
-		for (int i=0; i < Colors.v.length; i++) {
-			ByteBuffer vbb = ByteBuffer.allocateDirect(
-					// (# of coordinate values * 4 bytes per float)
-					Colors.v[i].length * 4);
-			vbb.order(ByteOrder.nativeOrder());// use the device hardware's native
-			// byte order
-			triangleVB[i] = vbb.asFloatBuffer(); // create a floating point buffer from
-			// the ByteBuffer
-			triangleVB[i].put(Colors.v[i]); // add the coordinates to the
-			// FloatBuffer
-			triangleVB[i].position(0); // set the buffer to read the first coordinate
-		}
+		triangleVB = new FloatBuffer[1];
+		//for (int i=0; i < Colors.v.length; i++) {
+		ByteBuffer vbb = ByteBuffer.allocateDirect(
+				// (# of coordinate values * 4 bytes per float)
+				triangleCoords.length * 4);
+		vbb.order(ByteOrder.nativeOrder());// use the device hardware's native
+		// byte order
+		triangleVB[0] = vbb.asFloatBuffer(); // create a floating point buffer from
+		// the ByteBuffer
+		triangleVB[0].put(triangleCoords); // add the coordinates to the
+		// FloatBuffer
+		triangleVB[0].position(0); // set the buffer to read the first coordinate
+		//}
 		// float triangleCoords[] = {
 		// // X, Y, Z
 		// -0.5f, -0.25f, 0,

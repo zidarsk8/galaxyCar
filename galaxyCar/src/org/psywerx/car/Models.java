@@ -1,9 +1,62 @@
 package org.psywerx.car;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import android.content.Context;
+import android.content.res.AssetManager;
+
+import org.psywerx.car.Debugger;
+
 public class Models{
 	
 	private float[] mTh; //track history
 	private float mTrackWidth = 0.2f;
+	private float[][] mModels;
+	private float[] mColors;
+
+
+	public Models(Context ctx){
+		
+		initModelArrays(ctx,"car");
+	}
+
+	private void initModelArrays(Context ctx,String model){
+		try{
+			InputStreamReader src = new InputStreamReader(ctx.getAssets().open(model+".c.csv",AssetManager.ACCESS_STREAMING));
+			BufferedReader brc = new BufferedReader(src);
+			String line;
+			String concat = "";
+			int lineCount = 0;
+			int i = 0;
+			while ((line = brc.readLine()) != null){
+				lineCount++;
+				concat+=line+",";
+			}
+			String[] modString = concat.split(",");
+			mColors = new float[modString.length];
+			for (String a : modString){
+				mColors[i++] = Float.parseFloat(a);
+			}
+
+			src = new InputStreamReader(ctx.getAssets().open(model+".v.csv",AssetManager.ACCESS_STREAMING));
+			brc = new BufferedReader(src);
+			mModels = new float[lineCount][];
+			i = 0;
+			while((line = brc.readLine()) != null){
+				modString = line.split(",");
+				mModels[i] = new float[modString.length];
+				int j = 0;
+				for (String a : modString){
+					mModels[i][j++] = Float.parseFloat(a);
+				}
+				i++;
+			}
+		}catch(Exception e){
+			Debugger.dbge(e.toString());
+		}
+	}
+
 
 	/**
 	 *	turn track history array into triangle array for OpenGL.

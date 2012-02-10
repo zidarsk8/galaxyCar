@@ -13,7 +13,8 @@ import android.view.WindowManager;
 public class GalaxyCarActivity extends Activity {
 
 	private GLSurfaceView mGlView;
-	private WakeLock wl;
+	private WakeLock mWakeLock;
+	private Models mModels;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -28,8 +29,10 @@ public class GalaxyCarActivity extends Activity {
 		// Get wake lock:
 		PowerManager pm = (PowerManager) context
 				.getSystemService(Context.POWER_SERVICE);
-		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Sandboc lock");
-		wl.acquire();
+		mWakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Sandboc lock");
+		mWakeLock.acquire();
+
+		mModels = new Models(this);
 
 		setContentView(R.layout.main);
 		this.mGlView = (GLSurfaceView) this.findViewById(R.id.glSurface);
@@ -45,14 +48,14 @@ public class GalaxyCarActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		wl.acquire();
+		mWakeLock.acquire();
 		mGlView.onResume();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		wl.release();
+		mWakeLock.release();
 		mGlView.onPause();
 	}
 
