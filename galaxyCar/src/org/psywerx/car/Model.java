@@ -30,6 +30,7 @@ public class Model {
 			
 			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, (vertexBuffer[i].capacity()/4)  / 3);
 		}
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 	}
 //	@Override
 //	public void init(ModelLoader m) {

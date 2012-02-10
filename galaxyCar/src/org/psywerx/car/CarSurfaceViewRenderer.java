@@ -45,8 +45,6 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		
 		// Enable the vertex and color state
 
-		gl.glLoadIdentity();
-		gl.glTranslatef(0.0f, 1.0f, -9.0f);
 		car.draw(gl);
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);

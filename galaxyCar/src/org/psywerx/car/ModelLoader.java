@@ -93,7 +93,7 @@ public class ModelLoader{
 			}
 			ByteBuffer vbb = ByteBuffer.allocateDirect(
 					// (# of coordinate values * 4 bytes per float)
-					modString.length * 4);
+					buff.length * 4);
 			// use the device hardware's native byte order
 			vbb.order(ByteOrder.nativeOrder());
 			// create a floating point buffer from the ByteBuffer
