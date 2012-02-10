@@ -28,7 +28,7 @@ public class Model {
 					colors[i][2],1);
 			// Draw the vertices as triangles
 			
-			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, (vertexBuffer[i].capacity()/4)  / 3);
+			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, (vertexBuffer[i].capacity())  / 3);
 		}
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 	}
