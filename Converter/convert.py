@@ -67,7 +67,7 @@ for l in f:
     if l[0] == 'n':
         output += ""
 
-cl = "package org.psywerx.car.gen;\n\npublic class "+ sys.argv[2] +"{\n"  
+cl = "package org.psywerx.car.generated;\n\npublic class "+ sys.argv[2] +"{\n"  
 arr = "\t public static float[][] v = {"
 clr = "\t public static float[][] c = {"
 for m in range(len(obj['materials'])):
@@ -92,7 +92,7 @@ cl += arr + "\n"
 cl += clr
 cl += "\n}"
 
-f = open('../galaxyCar/src/org/psywerx/car/gen/' + sys.argv[2] + '.java', 'w')
+f = open('../galaxyCar/src/org/psywerx/car/generated/' + sys.argv[2] + '.java', 'w')
 f.write(cl)
 f.close()
 

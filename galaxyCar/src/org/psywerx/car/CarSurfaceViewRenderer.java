@@ -10,7 +10,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.psywerx.car.collada.ColladaHandler;
 import org.psywerx.car.collada.ColladaObject;
-import org.psywerx.car.gen.Colors;
+import org.psywerx.car.generated.Colors;
 
 import android.content.res.AssetManager;
 import android.opengl.GLSurfaceView;
