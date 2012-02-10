@@ -14,6 +14,7 @@ public class Models{
 	protected float mTrackWidth = 0.2f;
 	protected float[][] mModels;
 	protected float[][] mColors;
+	protected float[][] mNormals;
 
 
 	public Models(Context ctx){
@@ -59,6 +60,22 @@ public class Models{
 				}
 				i++;
 			}
+			
+			src = new InputStreamReader(ctx.getAssets().open(model+".n.csv",AssetManager.ACCESS_STREAMING));
+			brc = new BufferedReader(src);
+			mNormals = new float[lineCount][];
+			i = 0;
+			while((line = brc.readLine()) != null){
+				String[] modString = line.split(",");
+				mNormals[i] = new float[modString.length];
+				int j = 0;
+				for (String a : modString){
+					mNormals[i][j++] = Float.parseFloat(a);
+				}
+				i++;
+			}
+			
+			
 		}catch(Exception e){
 			Debugger.dbge(e.toString());
 		}
