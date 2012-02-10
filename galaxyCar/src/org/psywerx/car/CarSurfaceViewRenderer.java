@@ -15,15 +15,17 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private AssetManager mAssets;
 
-	private ModelLoader mModels;
+	private ModelLoader mModelLoader;
 	private float rot = 0.0f;
 	
     float[] LightAmbient=		{ 0.1f, 0.1f, 0.1f, 1.0f };
     float[] LightDiffuse=		{ 0.9f, 0.9f, 0.9f, 1.0f };
     float[] LightPosition=	    { 0.0f, 0.0f, 2.0f, 1.0f };
 
+	private Car car;
+
 	public CarSurfaceViewRenderer(AssetManager asm, ModelLoader m) {
-		mModels = m;
+		mModelLoader= m;
 		mAssets = asm;
 	}
 
@@ -45,7 +47,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 		gl.glLoadIdentity();
 		gl.glTranslatef(0.0f, 1.0f, -9.0f);
-		
+		car.draw(gl);
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
@@ -93,7 +95,8 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private void initShapes() {
 		
-
+		car = new Car();
+		car.init(mModelLoader);
 
 	}
 

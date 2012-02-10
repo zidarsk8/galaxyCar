@@ -10,8 +10,7 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-
-import org.psywerx.car.Debugger;
+import android.util.Log;
 
 public class ModelLoader{
 	
@@ -26,10 +25,14 @@ public class ModelLoader{
 	public ModelLoader(Context ctx){
 		// TODO: go over all the .csv files in assets and generate models on based on csv file name
 		this.ctx = ctx;
-		models.put("car", initModel("car"));
+		models.put("car", InitModel("car"));
+	}
+	public Model GetModel(String model){
+		return models.get(model);
 	}
 
-	private Model initModel(String model){
+	private Model InitModel(String model){
+		
 		Model m = new Model();
 
 		try{
@@ -43,9 +46,12 @@ public class ModelLoader{
 				lineCount++;
 				concat += line+";";
 			}
+			//m.count = lineCount;
 			int i = 0;
+			
 			m.colors = new float[lineCount][];
 			String[] concatSplit = concat.split(";");
+			
 			for (String con : concatSplit){
 				String[] modString = con.split(",");
 				m.colors[i] = new float[modString.length];
@@ -55,9 +61,10 @@ public class ModelLoader{
 				}
 				i++;
 			}
+			
+			
 			m.vertexBuffer = InitBuffer(model, "v");
 			m.normalBuffer = InitBuffer(model, "n");
-			
 			
 		}catch(Exception e){
 			Debugger.dbge(e.toString());
@@ -67,14 +74,15 @@ public class ModelLoader{
 
 
 	private FloatBuffer[] InitBuffer(String model, String type) throws NumberFormatException, IOException {
+		
 		InputStreamReader src = new InputStreamReader(ctx.getAssets().open(model+"."+type+".csv",AssetManager.ACCESS_STREAMING));
 		BufferedReader brc = new BufferedReader(src);
 		
 		String line;
 		
-		mModels = new float[lineCount][];
 		FloatBuffer[] vertexBuffer = new FloatBuffer[lineCount];
 		int i = 0;
+		
 		
 		while((line = brc.readLine()) != null){
 			String[] modString = line.split(",");
@@ -83,10 +91,9 @@ public class ModelLoader{
 			for (String a : modString){
 				buff[j++] = Float.parseFloat(a);
 			}
-		
 			ByteBuffer vbb = ByteBuffer.allocateDirect(
 					// (# of coordinate values * 4 bytes per float)
-					lineCount * 4);
+					modString.length * 4);
 			// use the device hardware's native byte order
 			vbb.order(ByteOrder.nativeOrder());
 			// create a floating point buffer from the ByteBuffer
@@ -95,11 +102,9 @@ public class ModelLoader{
 			vertexBuffer[i].put(buff); 
 			// set the buffer to read the first coordinate
 			vertexBuffer[i].position(0); 
-			
 			i++;
 			
 		}
-		
 		return vertexBuffer;
 
 	}
@@ -108,6 +113,7 @@ public class ModelLoader{
 	 *	turn track history array into triangle array for OpenGL.
 	 */
 	protected float[] getTrackMesh(){
+		// TODO: move somplace else :)
 		return getTrackMesh(mTrackWidth);
 	}
 	
