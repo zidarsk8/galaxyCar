@@ -10,6 +10,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.psywerx.car.collada.ColladaHandler;
 import org.psywerx.car.collada.ColladaObject;
+import org.psywerx.car.gen.Colors;
 
 import android.content.res.AssetManager;
 import android.opengl.GLSurfaceView;
@@ -48,18 +49,18 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	public void onDrawFrame(GL10 gl) {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
-		gl.glTranslatef(0.0f, -1.2f, -7.0f);
+		gl.glTranslatef(0.0f, 0f, -7.0f);
 		gl.glRotatef(rot , 1.0f, 1.0f, 1.0f);
 		// Set the face rotation
 		gl.glFrontFace(GL10.GL_CW);
-		rot += 0.2f;
+		rot += 0.8f;
 		// Point to our buffers
 		
 		// Enable the vertex and color state
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		//gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 		for (int i=0; i<triangleVB.length;i++) {
-			gl.glColor4f(1.0f, i%2, 0.0f, 1.0f);
+			gl.glColor4f(Colors.c[i][0], Colors.c[i][1], Colors.c[i][2], 1.0f);
 			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, triangleVB[i]);
 			//gl.glColorPointer(4, GL10.GL_FLOAT, 0, triangleCB);
 			

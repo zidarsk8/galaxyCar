@@ -18,8 +18,10 @@ def parse_xyz(str):
 materials = []
 for l in m:
     if l.startswith('newmtl'):
-        material = {'name' : l[7:-1], 'alpha': 1, 'scale': 1.0, 'img': l[7:-1] + ".jpg" , 'ofsetX': 0, 'ofsetY': 0 }
+        material = {'name' : l[7:-1], 'alpha': 1, 'color': [], 'scale': 1.0, 'img': l[7:-1] + ".jpg" , 'ofsetX': 0, 'ofsetY': 0 }
         for l1 in m:
+            if l1[:2] == 'Kd':
+                material['color'] = l1[3:-1].split(' ')
             if l1[0] == 'd':
                 material['alpha'] = float(l1[2:])
                 break
@@ -66,8 +68,9 @@ for l in f:
     if l[0] == 'n':
         output += ""
 
-arr = "package org.psywerx.car;\n\npublic class "+ sys.argv[2] +"{\n"  
-arr += "\t public static float[][] v = {"
+cl = "package org.psywerx.car.gen;\n\npublic class "+ sys.argv[2] +"{\n"  
+arr = "\t public static float[][] v = {"
+clr = "\t public static float[][] c = {"
 for m in xrange(len(obj['materials'])):
     arr += '{'
     for f in obj['faces']:
@@ -79,11 +82,19 @@ for m in xrange(len(obj['materials'])):
                 arr += str(p) + 'f,'
         arr += "\n\t\t"
     arr += '},'
-arr += '};'
-arr += "\n}"
 
-f = open(sys.argv[2] + '.java', 'w')
-f.write(arr)
+    clr += "{"
+    for c in obj['materials'][m]['color']:
+        clr += c + "f,"
+    clr += "},\n\t\t"
+clr += '};'
+arr += '};'
+cl += arr + "\n"
+cl += clr
+cl += "\n}"
+
+f = open('../galaxyCar/src/org/psywerx/car/gen/' + sys.argv[2] + '.java', 'w')
+f.write(cl)
 f.close()
 
 print "Done"
