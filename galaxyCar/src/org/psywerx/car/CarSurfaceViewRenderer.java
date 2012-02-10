@@ -1,6 +1,7 @@
 package org.psywerx.car;
 
-import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
@@ -17,63 +18,99 @@ import android.opengl.GLU;
 public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private AssetManager mAssets;
-	private FloatBuffer triangleVB;
+	private FloatBuffer triangleVB[];
+	private FloatBuffer triangleCB;
 	private ColladaHandler mHandler;
 	private ArrayList<ColladaObject> mObjectArray;
+	private Models mModels;
+	private float triangleCoords[];
+	private float rot = 0.0f;
 
-	public CarSurfaceViewRenderer(AssetManager asm) {
-		this.mAssets = asm;
-		mHandler = new ColladaHandler();
+	public CarSurfaceViewRenderer(AssetManager asm, Models m) {
+		mModels = m;
+		mAssets = asm;
 	}
 
 	@Override
 	public void onDrawFrame(GL10 gl) {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-
-		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
-
-		if (mObjectArray != null && mObjectArray.size() > 0) {
-			for (int i = 0; i < mObjectArray.size(); i++) {
-				mObjectArray.get(i).draw(gl);
-			}
+		gl.glTranslatef(0.0f, 0f, -7.0f);
+		gl.glRotatef(rot , 1.0f, 1.0f, 1.0f);
+		// Set the face rotation
+		gl.glFrontFace(GL10.GL_CW);
+		rot += 0.8f;
+		// Point to our buffers
+		
+		// Enable the vertex and color state
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		//gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
+		for (int i=0; i<triangleVB.length;i++) {
+			gl.glColor4f(mModels.mColors[i][0],
+					mModels.mColors[i][1],
+					mModels.mColors[i][2],1);
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, triangleVB[i]);
+			
+			// Draw the vertices as triangles
+			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, mModels.mModels[i].length  / 3);
 		}
+
+		// Disable the client state before leaving
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+		//gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
+
 	}
 
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
-		final float zNear = 1.0f, zFar = 100.0f, fieldOfView = 45.0f;
-		float ratio = (float) width / (float) height;
+		if(height == 0) { 						//Prevent A Divide By Zero By
+			height = 1; 						//Making Height Equal One
+		}
 
-		gl.glMatrixMode(GL10.GL_PROJECTION);
-		gl.glLoadIdentity();
-		gl.glViewport(0, 0, width, height);
-		GLU.gluPerspective(gl, fieldOfView, ratio, zNear, zFar);
+		gl.glViewport(0, 0, width, height); 	//Reset The Current Viewport
+		gl.glMatrixMode(GL10.GL_PROJECTION); 	//Select The Projection Matrix
+		gl.glLoadIdentity(); 					//Reset The Projection Matrix
+
+		//Calculate The Aspect Ratio Of The Window
+		GLU.gluPerspective(gl, 45.0f, (float)width / (float)height, 0.1f, 100.0f);
+
+		gl.glMatrixMode(GL10.GL_MODELVIEW); 	//Select The Modelview Matrix
+		gl.glLoadIdentity(); 					//Reset The Modelview Matrix
 
 	}
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig arg1) {
-		gl.glDisable(GL10.GL_DITHER);
-		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
-
-		gl.glClearColor(0, 0, 0, 0);
-		gl.glEnable(GL10.GL_CULL_FACE);
-		gl.glShadeModel(GL10.GL_SMOOTH);
-		gl.glEnable(GL10.GL_DEPTH_TEST);
-		gl.glDepthFunc(GL10.GL_LEQUAL);
-		gl.glClearDepthf(1.0f);
+		gl.glShadeModel(GL10.GL_SMOOTH); 			//Enable Smooth Shading
+		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f); 	//Black Background
+		gl.glClearDepthf(1.0f); 					//Depth Buffer Setup
+		gl.glEnable(GL10.GL_DEPTH_TEST); 			//Enables Depth Testing
+		gl.glDepthFunc(GL10.GL_LEQUAL); 			//The Type Of Depth Testing To Do
+		
+		//Really Nice Perspective Calculations
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST); 
 
 		initShapes();
 	}
 
 	private void initShapes() {
 
-		try {
-			mObjectArray = mHandler.parseFile(mAssets.open("blend.dae"));
-		} catch (IOException e) {
-			e.printStackTrace();
+		int modelsLen = mModels.mModels.length;
+		triangleVB = new FloatBuffer[modelsLen];
+		for (int i=0; i < modelsLen; i++) {
+			ByteBuffer vbb = ByteBuffer.allocateDirect(
+					// (# of coordinate values * 4 bytes per float)
+					mModels.mModels[i].length * 4);
+			// use the device hardware's native byte order
+			vbb.order(ByteOrder.nativeOrder());
+			// create a floating point buffer from the ByteBuffer
+			triangleVB[i] = vbb.asFloatBuffer(); 
+			// add the coordinates to the FloatBuffer
+			triangleVB[i].put(mModels.mModels[i]); 
+			// set the buffer to read the first coordinate
+			triangleVB[i].position(0); 
 		}
+
 	}
 
 }
