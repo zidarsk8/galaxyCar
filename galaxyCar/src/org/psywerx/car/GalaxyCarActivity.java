@@ -1,5 +1,11 @@
 package org.psywerx.car;
 
+
+import org.psywerx.car.bluetooth.BluetoothChatService;
+import org.psywerx.car.bluetooth.BluetoothHandler;
+import org.psywerx.car.bluetooth.DeviceListActivity;
+
+
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -8,114 +14,103 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
-
-import org.psywerx.car.bluetooth.BluetoothChatService;
-import org.psywerx.car.bluetooth.DeviceListActivity;
 
 public class GalaxyCarActivity extends Activity {
 
-    private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
-    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
+    // Intent request codes
+    private static final int REQUEST_CONNECT_DEVICE = 2;
+    private static final int REQUEST_ENABLE_BT = 3;
 
-	private BluetoothChatService mBluetoothService = null;
+    // Key names received from the BluetoothChatService Handler
+    public static final String DEVICE_NAME = "device_name";
+    
+	private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothChatService mChatService = null;
+
+    private BluetoothHandler mHandler = null;
 	private GLSurfaceView mGlView;
 	private WakeLock mWakeLock;
-	
-	private String mLastData = null;
-	//private BtHelper mBluetooth;
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-            case BluetoothChatService.MESSAGE_READ:
-                byte[] readBuf = (byte[]) msg.obj;
-                mLastData = new String(readBuf, 0, msg.arg1);
-                break;
-            }
-        }
-    };
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+	/** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
 		
 		// Get wake lock:
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		mWakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Sandboc lock");
 		mWakeLock.acquire();
 
-		init();
-	}
-
-	private void init(){
-		//mBluetooth = BtHelper.getBtHelper(this);
-
-		this.mGlView = (GLSurfaceView) this.findViewById(R.id.glSurface);
-		if (this.mGlView != null) {
-			this.mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
-			this.mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-			this.mGlView.setRenderer(new CarSurfaceViewRenderer(getResources()
+        init();
+    }
+    
+    private void init() {
+		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
+		if (mGlView != null) {
+			mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+			mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+			mGlView.setRenderer(new CarSurfaceViewRenderer(getResources()
 					.getAssets(),new ModelLoader(this)));
-			this.mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+			mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 		}
-		turnOnBluetooth();
+    	mHandler = new BluetoothHandler(getApplicationContext());
+        Button b = (Button) findViewById(R.id.bluetoothButton);
+        b.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				enableBluetooth();
+			}
+		});
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+
+        // Initialize the BluetoothChatService to perform bluetooth connections
+        mChatService = new BluetoothChatService(getApplicationContext(), mHandler);
 	}
 
-	private void turnOnBluetooth(){
-		BluetoothAdapter ba = BluetoothAdapter.getDefaultAdapter();
-		if(ba == null || !ba.isEnabled()){
-			Toast.makeText(this , "We need ModriZob!", Toast.LENGTH_LONG).show();
-			return;
-		}
-		mBluetoothService = new BluetoothChatService(this, mHandler);
-		mBluetoothService.start();
-		Intent data = new Intent(this , DeviceListActivity.class);
-        startActivityForResult(data,REQUEST_CONNECT_DEVICE_INSECURE);
-	}
-
-	protected void onActvityResult(int requestCode, int resultCode, Intent data){
+	private void enableBluetooth(){
+    	D.dbgv("starting bluetooth thingy");
+    	if (mBluetoothAdapter == null) {
+            Toast.makeText(getApplicationContext(), "Bluetooth is not available", Toast.LENGTH_LONG).show();
+        }else if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+        } else {
+            Intent serverIntent = new Intent(getApplicationContext(), DeviceListActivity.class);
+            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+        }
+    }
+    
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		D.dbgv("on result from : "+requestCode+"   resultCode "+resultCode);
 		switch (requestCode) {
-			case REQUEST_CONNECT_DEVICE_SECURE:
-				// When DeviceListActivity returns with a device to connect
+			case REQUEST_CONNECT_DEVICE:
 				if (resultCode == Activity.RESULT_OK) {
-					connectDevice(data, true);
+					String address = data.getExtras()
+							.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+					BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+					mChatService.connect(device, false);
 				}
 				break;
-			case REQUEST_CONNECT_DEVICE_INSECURE:
-				// When DeviceListActivity returns with a device to connect
+			case REQUEST_ENABLE_BT:
+				// When the request to enable Bluetooth returns
 				if (resultCode == Activity.RESULT_OK) {
-					connectDevice(data, false);
+					// Bluetooth is now enabled, so set up a chat session
+					enableBluetooth();
+				} else {
+					// User did not enable Bluetooth or an error occurred
+					//Toast.makeText(getApplicationContext(), R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
 				}
 				break;
-		}	
+			default: 
+				super.onActivityResult(requestCode, resultCode, data);
+		}
 	}
-
-	private void connectDevice(Intent data, boolean secure){
-        String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-        BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
-        mBluetoothService.connect(device, secure);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mWakeLock.acquire();
-		mGlView.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		mWakeLock.release();
-		mGlView.onPause();
-	}
-
 }

@@ -11,7 +11,6 @@ public class Car implements Drawable{
 	
 	@Override
 	public void draw(GL10 gl) {
-		Log.v("smotko", "AAsdfafasdfAAA");
 		Model car = models.GetModel("car");
 		car.draw(gl);
 	}
@@ -20,9 +19,9 @@ public class Car implements Drawable{
 	public void init(ModelLoader m) {
 		models = m;
 		if(models.models.containsKey("car"))
-			Log.v("smotko","KEY");
+			D.dbgv("smotko KEY");
 		else
-			Log.v("smotko", "@@@");
+			D.dbgv("smotko @@@");
 	}
 
 }

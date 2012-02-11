@@ -19,6 +19,7 @@ package org.psywerx.car.bluetooth;
 import java.util.Set;
 
 import org.psywerx.car.R;
+import org.psywerx.car.D;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -28,7 +29,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -136,7 +136,7 @@ public class DeviceListActivity extends Activity {
      * Start device discover with the BluetoothAdapter
      */
     private void doDiscovery() {
-        if (D) Log.d(TAG, "doDiscovery()");
+        //D.dbgd( "doDiscovery()");
 
         // Indicate scanning in the title
         setProgressBarIndeterminateVisibility(true);

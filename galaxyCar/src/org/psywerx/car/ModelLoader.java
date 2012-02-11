@@ -67,7 +67,7 @@ public class ModelLoader{
 			m.normalBuffer = InitBuffer(model, "n");
 			
 		}catch(Exception e){
-			Debugger.dbge(e.toString());
+			D.dbge(e.toString());
 		}
 		return m;
 	}

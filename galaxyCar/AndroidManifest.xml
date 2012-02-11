@@ -5,25 +5,28 @@
     android:versionName="1.0" >
 
     <uses-sdk android:minSdkVersion="11" />
+
+	<uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+
     <application
         android:icon="@drawable/ic_launcher"
-		android:label="@string/app_name" 
-		android:theme="@android:style/Theme.Black.NoTitleBar">
+        android:label="@string/app_name" >
         <activity
             android:name=".GalaxyCarActivity"
-			android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="org.psywerx.car.bluetooth.DeviceListActivity"
-                  android:label="@string/select_device"
-                  android:theme="@android:style/Theme.Dialog"
-                  android:configChanges="orientation|keyboardHidden" />
+        <activity
+            android:name="org.psywerx.car.bluetooth.DeviceListActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/select_device"
+            android:theme="@android:style/Theme.Holo.Dialog" />
     </application>
-	<uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
+
 </manifest>
