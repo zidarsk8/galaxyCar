@@ -11,18 +11,14 @@ public class Car implements Drawable{
 	
 	@Override
 	public void draw(GL10 gl) {
-		Log.v("smotko", "AAsdfafasdfAAA");
 		Model car = models.GetModel("car");
+		gl.glTranslatef(pos[0], pos[1], pos[2]);
 		car.draw(gl);
 	}
 
 	@Override
 	public void init(ModelLoader m) {
 		models = m;
-		if(models.models.containsKey("car"))
-			Log.v("smotko","KEY");
-		else
-			Log.v("smotko", "@@@");
 	}
 
 }

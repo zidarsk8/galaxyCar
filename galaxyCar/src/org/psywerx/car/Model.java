@@ -32,35 +32,4 @@ public class Model {
 		}
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 	}
-//	@Override
-//	public void init(ModelLoader m) {
-//		int modelsLen = m.mModels.length;
-//		vertexBuffer = new FloatBuffer[modelsLen];
-//		normalBuffer = new FloatBuffer[modelsLen];
-//		for (int i=0; i < modelsLen; i++) {
-//			ByteBuffer vbb = ByteBuffer.allocateDirect(
-//					// (# of coordinate values * 4 bytes per float)
-//					m.mModels[i].length * 4);
-//			// use the device hardware's native byte order
-//			vbb.order(ByteOrder.nativeOrder());
-//			// create a floating point buffer from the ByteBuffer
-//			vertexBuffer[i] = vbb.asFloatBuffer(); 
-//			// add the coordinates to the FloatBuffer
-//			vertexBuffer[i].put(m.mModels[i]); 
-//			// set the buffer to read the first coordinate
-//			vertexBuffer[i].position(0); 
-//			
-//			vbb = ByteBuffer.allocateDirect(
-//					// (# of coordinate values * 4 bytes per float)
-//					m.mNormals[i].length * 4);
-//			// use the device hardware's native byte order
-//			vbb.order(ByteOrder.nativeOrder());
-//			
-//			normalBuffer[i] = vbb.asFloatBuffer(); 
-//			// add the coordinates to the FloatBuffer
-//			normalBuffer[i].put(m.mNormals[i]); 
-//			// set the buffer to read the first coordinate
-//			normalBuffer[i].position(0); 			
-//		}		
-//	}	
 }
