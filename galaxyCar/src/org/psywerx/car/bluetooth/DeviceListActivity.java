@@ -48,7 +48,6 @@ import android.widget.AdapterView.OnItemClickListener;
 public class DeviceListActivity extends Activity {
     // Debugging
     private static final String TAG = "DeviceListActivity";
-    private static final boolean D = true;
 
     // Return Intent extra
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
@@ -136,7 +135,7 @@ public class DeviceListActivity extends Activity {
      * Start device discover with the BluetoothAdapter
      */
     private void doDiscovery() {
-        //D.dbgd( "doDiscovery()");
+        D.dbgd( "doDiscovery()");
 
         // Indicate scanning in the title
         setProgressBarIndeterminateVisibility(true);
