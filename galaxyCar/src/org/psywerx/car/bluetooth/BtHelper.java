@@ -14,19 +14,20 @@ import android.widget.Toast;
 
 public class BtHelper implements Runnable{
 	
-	private static final int TIMEOUT = 4000;
+	private static final int TIMEOUT = 1000;
 
 	private Context mContext = null;
 	private BluetoothChatService mBluetoothService = null;
+    private BluetoothHandler mHandler = null;
 	private String mLastData = null;
 	
+	private boolean dataLock = false;
 	private boolean run = true;
 	
 	public void run(){
 		try{
 		while (run){
 			Thread.sleep(TIMEOUT);
-			D.dbgv("requesting");
 			sendData();
 		}
 		}catch(Exception e){
@@ -34,8 +35,12 @@ public class BtHelper implements Runnable{
 		}
 	}
 
-	public BtHelper(BluetoothChatService service){
-		mBluetoothService = service;
+	public BtHelper(Context ctx){
+		mHandler = new BluetoothHandler(ctx);
+		mBluetoothService = new BluetoothChatService(ctx, mHandler);
+	}
+	public void connect(BluetoothDevice device, boolean secure){
+		mBluetoothService.connect(device,secure);
 	}
 	
 	public void stopConnection(){
@@ -53,7 +58,12 @@ public class BtHelper implements Runnable{
 	}
 	
 	public synchronized void sendData(){
-		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED)
+		if (!dataLock && mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED)
 			mBluetoothService.write("podatki".getBytes());
 	}
+
+	public BluetoothChatService getChatService(){
+		return mBluetoothService;
+	}
+
 }

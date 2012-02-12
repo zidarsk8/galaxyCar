@@ -1,9 +1,5 @@
 package org.psywerx.car;
 
-import java.lang.Thread;
-
-import org.psywerx.car.bluetooth.BluetoothChatService;
-import org.psywerx.car.bluetooth.BluetoothHandler;
 import org.psywerx.car.bluetooth.BtHelper;
 import org.psywerx.car.bluetooth.DeviceListActivity;
 
@@ -28,13 +24,10 @@ public class GalaxyCarActivity extends Activity {
     private static final int REQUEST_CONNECT_DEVICE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
 
-    // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "device_name";
     
 	private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothChatService mChatService = null;
 
-    private BluetoothHandler mHandler = null;
 	private GLSurfaceView mGlView;
 	private WakeLock mWakeLock;
 	private BtHelper mBtHelper;
@@ -63,8 +56,6 @@ public class GalaxyCarActivity extends Activity {
 			mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 		}
     	
-		mHandler = new BluetoothHandler(getApplicationContext());
-
         Button b = (Button) findViewById(R.id.bluetoothButton);
         b.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -75,23 +66,12 @@ public class GalaxyCarActivity extends Activity {
         Button startButton = (Button) findViewById(R.id.startButton);
         startButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				sendStart();
+				mBtHelper.sendStart();
 			}
 		});
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-
-        // Initialize the BluetoothChatService to perform bluetooth connections
-        mChatService = new BluetoothChatService(getApplicationContext(), mHandler);
-		
-		mBtHelper = new BtHelper(mChatService);
-	}
-	private boolean sendStart(){
-		D.dbgv("sending start signal");
-		if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) 
-			return false;
-		mChatService.write("start".getBytes());
-		return true;
+		mBtHelper = new BtHelper(getApplicationContext());
 	}
 
 	private void enableBluetooth(){
@@ -116,7 +96,7 @@ public class GalaxyCarActivity extends Activity {
 					String address = data.getExtras()
 							.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
 					BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-					mChatService.connect(device, false);
+					mBtHelper.connect(device, false);
 					new Thread(mBtHelper).start();
 				}
 				break;
@@ -134,4 +114,5 @@ public class GalaxyCarActivity extends Activity {
 				super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
+
 }
