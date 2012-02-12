@@ -1,9 +1,5 @@
 package org.psywerx.car;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -12,8 +8,6 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 
 public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
-
-	private AssetManager mAssets;
 
 	private ModelLoader mModelLoader;
 	private float rot = 0.0f;
@@ -26,10 +20,8 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	public CarSurfaceViewRenderer(AssetManager asm, ModelLoader m) {
 		mModelLoader= m;
-		mAssets = asm;
 	}
 
-	@Override
 	public void onDrawFrame(GL10 gl) {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
@@ -53,7 +45,6 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	}
 
-	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		if(height == 0) { 						//Prevent A Divide By Zero By
 			height = 1; 						//Making Height Equal One
@@ -71,7 +62,6 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	}
 
-	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig arg1) {
 		gl.glShadeModel(GL10.GL_SMOOTH); 			//Enable Smooth Shading
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f); 	//Black Background

@@ -10,7 +10,6 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
 
 public class ModelLoader{
 	

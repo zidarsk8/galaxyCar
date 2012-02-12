@@ -1,7 +1,5 @@
 package org.psywerx.car;
 
-import java.nio.FloatBuffer;
-
 import javax.microedition.khronos.opengles.GL10;
 
 public interface Drawable {
