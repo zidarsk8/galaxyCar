@@ -1,0 +1,2 @@
+AChartEngine is contributed based on the Apache 2.0 license. [http://www.apache.org/licenses/LICENSE-2.0]
+LowPoly_Car is licensed under a Creative Commons Attribution 3.0 Unported License [http://creativecommons.org/licenses/by/3.0/]
