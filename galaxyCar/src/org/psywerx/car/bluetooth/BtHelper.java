@@ -141,6 +141,8 @@ public class BtHelper implements Runnable{
 	}
 	
 	public synchronized float[] getLastData(){
+		if(mHistory.isEmpty())
+			return new float[6];
 		return mHistory.get(mHistory.size()-1);
 	}
 
