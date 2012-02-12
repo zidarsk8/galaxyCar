@@ -46,8 +46,6 @@ import android.widget.AdapterView.OnItemClickListener;
  * Activity in the result Intent.
  */
 public class DeviceListActivity extends Activity {
-    // Debugging
-    private static final String TAG = "DeviceListActivity";
 
     // Return Intent extra
     public static String EXTRA_DEVICE_ADDRESS = "device_address";

@@ -5,10 +5,8 @@ import java.lang.Runnable;
 import org.psywerx.car.D;
 import org.psywerx.car.GalaxyCarActivity;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
@@ -26,8 +24,6 @@ public class BtHelper implements Runnable{
 
 	private Context mContext = null;
 	private BluetoothChatService mBluetoothService = null;
-    //private BluetoothHandler mHandler = null;
-	private String mLastData = null;
 	
 	private boolean dataLock = false;
 	private boolean run = true;
@@ -55,10 +51,7 @@ public class BtHelper implements Runnable{
 					}
 					break;
 				case MESSAGE_WRITE:
-					byte[] writeBuf = (byte[]) msg.obj;
-					// construct a string from the buffer
-					String writeMessage = new String(writeBuf);
-					D.dbgv("Me:  " + writeMessage);
+					D.dbgv("Me:  " + new String((byte[]) msg.obj));
 					break;
 				case MESSAGE_READ:
 					byte[] readBuf = (byte[]) msg.obj;
