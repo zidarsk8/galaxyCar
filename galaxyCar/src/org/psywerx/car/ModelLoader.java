@@ -25,6 +25,7 @@ public class ModelLoader{
 		// TODO: go over all the .csv files in assets and generate models on based on csv file name
 		this.ctx = ctx;
 		models.put("car", InitModel("car"));
+		models.put("cesta", InitModel("cesta"));
 	}
 	public Model GetModel(String model){
 		return models.get(model);
