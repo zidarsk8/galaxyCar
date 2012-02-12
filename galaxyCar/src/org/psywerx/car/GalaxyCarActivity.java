@@ -37,13 +37,10 @@ public class GalaxyCarActivity extends Activity {
 	private static final int REQUEST_CONNECT_DEVICE = 2;
 	private static final int REQUEST_ENABLE_BT = 3;
 
-	// Key names received from the BluetoothChatService Handler
-	public static final String DEVICE_NAME = "device_name";
-
+    public static final String DEVICE_NAME = "device_name";
+    
 	private BluetoothAdapter mBluetoothAdapter;
-	private BluetoothChatService mChatService = null;
 
-	private BluetoothHandler mHandler = null;
 	private GLSurfaceView mGlView;
 	private WakeLock mWakeLock;
 	private BtHelper mBtHelper;
@@ -72,11 +69,9 @@ public class GalaxyCarActivity extends Activity {
 					.getAssets(), new ModelLoader(this)));
 			mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 		}
-
-		mHandler = new BluetoothHandler(getApplicationContext());
-
-		Button b = (Button) findViewById(R.id.bluetoothButton);
-		b.setOnClickListener(new View.OnClickListener() {
+    	
+        Button b = (Button) findViewById(R.id.bluetoothButton);
+        b.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				enableBluetooth();
 			}
@@ -85,24 +80,12 @@ public class GalaxyCarActivity extends Activity {
 		Button startButton = (Button) findViewById(R.id.startButton);
 		startButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				sendStart();
+				mBtHelper.sendStart();
 			}
 		});
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-		// Initialize the BluetoothChatService to perform bluetooth connections
-		mChatService = new BluetoothChatService(getApplicationContext(),
-				mHandler);
-
-		mBtHelper = new BtHelper(mChatService);
-	}
-
-	private boolean sendStart() {
-		D.dbgv("sending start signal");
-		if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED)
-			return false;
-		mChatService.write("start".getBytes());
-		return true;
+		mBtHelper = new BtHelper(getApplicationContext());
 	}
 
 	private void enableBluetooth() {
@@ -126,29 +109,27 @@ public class GalaxyCarActivity extends Activity {
 		D.dbgv("on result from : " + requestCode + "   resultCode "
 				+ resultCode);
 		switch (requestCode) {
-		case REQUEST_CONNECT_DEVICE:
-			if (resultCode == Activity.RESULT_OK) {
-				String address = data.getExtras().getString(
-						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				BluetoothDevice device = mBluetoothAdapter
-						.getRemoteDevice(address);
-				mChatService.connect(device, false);
-				new Thread(mBtHelper).start();
-			}
-			break;
-		case REQUEST_ENABLE_BT:
-			// When the request to enable Bluetooth returns
-			if (resultCode == Activity.RESULT_OK) {
-				// Bluetooth is now enabled, so set up a chat session
-				enableBluetooth();
-			} else {
-				// User did not enable Bluetooth or an error occurred
-				// Toast.makeText(getApplicationContext(),
-				// R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
-			}
-			break;
-		default:
-			super.onActivityResult(requestCode, resultCode, data);
+			case REQUEST_CONNECT_DEVICE:
+				if (resultCode == Activity.RESULT_OK) {
+					String address = data.getExtras()
+							.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+					BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+					mBtHelper.connect(device, false);
+					new Thread(mBtHelper).start();
+				}
+				break;
+			case REQUEST_ENABLE_BT:
+				// When the request to enable Bluetooth returns
+				if (resultCode == Activity.RESULT_OK) {
+					// Bluetooth is now enabled, so set up a chat session
+					enableBluetooth();
+				} else {
+					// User did not enable Bluetooth or an error occurred
+					//Toast.makeText(getApplicationContext(), R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
+				}
+				break;
+			default: 
+				super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -205,4 +186,5 @@ public class GalaxyCarActivity extends Activity {
 		    ((GraphicalView) mChartView).repaint(); 
 		  } 
 	}
+
 }
