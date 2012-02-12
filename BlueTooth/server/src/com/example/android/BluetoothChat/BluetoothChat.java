@@ -25,7 +25,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -124,7 +123,7 @@ public class BluetoothChat extends Activity {
         			while (true){
         				mCurrentLine = br.readLine();
         				Log.v("Thread read line:", mCurrentLine);
-        				Thread.sleep(1000);
+        				Thread.sleep(300);
         			}
         		} catch (InterruptedException e) {
     				Log.e("Thread read:", e.toString());
