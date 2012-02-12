@@ -3,6 +3,7 @@
 
     <string name="hello">Hello World, ActTestActivity!</string>
     <string name="bluetoothButton">Connect to device</string>
+    <string name="startButton">Start</string>
     <string name="app_name">ActTest</string>
     <string name="sub">SubAct</string>
     
