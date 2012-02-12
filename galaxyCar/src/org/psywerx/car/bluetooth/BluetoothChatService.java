@@ -41,8 +41,6 @@ import android.os.Handler;
  * thread for performing data transmissions when connected.
  */
 public class BluetoothChatService {
-    // Debugging
-    private static final String TAG = "BluetoothChatService";
 
     // Name for the SDP record when creating server socket
     private static final String NAME_SECURE = "ActTestActivitySecure";
