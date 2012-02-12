@@ -1,6 +1,7 @@
 package org.psywerx.car.bluetooth;
 
 import java.lang.Runnable;
+import java.util.ArrayList;
 
 import org.psywerx.car.D;
 import org.psywerx.car.GalaxyCarActivity;
@@ -21,12 +22,12 @@ public class BtHelper implements Runnable{
 	public static final int MESSAGE_TOAST = 5;
     public static final String TOAST = "toast";
 
-
 	private Context mContext = null;
 	private BluetoothChatService mBluetoothService = null;
 	
 	private boolean dataLock = false;
 	private boolean run = true;
+	private ArrayList<float[]> history = null;
 	
 
 	private final Handler mHandler = new Handler(){
@@ -54,10 +55,7 @@ public class BtHelper implements Runnable{
 					D.dbgv("Me:  " + new String((byte[]) msg.obj));
 					break;
 				case MESSAGE_READ:
-					byte[] readBuf = (byte[]) msg.obj;
-					// construct a string from the valid bytes in the buffer
-					String readMessage = new String(readBuf, 0, msg.arg1);
-					D.dbgv(mConnectedDeviceName+":  " + readMessage);
+					recieveData(new String((byte[]) msg.obj));
 					break;
 				case MESSAGE_DEVICE_NAME:
 					// save the connected device's name
@@ -87,6 +85,7 @@ public class BtHelper implements Runnable{
 	public BtHelper(Context ctx){
 		mContext = ctx;
 		mBluetoothService = new BluetoothChatService(ctx, mHandler);
+		history = new ArrayList<float[]>();
 	}
 
 	public void connect(BluetoothDevice device, boolean secure){
@@ -108,8 +107,25 @@ public class BtHelper implements Runnable{
 	}
 	
 	public synchronized void sendData(){
-		if (!dataLock && mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED)
-			mBluetoothService.write("podatki".getBytes());
+		if (!dataLock && mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED){
+			dataLock = true;
+			mBluetoothService.write("podatki".getBytes());			
+		}
+	}
+	public synchronized void recieveData(String data){
+		D.dbgv(data);
+		String[] arr = data.split(",");
+		if (arr.length !=5){
+			D.dbge("wrong data set");
+			return;
+		}
+		int len = arr.length;
+		float[] cur = new float[len];
+		for (int i = 0; i < len; i++){
+			cur[i] = Float.parseFloat(arr[i]);
+		}
+		history.add(cur);
+		
 	}
 
 	public BluetoothChatService getChatService(){
