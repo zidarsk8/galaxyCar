@@ -3,6 +3,8 @@ package org.psywerx.car;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import org.psywerx.car.bluetooth.BtHelper;
+
 import android.content.res.AssetManager;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
@@ -17,9 +19,11 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
     float[] LightPosition=	    { 0.0f, 0.0f, 2.0f, 1.0f };
 
 	private Car car;
+	private BtHelper mBtHelper;
 
-	public CarSurfaceViewRenderer(AssetManager asm, ModelLoader m) {
+	public CarSurfaceViewRenderer(AssetManager asm, ModelLoader m, BtHelper b) {
 		mModelLoader= m;
+		mBtHelper = b;
 	}
 
 	public void onDrawFrame(GL10 gl) {
@@ -88,8 +92,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private void initShapes() {
 		
-		car = new Car();
-		car.init(mModelLoader);
+		car = new Car(mModelLoader, mBtHelper);
 
 	}
 

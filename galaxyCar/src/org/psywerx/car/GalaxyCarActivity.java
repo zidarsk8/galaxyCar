@@ -59,12 +59,15 @@ public class GalaxyCarActivity extends Activity {
 	}
 
 	private void init() {
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+		mBtHelper = new BtHelper(getApplicationContext());
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
 		if (mGlView != null) {
 			mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 			mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 			mGlView.setRenderer(new CarSurfaceViewRenderer(getResources()
-					.getAssets(), new ModelLoader(this)));
+					.getAssets(), new ModelLoader(this), mBtHelper));
 			mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 		}
     	
@@ -89,9 +92,6 @@ public class GalaxyCarActivity extends Activity {
 				}
 			}
 		});
-		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-		mBtHelper = new BtHelper(getApplicationContext());
 	}
 
 	private void enableBluetooth() {
