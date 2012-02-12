@@ -32,6 +32,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
+import android.os.Handler;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -55,7 +56,7 @@ public class BluetoothChatService {
 
     // Member fields
     private final BluetoothAdapter mAdapter;
-    private final BluetoothHandler mHandler;
+    private final Handler mHandler;
     private AcceptThread mSecureAcceptThread;
     private AcceptThread mInsecureAcceptThread;
     private ConnectThread mConnectThread;
@@ -73,7 +74,7 @@ public class BluetoothChatService {
      * @param context  The UI Activity Context
      * @param handler  A Handler to send messages back to the UI Activity
      */
-    public BluetoothChatService(Context context, BluetoothHandler handler) {
+    public BluetoothChatService(Context context, Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mHandler = handler;
@@ -89,7 +90,7 @@ public class BluetoothChatService {
         mState = state;
 
         // Give the new state to the Handler so the UI Activity can update
-        mHandler.obtainMessage(BluetoothHandler.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+        mHandler.obtainMessage(BtHelper.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
 
     /**
@@ -175,7 +176,7 @@ public class BluetoothChatService {
         mConnectedThread.start();
 
         // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(BluetoothHandler.MESSAGE_DEVICE_NAME);
+        Message msg = mHandler.obtainMessage(BtHelper.MESSAGE_DEVICE_NAME);
         Bundle bundle = new Bundle();
         bundle.putString(GalaxyCarActivity.DEVICE_NAME, device.getName());
         msg.setData(bundle);
@@ -234,9 +235,9 @@ public class BluetoothChatService {
      */
     private void connectionFailed() {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(BluetoothHandler.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(BtHelper.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(BluetoothHandler.TOAST, "Unable to connect device");
+        bundle.putString(BtHelper.TOAST, "Unable to connect device");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -249,9 +250,9 @@ public class BluetoothChatService {
      */
     private void connectionLost() {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(BluetoothHandler.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(BtHelper.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(BluetoothHandler.TOAST, "Device connection was lost");
+        bundle.putString(BtHelper.TOAST, "Device connection was lost");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -457,7 +458,7 @@ public class BluetoothChatService {
                     bytes = mmInStream.read(buffer);
 
                     // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(BluetoothHandler.MESSAGE_READ, bytes, -1, buffer)
+                    mHandler.obtainMessage(BtHelper.MESSAGE_READ, bytes, -1, buffer)
                             .sendToTarget();
                 } catch (IOException e) {
                     D.dbge( "disconnected", e);
@@ -478,7 +479,7 @@ public class BluetoothChatService {
                 mmOutStream.write(buffer);
 
                 // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(BluetoothHandler.MESSAGE_WRITE, -1, -1, buffer)
+                mHandler.obtainMessage(BtHelper.MESSAGE_WRITE, -1, -1, buffer)
                         .sendToTarget();
             } catch (IOException e) {
                 D.dbge( "Exception during write", e);
