@@ -27,16 +27,22 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		gl.glLoadIdentity();
 		gl.glEnable(GL10.GL_COLOR_MATERIAL);
 		gl.glEnable(GL10.GL_LIGHTING);
-		gl.glTranslatef(0.0f, 0f, -9.0f);
 		
-		gl.glRotatef(rot , 1.0f, 1.0f, 1.0f);
+		GLU.gluLookAt(gl, 0f, 5f, 10, 0, 0, 0, 0, 1, 0);
+		
+		Model cesta = mModelLoader.GetModel("cesta");
+		cesta.draw(gl);
+		
+		
+//		gl.glRotatef(rot , 1.0f, 1.0f, 1.0f);
 		// Set the face rotation
 		gl.glFrontFace(GL10.GL_CW);
-		rot += 0.8f;
+		rot += 0.5f;
 		// Point to our buffers
 		
 		// Enable the vertex and color state
-
+		float[] p = new float[]{0f, 0f, rot/10};
+		car.pos = p;
 		car.draw(gl);
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
