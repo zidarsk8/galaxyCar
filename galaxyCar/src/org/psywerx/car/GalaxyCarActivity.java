@@ -78,7 +78,15 @@ public class GalaxyCarActivity extends Activity {
 		Button startButton = (Button) findViewById(R.id.startButton);
 		startButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				mBtHelper.sendStart();
+				//mBtHelper.sendStart();
+				float[][] podatki = mBtHelper.getUnreadData();
+				for (float[] f : podatki){
+					String s = "";
+					for (float g : f){
+						s+=g+",";
+					}
+					D.dbgv(s);
+				}
 			}
 		});
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 public class BtHelper implements Runnable{
 	
-	private static final int TIMEOUT = 1000;
+	private static final int TIMEOUT = 300;
 	public static final int MESSAGE_STATE_CHANGE = 1;
 	public static final int MESSAGE_READ = 2;
 	public static final int MESSAGE_WRITE = 3;
@@ -25,10 +25,11 @@ public class BtHelper implements Runnable{
 	private Context mContext = null;
 	private BluetoothChatService mBluetoothService = null;
 	
+	
 	private boolean dataLock = false;
 	private boolean run = true;
-	private ArrayList<float[]> history = null;
-	
+	private ArrayList<float[]> mHistory = null;
+	private int mReadIndex;
 
 	private final Handler mHandler = new Handler(){
 
@@ -42,7 +43,6 @@ public class BtHelper implements Runnable{
 				case MESSAGE_STATE_CHANGE:
 					switch (msg.arg1) {
 						case BluetoothChatService.STATE_CONNECTED:
-							//TODO: initialize history array
 							break;
 						case BluetoothChatService.STATE_CONNECTING:
 							break;
@@ -85,7 +85,8 @@ public class BtHelper implements Runnable{
 	public BtHelper(Context ctx){
 		mContext = ctx;
 		mBluetoothService = new BluetoothChatService(ctx, mHandler);
-		history = new ArrayList<float[]>();
+		mHistory = new ArrayList<float[]>();
+		mReadIndex = 0;
 	}
 
 	public void connect(BluetoothDevice device, boolean secure){
@@ -113,9 +114,10 @@ public class BtHelper implements Runnable{
 		}
 	}
 	public synchronized void recieveData(String data){
+		data = System.nanoTime()+","+data;
 		D.dbgv(data);
 		String[] arr = data.split(",");
-		if (arr.length !=5){
+		if (arr.length != 6 ){
 			D.dbge("wrong data set");
 			return;
 		}
@@ -124,8 +126,22 @@ public class BtHelper implements Runnable{
 		for (int i = 0; i < len; i++){
 			cur[i] = Float.parseFloat(arr[i]);
 		}
-		history.add(cur);
-		
+		mHistory.add(cur);
+		dataLock = false;
+	}
+	
+	public synchronized float[][] getUnreadData(){
+		int histSize = mHistory.size();
+		float[][] data = new float[histSize-mReadIndex][5];
+		for (int i = 0; i < histSize-mReadIndex; i++ ){
+			data[i]= mHistory.get(mReadIndex+i);
+		}
+		mReadIndex = histSize-1;
+		return data;
+	}
+	
+	public synchronized float[] getLastData(){
+		return mHistory.get(mHistory.size()-1);
 	}
 
 	public BluetoothChatService getChatService(){
