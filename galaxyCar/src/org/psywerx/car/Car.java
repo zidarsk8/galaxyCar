@@ -4,20 +4,24 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class Car implements Drawable{
 	
-	public float[] pos = {0f, 0f, 0f};
-	public float[] rot = {0f, 0f, 0f};
+
 	ModelLoader models;
+	private float rot;
 	
 	
 	
 	public void draw(GL10 gl) {
 		Model car = models.GetModel("car");
-		gl.glTranslatef(pos[0], pos[1], pos[2]);
+		rot -= 0.005f;
+		car.rotate(gl, rot, 0f, 1f, 0f);
+		//car.move(gl, 0, 0, 0.01f);
 		car.draw(gl);
 	}
 
 	public void init(ModelLoader m) {
 		models = m;
 	}
+
+
 
 }

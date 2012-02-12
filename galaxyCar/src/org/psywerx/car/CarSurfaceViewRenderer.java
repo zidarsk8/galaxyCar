@@ -41,8 +41,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		// Point to our buffers
 		
 		// Enable the vertex and color state
-		float[] p = new float[]{0f, 0f, rot/10};
-		car.pos = p;
+		
 		car.draw(gl);
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);

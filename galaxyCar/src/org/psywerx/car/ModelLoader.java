@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -63,8 +64,8 @@ public class ModelLoader{
 			}
 			
 			
-			m.vertexBuffer = InitBuffer(model, "v");
-			m.normalBuffer = InitBuffer(model, "n");
+			m.vertexBuffer = InitBuffer(model, "v", m);
+			m.normalBuffer = InitBuffer(model, "n", m);
 			
 		}catch(Exception e){
 			D.dbge(e.toString());
@@ -73,7 +74,7 @@ public class ModelLoader{
 	}
 
 
-	private FloatBuffer[] InitBuffer(String model, String type) throws NumberFormatException, IOException {
+	private FloatBuffer[] InitBuffer(String model, String type, Model m) throws NumberFormatException, IOException {
 		
 		InputStreamReader src = new InputStreamReader(ctx.getAssets().open(model+"."+type+".csv",AssetManager.ACCESS_STREAMING));
 		BufferedReader brc = new BufferedReader(src);
@@ -83,6 +84,8 @@ public class ModelLoader{
 		FloatBuffer[] vertexBuffer = new FloatBuffer[lineCount];
 		int i = 0;
 		
+		float x = 0,y = 0,z = 0;
+		
 		
 		while((line = brc.readLine()) != null){
 			String[] modString = line.split(",");
@@ -91,6 +94,7 @@ public class ModelLoader{
 			for (String a : modString){
 				buff[j++] = Float.parseFloat(a);
 			}
+			x += buff[0]; y += buff[1]; z += buff[2];
 			ByteBuffer vbb = ByteBuffer.allocateDirect(
 					// (# of coordinate values * 4 bytes per float)
 					buff.length * 4);
@@ -103,7 +107,9 @@ public class ModelLoader{
 			// set the buffer to read the first coordinate
 			vertexBuffer[i].position(0); 
 			i++;
-			
+		}
+		if(type == "v"){
+			m.center = new float[]{x/i, y/i, z/i};
 		}
 		return vertexBuffer;
 
