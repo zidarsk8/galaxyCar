@@ -55,7 +55,7 @@ public class BtHelper implements Runnable{
 					D.dbgv("Me:  " + new String((byte[]) msg.obj));
 					break;
 				case MESSAGE_READ:
-					recieveData(new String((byte[]) msg.obj));
+					recieveData(new String((byte[]) msg.obj, 0, msg.arg1));
 					break;
 				case MESSAGE_DEVICE_NAME:
 					// save the connected device's name
