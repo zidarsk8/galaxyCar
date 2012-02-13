@@ -1,5 +1,9 @@
 package org.psywerx.car;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -14,13 +18,14 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	private ModelLoader mModelLoader;
 	private float rot = 0.0f;
 
-	float[] LightAmbient = { 0.1f, 0.1f, 0.1f, 1.0f };
+	float[] LightAmbient = { 0.8f, 0.8f, 0.8f, 1.0f };
 	float[] LightDiffuse = { 0.9f, 0.9f, 0.9f, 1.0f };
 	float[] LightPosition = { 0.0f, 0.0f, 2.0f, 1.0f };
 
 	private Car car;
 	private BtHelper mBtHelper;
 	private Model cesta;
+	private Camera camera;
 
 	public CarSurfaceViewRenderer(AssetManager asm, ModelLoader m, BtHelper b) {
 		mModelLoader = m;
@@ -29,18 +34,14 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	public void onDrawFrame(GL10 gl) {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-		gl.glLoadIdentity();
 		
-		//gl.glRotatef(car.pitch, 1, 0, 0);
-		//gl.glRotatef(car.yaw, 0, 1, 0);
-		//gl.glTranslatef(0, -2f, 0);
-		GLU.gluLookAt(gl, 0f, 5f, 10, 0, 0, 0, 0, 1, 0);
+		gl.glLoadIdentity();
+		camera.setView(gl);
+		camera.set(-car.x, -4, -car.z-12f);
+		//GLU.gluLookAt(gl, 0f, 5f, 10, 0, 0, 0, 0, 1, 0);
 		
 		gl.glEnable(GL10.GL_COLOR_MATERIAL);
 		gl.glEnable(GL10.GL_LIGHTING);
-
-		
-		
 		
 		car.draw(gl);
 		cesta.draw(gl);
@@ -89,8 +90,8 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	}
 
 	private void initShapes() {
-
-		car = new Car(mModelLoader, mBtHelper);
+		camera = new Camera();
+		car = new Car(mModelLoader, mBtHelper, camera);
 		cesta = mModelLoader.GetModel("cesta");
 
 	}
