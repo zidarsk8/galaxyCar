@@ -126,6 +126,8 @@ public class BtHelper implements Runnable{
 		for (int i = 0; i < len; i++){
 			cur[i] = Float.parseFloat(arr[i]);
 		}
+		// Correct the wheels value:
+		cur[5] -= 5f;
 		mHistory.add(cur);
 		dataLock = false;
 	}

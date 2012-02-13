@@ -9,7 +9,6 @@ public class Model {
 
 	public FloatBuffer vertexBuffer[];
 	public FloatBuffer normalBuffer[];
-	private float[] pos = {0f, 0f, 0f};
 	protected float[] center = {0f, 0f, 0f};
 	private float angle = 0;
 	public float colors[][];
@@ -19,7 +18,6 @@ public class Model {
 	
 	public void draw(GL10 gl) {
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glTranslatef(pos[0], pos[1], pos[2]);
 		
 		for (int i=0; i<vertexBuffer.length;i++) {
 			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
@@ -32,17 +30,12 @@ public class Model {
 		}
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 	}
-	public void rotate(GL10 gl, float angle, float x, float y, float z){
+	public void rotate(GL10 gl, float pitch, float yaw, float skew){
 		gl.glTranslatef(center[0], center[1], center[2]);
-		this.angle += angle;
-		gl.glRotatef(this.angle, x, y, z);
+		gl.glRotatef(-pitch, 1, 0, 0);
+		gl.glRotatef(-yaw, 0, 1, 0);
+		gl.glRotatef(-skew, 0, 0, 1);
 		gl.glTranslatef(-center[0], -center[1], -center[2]);
-		
 	}
-	public void move(GL10 gl, float x, float y, float z){
-		pos[0]+=x; 
-		pos[1]+=y;
-		pos[2]+=z;
-		gl.glTranslatef(pos[0], pos[1], pos[2]);
-	}
+
 }

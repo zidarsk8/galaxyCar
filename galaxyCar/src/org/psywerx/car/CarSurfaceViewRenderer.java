@@ -13,40 +13,38 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private ModelLoader mModelLoader;
 	private float rot = 0.0f;
-	
-    float[] LightAmbient=		{ 0.1f, 0.1f, 0.1f, 1.0f };
-    float[] LightDiffuse=		{ 0.9f, 0.9f, 0.9f, 1.0f };
-    float[] LightPosition=	    { 0.0f, 0.0f, 2.0f, 1.0f };
+
+	float[] LightAmbient = { 0.1f, 0.1f, 0.1f, 1.0f };
+	float[] LightDiffuse = { 0.9f, 0.9f, 0.9f, 1.0f };
+	float[] LightPosition = { 0.0f, 0.0f, 2.0f, 1.0f };
 
 	private Car car;
 	private BtHelper mBtHelper;
+	private Model cesta;
 
 	public CarSurfaceViewRenderer(AssetManager asm, ModelLoader m, BtHelper b) {
-		mModelLoader= m;
+		mModelLoader = m;
 		mBtHelper = b;
 	}
 
 	public void onDrawFrame(GL10 gl) {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
-		gl.glEnable(GL10.GL_COLOR_MATERIAL);
-		gl.glEnable(GL10.GL_LIGHTING);
 		
+		//gl.glRotatef(car.pitch, 1, 0, 0);
+		//gl.glRotatef(car.yaw, 0, 1, 0);
+		//gl.glTranslatef(0, -2f, 0);
 		GLU.gluLookAt(gl, 0f, 5f, 10, 0, 0, 0, 0, 1, 0);
 		
-		Model cesta = mModelLoader.GetModel("cesta");
-		cesta.draw(gl);
+		gl.glEnable(GL10.GL_COLOR_MATERIAL);
+		gl.glEnable(GL10.GL_LIGHTING);
+
 		
 		
-//		gl.glRotatef(rot , 1.0f, 1.0f, 1.0f);
-		// Set the face rotation
-		gl.glFrontFace(GL10.GL_CW);
-		rot += 0.5f;
-		// Point to our buffers
-		
-		// Enable the vertex and color state
 		
 		car.draw(gl);
+		cesta.draw(gl);
+
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
@@ -55,44 +53,45 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	}
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
-		if(height == 0) { 						//Prevent A Divide By Zero By
-			height = 1; 						//Making Height Equal One
+		if (height == 0) { // Prevent A Divide By Zero By
+			height = 1; // Making Height Equal One
 		}
 
-		gl.glViewport(0, 0, width, height); 	//Reset The Current Viewport
-		gl.glMatrixMode(GL10.GL_PROJECTION); 	//Select The Projection Matrix
-		gl.glLoadIdentity(); 					//Reset The Projection Matrix
+		gl.glViewport(0, 0, width, height); // Reset The Current Viewport
+		gl.glMatrixMode(GL10.GL_PROJECTION); // Select The Projection Matrix
+		gl.glLoadIdentity(); // Reset The Projection Matrix
 
-		//Calculate The Aspect Ratio Of The Window
-		GLU.gluPerspective(gl, 45.0f, (float)width / (float)height, 0.1f, 100.0f);
+		// Calculate The Aspect Ratio Of The Window
+		GLU.gluPerspective(gl, 45.0f, (float) width / (float) height, 0.1f,
+				100.0f);
 
-		gl.glMatrixMode(GL10.GL_MODELVIEW); 	//Select The Modelview Matrix
-		gl.glLoadIdentity(); 					//Reset The Modelview Matrix
+		gl.glMatrixMode(GL10.GL_MODELVIEW); // Select The Modelview Matrix
+		gl.glLoadIdentity(); // Reset The Modelview Matrix
 
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig arg1) {
-		gl.glShadeModel(GL10.GL_SMOOTH); 			//Enable Smooth Shading
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f); 	//Black Background
-		gl.glClearDepthf(1.0f); 					//Depth Buffer Setup
-		gl.glEnable(GL10.GL_DEPTH_TEST); 			//Enables Depth Testing
-		gl.glDepthFunc(GL10.GL_LEQUAL); 			//The Type Of Depth Testing To Do
-		
-		//Really Nice Perspective Calculations
-		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST); 
-		
-        gl.glLightfv(GL10.GL_LIGHT1, GL10.GL_AMBIENT, LightAmbient, 0);		// Setup The Ambient Light
-        gl.glLightfv(GL10.GL_LIGHT1, GL10.GL_DIFFUSE, LightDiffuse, 0);		// Setup The Diffuse Light
-        gl.glLightfv(GL10.GL_LIGHT1, GL10.GL_POSITION,LightPosition, 0);	// Position The Light
-        gl.glEnable(GL10.GL_LIGHT1);								// Enable Light One
-		
+		gl.glShadeModel(GL10.GL_SMOOTH); // Enable Smooth Shading
+		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f); // Black Background
+		gl.glClearDepthf(1.0f); // Depth Buffer Setup
+		gl.glEnable(GL10.GL_DEPTH_TEST); // Enables Depth Testing
+		gl.glDepthFunc(GL10.GL_LEQUAL); // The Type Of Depth Testing To Do
+
+		// Really Nice Perspective Calculations
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+
+		gl.glLightfv(GL10.GL_LIGHT1, GL10.GL_AMBIENT, LightAmbient, 0);
+		gl.glLightfv(GL10.GL_LIGHT1, GL10.GL_DIFFUSE, LightDiffuse, 0);
+		gl.glLightfv(GL10.GL_LIGHT1, GL10.GL_POSITION, LightPosition, 0);
+		gl.glEnable(GL10.GL_LIGHT1); // Enable Light One
 
 		initShapes();
 	}
 
 	private void initShapes() {
-		
+
 		car = new Car(mModelLoader, mBtHelper);
+		cesta = mModelLoader.GetModel("cesta");
 
 	}
 
