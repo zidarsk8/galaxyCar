@@ -8,10 +8,12 @@
         android:id="@+id/imageView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:contentDescription="@string/image"
         android:scaleType="fitXY"
-        android:src="@drawable/sketch2" >
+        android:src="@drawable/alubg" >
     </ImageView>
 
+    <!--
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -32,14 +34,6 @@
                 android:layout_height="394dp"
                 android:orientation="horizontal" />
 
-            <android.opengl.GLSurfaceView
-                android:id="@+id/glSurface"
-                android:layout_marginTop="43dp"
-                android:layout_marginBottom="43dp"
-                android:layout_marginLeft="55dp"
-                android:layout_width="685dp"
-                android:layout_height="392dp"
-                />
         </LinearLayout>
 
         <LinearLayout
@@ -72,7 +66,7 @@
                 android:layout_marginLeft="55dp"
                 android:layout_width="185dp"
                 android:layout_height="92dp"
-                android:text="TextView" />
+                android:text="@string/app_name" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -82,16 +76,60 @@
                 android:layout_width="185dp"
                 android:layout_height="92dp"
                 android:layout_gravity="top"
-                android:text="Large Text"
+                android:text="@string/app_name"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Medium Text"
+                android:text="@string/app_name"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
+            
     </LinearLayout>
+    -->
+    
+    
+            <LinearLayout
+                android:id="@+id/chart"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_width="400dp"
+                android:layout_height="400dp"
+                android:background="@android:color/black"
+                android:orientation="horizontal" />
+    
+            <android.opengl.GLSurfaceView
+                android:id="@+id/glSurface"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="480dp"
+                android:layout_width="750dp"
+                android:layout_height="400dp" />
 
+            <ToggleButton
+                android:id="@+id/bluetoothButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="620dp"
+                android:layout_marginLeft="10dp"
+                android:textOff=""
+				android:textOn=""
+        		android:background="@drawable/bluetooth_button" />
+            <ToggleButton
+                android:id="@+id/powerButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="540dp"
+                android:layout_marginLeft="150dp"
+                android:textOff="Start"
+				android:textOn="Stop"
+        		android:background="@drawable/power_button" />
+            <org.psywerx.car.StevecView 
+                android:id="@+id/stevec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="480dp"
+                android:layout_marginLeft="880dp" />
+            
 </RelativeLayout>

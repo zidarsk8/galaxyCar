@@ -1,8 +1,10 @@
 package org.psywerx.car;
 
+
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.AttributeSet;
 import android.view.View;
 
 public class StevecView extends View {
@@ -24,7 +26,13 @@ public class StevecView extends View {
 	public StevecView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
-	}
+	} 
+	
+	public StevecView(Context context, AttributeSet attrs){
+        super(context, attrs);
+ 
+    }
+ 
 
 	@Override
 	protected void onDraw(Canvas canvas) {

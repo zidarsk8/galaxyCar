@@ -78,7 +78,7 @@ public class GalaxyCarActivity extends Activity {
 			}
 		});
 
-		Button startButton = (Button) findViewById(R.id.startButton);
+		Button startButton = (Button) findViewById(R.id.powerButton);
 		startButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				//mBtHelper.sendStart();

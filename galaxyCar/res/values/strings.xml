@@ -5,7 +5,7 @@
     <string name="bluetoothButton">Connect to device</string>
     <string name="startButton">Start</string>
     <string name="app_name">ActTest</string>
-    <string name="sub">SubAct</string>
+    <string name="image">Image</string>
     
     
     <!--  DeviceListActivity -->
