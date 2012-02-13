@@ -18,12 +18,11 @@ public class Car{
 	
 	public void update(){
 		float[] m = b.getLastData();
-//		x = camera.x;
-		//y = camera.y;
-//		z = -camera.z - 15;
 		m[5] = 5;
-//		z += -0.1f;
-		yaw += m[5]*0.03;
+		
+		// TODO: This sort of works for wheel turn 5, make it work better and for more values
+		
+		yaw += m[5]*0.0285;
 		skew += Math.log(m[5]);
 		if(skew > 1) skew = 1;
 		else if(skew < -1) skew = -1;
