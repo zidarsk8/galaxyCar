@@ -125,7 +125,8 @@
                 android:textOff="Start"
 				android:textOn="Stop"
         		android:background="@drawable/power_button" />
-            <org.psywerx.car.StevecView 
+            
+            <org.psywerx.car.view.StevecView
                 android:id="@+id/stevec"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

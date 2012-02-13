@@ -4,5 +4,7 @@
           android:state_pressed="true" />
     <item android:drawable="@drawable/bt_on"
           android:state_focused="true" />
-    <item android:drawable="@drawable/bt_off" />
+    <item android:state_checked="true"
+        android:drawable="@drawable/bt_on" /> <!-- pressed -->
+    <item android:drawable="@drawable/bt_off" /> <!-- default/unchecked -->
 </selector>

@@ -1,5 +1,7 @@
-package org.psywerx.car;
+package org.psywerx.car.view;
 
+
+import org.psywerx.car.R;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
