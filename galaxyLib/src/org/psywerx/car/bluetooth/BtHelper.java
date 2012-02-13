@@ -1,10 +1,8 @@
 package org.psywerx.car.bluetooth;
 
-import java.lang.Runnable;
 import java.util.ArrayList;
 
 import org.psywerx.car.D;
-import org.psywerx.car.GalaxyCarActivity;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -59,7 +57,7 @@ public class BtHelper implements Runnable{
 					break;
 				case MESSAGE_DEVICE_NAME:
 					// save the connected device's name
-					mConnectedDeviceName = msg.getData().getString(GalaxyCarActivity.DEVICE_NAME);
+					mConnectedDeviceName = msg.getData().getString("device_name");
 					Toast.makeText(mContext, "Connected to "
 							+ mConnectedDeviceName, Toast.LENGTH_SHORT).show();
 					break;

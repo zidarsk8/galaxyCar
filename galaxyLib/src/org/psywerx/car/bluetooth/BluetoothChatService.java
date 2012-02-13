@@ -21,9 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
-import org.psywerx.car.GalaxyCarActivity;
 import org.psywerx.car.D;
-
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -31,8 +29,8 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.os.Handler;
+import android.os.Message;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -176,7 +174,7 @@ public class BluetoothChatService {
         // Send the name of the connected device back to the UI Activity
         Message msg = mHandler.obtainMessage(BtHelper.MESSAGE_DEVICE_NAME);
         Bundle bundle = new Bundle();
-        bundle.putString(GalaxyCarActivity.DEVICE_NAME, device.getName());
+        bundle.putString("device_name", device.getName());
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -278,7 +276,7 @@ public class BluetoothChatService {
                     tmp = mAdapter.listenUsingRfcommWithServiceRecord(NAME_SECURE,
                         MY_UUID_SECURE);
                 } else {
-                    tmp = mAdapter.listenUsingInsecureRfcommWithServiceRecord(
+                    tmp = mAdapter.listenUsingRfcommWithServiceRecord(
                             NAME_INSECURE, MY_UUID_INSECURE);
                 }
             } catch (IOException e) {
@@ -365,7 +363,7 @@ public class BluetoothChatService {
                     tmp = device.createRfcommSocketToServiceRecord(
                             MY_UUID_SECURE);
                 } else {
-                    tmp = device.createInsecureRfcommSocketToServiceRecord(
+                    tmp = device.createRfcommSocketToServiceRecord(
                             MY_UUID_INSECURE);
                 }
             } catch (IOException e) {

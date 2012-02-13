@@ -12,7 +12,6 @@ import org.achartengine.renderer.XYSeriesRenderer;
 import org.psywerx.car.bluetooth.BtHelper;
 import org.psywerx.car.bluetooth.DeviceListActivity;
 
-import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -25,6 +24,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
