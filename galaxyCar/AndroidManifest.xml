@@ -27,7 +27,8 @@
         <activity
             android:name="org.psywerx.car.bluetooth.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/select_device" />
+            android:label="@string/select_device"
+            android:theme="@android:style/Theme.Dialog" />
     </application>
 
 </manifest>

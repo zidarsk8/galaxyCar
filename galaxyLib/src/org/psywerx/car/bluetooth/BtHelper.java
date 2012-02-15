@@ -78,6 +78,7 @@ public class BtHelper implements Runnable{
 		}catch(Exception e){
 			D.dbge("Bt helper running stuff ",e);
 		}
+		run = true;
 	}
 
 	public BtHelper(Context ctx){
@@ -91,8 +92,11 @@ public class BtHelper implements Runnable{
 		mBluetoothService.connect(device,secure);
 	}
 	
-	public void stopConnection(){
+	public void reset(){
 		run = false;
+		mHistory = new ArrayList<float[]>();
+		mReadIndex = 0;
+		mBluetoothService.stop();
 	}
 	
 	public synchronized void sendStart(){

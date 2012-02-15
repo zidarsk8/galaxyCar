@@ -25,9 +25,9 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class GalaxyCarActivity extends Activity {
 
@@ -43,6 +43,8 @@ public class GalaxyCarActivity extends Activity {
 	private WakeLock mWakeLock;
 	private BtHelper mBtHelper;
 	private Object mChartView;
+	private ToggleButton mBluetoothButton;
+	private ToggleButton mStartButton;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -71,15 +73,15 @@ public class GalaxyCarActivity extends Activity {
 			mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 		}
     	
-        Button b = (Button) findViewById(R.id.bluetoothButton);
-        b.setOnClickListener(new View.OnClickListener() {
+		mBluetoothButton = (ToggleButton) findViewById(R.id.bluetoothButton);
+		mBluetoothButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				enableBluetooth();
 			}
 		});
 
-		Button startButton = (Button) findViewById(R.id.powerButton);
-		startButton.setOnClickListener(new View.OnClickListener() {
+        mStartButton = (ToggleButton) findViewById(R.id.powerButton);
+		mStartButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				//mBtHelper.sendStart();
 				float[][] podatki = mBtHelper.getUnreadData();
@@ -95,18 +97,24 @@ public class GalaxyCarActivity extends Activity {
 	}
 
 	private void enableBluetooth() {
-		D.dbgv("starting bluetooth thingy");
-		if (mBluetoothAdapter == null) {
-			Toast.makeText(getApplicationContext(),
-					"Bluetooth is not available", Toast.LENGTH_LONG).show();
-		} else if (!mBluetoothAdapter.isEnabled()) {
-			Intent enableIntent = new Intent(
-					BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-		} else {
-			Intent serverIntent = new Intent(getApplicationContext(),
-					DeviceListActivity.class);
-			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+		if (mBluetoothButton.isChecked()){
+			D.dbgv("starting bluetooth thingy");
+			if (mBluetoothAdapter == null) {
+				Toast.makeText(getApplicationContext(),
+						"Bluetooth is not available", Toast.LENGTH_LONG).show();
+			} else if (!mBluetoothAdapter.isEnabled()) {
+				Intent enableIntent = new Intent(
+						BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+			} else {
+				Intent serverIntent = new Intent(getApplicationContext(),
+						DeviceListActivity.class);
+				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+			}
+		}else{
+			D.dbgv("turn off bluetoot");
+			mBtHelper.reset();
+			
 		}
 	}
 
