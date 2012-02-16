@@ -1,10 +1,9 @@
 package org.psywerx.car.view;
 
-import org.psywerx.car.D;
+import java.text.DecimalFormat;
+
 import org.psywerx.car.DataListener;
 import org.psywerx.car.R;
-
-import java.text.DecimalFormat;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -22,10 +21,13 @@ public class StevecView extends View implements DataListener{
 
 	private Paint mTextPaint = null;
 	private float mRotate = 0;
+	private float mSpeed = 0;
+	private float mAlpha = 0.3f;
 	private int mDistance = 0;
 
 	public boolean setSpeed(float speed) {
-		float temp = -30+2.3f*speed;
+		mSpeed = (1.0f-mAlpha)*mSpeed + mAlpha * speed;
+		float temp = -30+2.3f*mSpeed;
 		if (temp < MIN_ROTATE || temp > MAX_ROTATE)
 			return false;
 		this.mRotate = temp;
@@ -61,7 +63,7 @@ public class StevecView extends View implements DataListener{
 	}
 
 	public void updateData(float[] data) {
-		D.dbgv("updating stevec view with speed: "+data[3]);
+		//D.dbgv("updating stevec view with speed: "+data[3]);
 		setSpeed(data[3]);
 	}
 }

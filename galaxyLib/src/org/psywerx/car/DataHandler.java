@@ -10,13 +10,19 @@ public class DataHandler implements DataListener{
 	private float[] mLastData;
 	
 	private boolean mRunning;
-	private final Thread mUpdateViews = new Thread(){
+	private class UpdateViews implements Runnable{
 		public void run() {
-			mLastData[4] -= 5f; //
-			stevec.updateData(mLastData);
-			mRunning = false;
+			try {
+				mLastData[4] -= 5f; //
+				stevec.updateData(mLastData);
+			} catch (Exception e) {
+				D.dbge("updating views error", e);
+			} finally{
+				mRunning = false;
+			}
 		};
 	};
+	private final UpdateViews mUpdateViews = new UpdateViews();
 		
 	public DataHandler() {
 		mHistory = new ArrayList<float[]>();
@@ -31,7 +37,7 @@ public class DataHandler implements DataListener{
 		
 		if (!mRunning){
 			mRunning = true;
-			mUpdateViews.start();
+			new Thread(mUpdateViews).start();
 		}
 	}
 	
