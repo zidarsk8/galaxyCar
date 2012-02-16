@@ -73,7 +73,7 @@ public class D {
 	 */
 	public static void dbge(String m, Exception e){
 		if (!showDBGE) return;
-		Log.e(TAG," printig stack ");
+		Log.e(TAG,e.toString());
 		printStack(e);
 	}
 

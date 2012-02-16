@@ -11,6 +11,7 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 import org.psywerx.car.bluetooth.BtHelper;
 import org.psywerx.car.bluetooth.DeviceListActivity;
+import org.psywerx.car.view.StevecView;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -64,7 +65,10 @@ public class GalaxyCarActivity extends Activity {
 	private void init() {
 		mDataHandler = new DataHandler();
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
+		
+		StevecView sv = (StevecView) findViewById(R.id.stevec);
+		mDataHandler.setStevec(sv);
+		
 		mBtHelper = new BtHelper(getApplicationContext(),mDataHandler);
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
 		if (mGlView != null) {

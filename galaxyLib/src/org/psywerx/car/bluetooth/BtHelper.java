@@ -12,7 +12,7 @@ import android.widget.Toast;
 public class BtHelper implements Runnable{
 	
 	private static final long REQUEST_TIMEOUT = 100;
-	private static final int REQUEST_PERIOD = 35;
+	private static final int REQUEST_PERIOD = 350;
 	public static final int MESSAGE_STATE_CHANGE = 1;
 	public static final int MESSAGE_READ = 2;
 	public static final int MESSAGE_WRITE = 3;
@@ -134,7 +134,7 @@ public class BtHelper implements Runnable{
 			for (int i = 0; i < len; i++){
 				cur[i] = Float.parseFloat(arr[i]);
 			}
-			mDataListener.addData(cur);
+			mDataListener.updateData(cur);
 			
 		} catch (Exception e) {
 			D.dbge("error recieving data fro bluetooth",e);

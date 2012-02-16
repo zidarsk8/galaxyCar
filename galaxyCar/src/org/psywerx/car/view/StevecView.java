@@ -1,5 +1,7 @@
 package org.psywerx.car.view;
 
+import org.psywerx.car.D;
+import org.psywerx.car.DataListener;
 import org.psywerx.car.R;
 
 import java.text.DecimalFormat;
@@ -13,7 +15,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class StevecView extends View {
+public class StevecView extends View implements DataListener{
 	private final int MIN_ROTATE = -30;
 	private final int MAX_ROTATE = 180;
 	private final DecimalFormat FORMATTER = new DecimalFormat("0000");
@@ -56,5 +58,10 @@ public class StevecView extends View {
 		canvas.rotate(mRotate,130,129);
 		canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.cagr), 45, 124, null);
 		canvas.restore();
+	}
+
+	public void updateData(float[] data) {
+		D.dbgv("updating stevec view with speed: "+data[3]);
+		setSpeed(data[3]);
 	}
 }
