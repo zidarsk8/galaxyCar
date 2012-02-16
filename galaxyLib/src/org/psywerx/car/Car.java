@@ -1,27 +1,21 @@
 package org.psywerx.car;
 
-import java.util.Random;
-
 import javax.microedition.khronos.opengles.GL10;
-
-import org.psywerx.car.bluetooth.BtHelper;
 
 public class Car{
 	
 
 	ModelLoader models;
 	Camera camera;
-	private float rot;
-	private BtHelper b;
+	//private float rot;
 	float angle = 0;
 	private Model car;
 	protected float x = 0f,y = 0f,z = -10f;
 	protected float yaw = 180, pitch = 0, skew = 0;
 	private float alpha = 0;
-	private Random random;
 	
 	public void update(){
-		float[] m = b.getLastData();
+		float[] m = new float[6];
 		m[5] =10;
 		m[4] = 5;
 		
@@ -58,12 +52,10 @@ public class Car{
 		gl.glPopMatrix();
 	}
 
-	public Car(ModelLoader m, BtHelper md, Camera c) {
+	public Car(ModelLoader m, Camera c) {
 		models = m;
-		b = md;
 		car = models.GetModel("car");
 		camera = c;
-		random = new Random();
 	}
 
 

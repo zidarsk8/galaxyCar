@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import android.content.Context;

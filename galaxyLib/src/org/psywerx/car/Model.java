@@ -1,7 +1,6 @@
 package org.psywerx.car;
 
 import java.nio.FloatBuffer;
-import java.util.Arrays;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -10,10 +9,10 @@ public class Model {
 	public FloatBuffer vertexBuffer[];
 	public FloatBuffer normalBuffer[];
 	protected float[] center = {0f, 0f, 0f};
-	private float angle = 0;
+	//private float angle = 0;
 	public float colors[][];
 	public int count;
-	private float[] rot = {0f, 0f, 0f};
+	//private float[] rot = {0f, 0f, 0f};
 
 	
 	public void draw(GL10 gl) {

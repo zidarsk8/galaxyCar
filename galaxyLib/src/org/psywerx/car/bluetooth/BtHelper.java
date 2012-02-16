@@ -1,8 +1,7 @@
 package org.psywerx.car.bluetooth;
 
-import java.util.ArrayList;
-
 import org.psywerx.car.D;
+import org.psywerx.car.DataListener;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -12,7 +11,8 @@ import android.widget.Toast;
 
 public class BtHelper implements Runnable{
 	
-	private static final int TIMEOUT = 300;
+	private static final long REQUEST_TIMEOUT = 100;
+	private static final int REQUEST_PERIOD = 35;
 	public static final int MESSAGE_STATE_CHANGE = 1;
 	public static final int MESSAGE_READ = 2;
 	public static final int MESSAGE_WRITE = 3;
@@ -22,12 +22,11 @@ public class BtHelper implements Runnable{
 
 	private Context mContext = null;
 	private BluetoothChatService mBluetoothService = null;
-	
+	private DataListener mDataListener = null;
 	
 	private boolean dataLock = false;
+	private long dataTimout = 0;
 	private boolean run = true;
-	private ArrayList<float[]> mHistory = null;
-	private int mReadIndex;
 
 	private final Handler mHandler = new Handler(){
 
@@ -50,7 +49,7 @@ public class BtHelper implements Runnable{
 					}
 					break;
 				case MESSAGE_WRITE:
-					D.dbgv("Me:  " + new String((byte[]) msg.obj));
+					//D.dbgv("Me:  " + new String((byte[]) msg.obj));
 					break;
 				case MESSAGE_READ:
 					recieveData(new String((byte[]) msg.obj, 0, msg.arg1));
@@ -72,7 +71,7 @@ public class BtHelper implements Runnable{
 	public void run(){
 		try{
 		while (run){
-			Thread.sleep(TIMEOUT);
+			Thread.sleep(REQUEST_PERIOD);
 			sendData();
 		}
 		}catch(Exception e){
@@ -81,11 +80,10 @@ public class BtHelper implements Runnable{
 		run = true;
 	}
 
-	public BtHelper(Context ctx){
+	public BtHelper(Context ctx, DataListener dl){
 		mContext = ctx;
 		mBluetoothService = new BluetoothChatService(ctx, mHandler);
-		mHistory = new ArrayList<float[]>();
-		mReadIndex = 0;
+		mDataListener = dl;
 	}
 
 	public void connect(BluetoothDevice device, boolean secure){
@@ -94,8 +92,6 @@ public class BtHelper implements Runnable{
 	
 	public void reset(){
 		run = false;
-		mHistory = new ArrayList<float[]>();
-		mReadIndex = 0;
 		mBluetoothService.stop();
 	}
 	
@@ -112,44 +108,41 @@ public class BtHelper implements Runnable{
 	public synchronized void sendData(){
 		if (!dataLock && mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED){
 			dataLock = true;
-			mBluetoothService.write("podatki".getBytes());			
+			dataTimout = System.nanoTime();
+			mBluetoothService.write("podatki".getBytes());
+		}else{
+			if (System.nanoTime()-dataTimout > REQUEST_TIMEOUT ){
+				dataLock = false;
+			}
 		}
 	}
+	
+	/**
+	 * The function checks if the csv is correct and splits the csv string into a float array, which is passed to dataHandler
+	 * 
+	 * @param data csv string recieved from bluetooth (x,y,z,speed,turn)
+	 */
 	public synchronized void recieveData(String data){
-		data = System.nanoTime()+","+data;
-		D.dbgv(data);
-		String[] arr = data.split(",");
-		if (arr.length != 6 ){
-			D.dbge("wrong data set");
-			return;
+		try {
+			String[] arr = data.split(",");
+			if (arr.length != 5 ){
+				D.dbge("wrong data set");
+				return;
+			}
+			int len = arr.length;
+			float[] cur = new float[len];
+			for (int i = 0; i < len; i++){
+				cur[i] = Float.parseFloat(arr[i]);
+			}
+			mDataListener.addData(cur);
+			
+		} catch (Exception e) {
+			D.dbge("error recieving data fro bluetooth",e);
+		}finally{
+			dataLock = false;
 		}
-		int len = arr.length;
-		float[] cur = new float[len];
-		for (int i = 0; i < len; i++){
-			cur[i] = Float.parseFloat(arr[i]);
-		}
-		// Correct the wheels value:
-		cur[5] -= 5f;
-		mHistory.add(cur);
-		dataLock = false;
 	}
 	
-	public synchronized float[][] getUnreadData(){
-		int histSize = mHistory.size();
-		float[][] data = new float[histSize-mReadIndex][5];
-		for (int i = 0; i < histSize-mReadIndex; i++ ){
-			data[i]= mHistory.get(mReadIndex+i);
-		}
-		mReadIndex = histSize-1;
-		return data;
-	}
-	
-	public synchronized float[] getLastData(){
-		if(mHistory.isEmpty())
-			return new float[6];
-		return mHistory.get(mHistory.size()-1);
-	}
-
 	public BluetoothChatService getChatService(){
 		return mBluetoothService;
 	}

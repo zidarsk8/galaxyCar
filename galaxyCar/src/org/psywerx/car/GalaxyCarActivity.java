@@ -45,6 +45,7 @@ public class GalaxyCarActivity extends Activity {
 	private Object mChartView;
 	private ToggleButton mBluetoothButton;
 	private ToggleButton mStartButton;
+	private DataHandler mDataHandler;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -61,15 +62,16 @@ public class GalaxyCarActivity extends Activity {
 	}
 
 	private void init() {
+		mDataHandler = new DataHandler();
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-		mBtHelper = new BtHelper(getApplicationContext());
+		mBtHelper = new BtHelper(getApplicationContext(),mDataHandler);
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
 		if (mGlView != null) {
 			mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 			mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 			mGlView.setRenderer(new CarSurfaceViewRenderer(getResources()
-					.getAssets(), new ModelLoader(this), mBtHelper));
+					.getAssets(), new ModelLoader(this)));
 			mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 		}
     	
@@ -83,15 +85,7 @@ public class GalaxyCarActivity extends Activity {
         mStartButton = (ToggleButton) findViewById(R.id.powerButton);
 		mStartButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				//mBtHelper.sendStart();
-				float[][] podatki = mBtHelper.getUnreadData();
-				for (float[] f : podatki){
-					String s = "";
-					for (float g : f){
-						s+=g+",";
-					}
-					D.dbgv(s);
-				}
+				mBtHelper.sendStart();
 			}
 		});
 	}

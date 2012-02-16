@@ -1,13 +1,7 @@
 package org.psywerx.car;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
-import org.psywerx.car.bluetooth.BtHelper;
 
 import android.content.res.AssetManager;
 import android.opengl.GLSurfaceView;
@@ -16,20 +10,17 @@ import android.opengl.GLU;
 public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private ModelLoader mModelLoader;
-	private float rot = 0.0f;
-
+	
 	float[] LightAmbient = { 0.8f, 0.8f, 0.8f, 1.0f };
 	float[] LightDiffuse = { 0.9f, 0.9f, 0.9f, 1.0f };
 	float[] LightPosition = { 0.0f, 0.0f, 2.0f, 1.0f };
 
 	private Car car;
-	private BtHelper mBtHelper;
 	private Model cesta;
 	private Camera camera;
 
-	public CarSurfaceViewRenderer(AssetManager asm, ModelLoader m, BtHelper b) {
+	public CarSurfaceViewRenderer(AssetManager asm, ModelLoader m) {
 		mModelLoader = m;
-		mBtHelper = b;
 	}
 
 	public void onDrawFrame(GL10 gl) {
@@ -92,7 +83,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private void initShapes() {
 		camera = new Camera();
-		car = new Car(mModelLoader, mBtHelper, camera);
+		car = new Car(mModelLoader, camera);
 		cesta = mModelLoader.GetModel("cesta");
 
 	}
