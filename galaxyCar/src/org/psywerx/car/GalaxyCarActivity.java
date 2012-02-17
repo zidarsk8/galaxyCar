@@ -36,14 +36,14 @@ public class GalaxyCarActivity extends Activity {
 	private static final int REQUEST_CONNECT_DEVICE = 2;
 	private static final int REQUEST_ENABLE_BT = 3;
 
-    public static final String DEVICE_NAME = "device_name";
-    
+	public static final String DEVICE_NAME = "device_name";
+
 	private BluetoothAdapter mBluetoothAdapter;
 
 	private GLSurfaceView mGlView;
 	private WakeLock mWakeLock;
 	private BtHelper mBtHelper;
-	private Object mChartView;
+	private Charts mChartView;
 	private ToggleButton mBluetoothButton;
 	private ToggleButton mStartButton;
 	private DataHandler mDataHandler;
@@ -63,22 +63,29 @@ public class GalaxyCarActivity extends Activity {
 	}
 
 	private void init() {
+
+		LinearLayout layout = (LinearLayout)findViewById(R.id.chart); 
+		mChartView = (Charts) ChartFactory.getLineChartView(this, getDemoDataset(), getDemoRenderer());
+		layout.addView((View) mChartView, new LayoutParams		(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT)); 
+
 		mDataHandler = new DataHandler();
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		
+
 		StevecView sv = (StevecView) findViewById(R.id.stevec);
 		mDataHandler.setStevec(sv);
-		
+
 		mBtHelper = new BtHelper(getApplicationContext(),mDataHandler);
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
 		if (mGlView != null) {
+			CarSurfaceViewRenderer svr = new CarSurfaceViewRenderer(getResources()
+					.getAssets(), new ModelLoader(this));
 			mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 			mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-			mGlView.setRenderer(new CarSurfaceViewRenderer(getResources()
-					.getAssets(), new ModelLoader(this)));
+			mGlView.setRenderer(svr);
 			mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+			mDataHandler.setmCarListener(svr.getCar());
 		}
-    	
+
 		mBluetoothButton = (ToggleButton) findViewById(R.id.bluetoothButton);
 		mBluetoothButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -86,7 +93,7 @@ public class GalaxyCarActivity extends Activity {
 			}
 		});
 
-        mStartButton = (ToggleButton) findViewById(R.id.powerButton);
+		mStartButton = (ToggleButton) findViewById(R.id.powerButton);
 		mStartButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				mBtHelper.sendStart();
@@ -112,7 +119,7 @@ public class GalaxyCarActivity extends Activity {
 		}else{
 			D.dbgv("turn off bluetoot");
 			mBtHelper.reset();
-			
+
 		}
 	}
 
@@ -121,27 +128,27 @@ public class GalaxyCarActivity extends Activity {
 		D.dbgv("on result from : " + requestCode + "   resultCode "
 				+ resultCode);
 		switch (requestCode) {
-			case REQUEST_CONNECT_DEVICE:
-				if (resultCode == Activity.RESULT_OK) {
-					String address = data.getExtras()
-							.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-					BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-					mBtHelper.connect(device, false);
-					new Thread(mBtHelper).start();
-				}
-				break;
-			case REQUEST_ENABLE_BT:
-				// When the request to enable Bluetooth returns
-				if (resultCode == Activity.RESULT_OK) {
-					// Bluetooth is now enabled, so set up a chat session
-					enableBluetooth();
-				} else {
-					// User did not enable Bluetooth or an error occurred
-					//Toast.makeText(getApplicationContext(), R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
-				}
-				break;
-			default: 
-				super.onActivityResult(requestCode, resultCode, data);
+		case REQUEST_CONNECT_DEVICE:
+			if (resultCode == Activity.RESULT_OK) {
+				String address = data.getExtras()
+						.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+				BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+				mBtHelper.connect(device, false);
+				new Thread(mBtHelper).start();
+			}
+			break;
+		case REQUEST_ENABLE_BT:
+			// When the request to enable Bluetooth returns
+			if (resultCode == Activity.RESULT_OK) {
+				// Bluetooth is now enabled, so set up a chat session
+				enableBluetooth();
+			} else {
+				// User did not enable Bluetooth or an error occurred
+				//Toast.makeText(getApplicationContext(), R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
+			}
+			break;
+		default: 
+			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -189,14 +196,7 @@ public class GalaxyCarActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mChartView == null) { 
-		    LinearLayout layout = (LinearLayout)findViewById(R.id.chart); 
-		    mChartView = ChartFactory.getLineChartView(this, getDemoDataset(), 
-		getDemoRenderer()); 
-			layout.addView((View) mChartView, new LayoutParams		(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT)); 
-		  } else { 
-		    ((GraphicalView) mChartView).repaint(); 
-		  } 
+		((GraphicalView) mChartView).repaint(); 
 	}
 
 }

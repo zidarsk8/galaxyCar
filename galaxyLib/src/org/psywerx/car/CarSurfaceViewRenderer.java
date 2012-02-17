@@ -85,7 +85,9 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		camera = new Camera();
 		car = new Car(mModelLoader, camera);
 		cesta = mModelLoader.GetModel("cesta");
-
+	}
+	public Car getCar() {
+		return car;
 	}
 
 }

@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 public class DataHandler implements DataListener{
 	private int sillydebug = 0;
-	private DataListener stevec;
+	private DataListener mStevecListener;
+	private DataListener mCarListener;
+	private DataListener mGraphListener;
+	private DataListener mSteeringListener;
 	
 	private ArrayList<float[]> mHistory;
 	private float[] mLastData;
@@ -13,8 +16,23 @@ public class DataHandler implements DataListener{
 	private class UpdateViews implements Runnable{
 		public void run() {
 			try {
-				mLastData[4] -= 5f; //
-				stevec.updateData(mLastData);
+				mLastData[4] -= 5f; 
+				
+				// update speed gauge data if listener available
+				if (mStevecListener != null){
+					mStevecListener.updateData(mLastData);
+				}
+				
+				if (mCarListener != null){
+					mCarListener.updateData(mLastData);
+				}
+				if (mGraphListener != null){
+					mGraphListener.updateData(mLastData);
+				}
+				if (mSteeringListener != null){
+					mSteeringListener.updateData(mLastData);
+				}
+				
 			} catch (Exception e) {
 				D.dbge("updating views error", e);
 			} finally{
@@ -42,6 +60,12 @@ public class DataHandler implements DataListener{
 	}
 	
 	public void setStevec(DataListener stevec) {
-		this.stevec = stevec;
+		this.mStevecListener = stevec;
+	}
+	public void setmCarListener(DataListener mCarListener) {
+		this.mCarListener = mCarListener;
+	}
+	public void setmSteeringListener(DataListener mSteeringListener) {
+		this.mSteeringListener = mSteeringListener;
 	}
 }

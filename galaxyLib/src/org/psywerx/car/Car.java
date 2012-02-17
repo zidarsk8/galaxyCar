@@ -2,7 +2,7 @@ package org.psywerx.car;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class Car{
+public class Car implements DataListener{
 	
 
 	ModelLoader models;
@@ -56,6 +56,11 @@ public class Car{
 		models = m;
 		car = models.GetModel("car");
 		camera = c;
+	}
+
+	public void updateData(float[] data) {
+		// TODO Auto-generated method stub
+		
 	}
 
 
