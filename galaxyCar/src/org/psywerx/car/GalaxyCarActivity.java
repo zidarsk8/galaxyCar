@@ -27,8 +27,10 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -73,19 +75,21 @@ public class GalaxyCarActivity extends Activity {
 		mChartView = ChartFactory.getLineChartView(this, getDemoDataset(), getDemoRenderer());
 		layout.addView((View) mChartView, new LayoutParams		(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT)); 
 
-		
-		
+
+
 		mBtHelper = new BtHelper(getApplicationContext(),mDataHandler);
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
-		if (mGlView != null) {
-			CarSurfaceViewRenderer svr = new CarSurfaceViewRenderer(getResources()
-					.getAssets(), new ModelLoader(this));
-			mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
-			mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-			mGlView.setRenderer(svr);
-			mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-			mDataHandler.registerListener(svr.getCar());
+		if (mGlView == null){
+			//cant show stuff if you cant show stuff right :P
+			finish();
+			return;
 		}
+		CarSurfaceViewRenderer svr = new CarSurfaceViewRenderer(getResources()
+				.getAssets(), new ModelLoader(this));
+		mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+		mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+		mGlView.setRenderer(svr);
+		mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
 		mBluetoothButton = (ToggleButton) findViewById(R.id.bluetoothButton);
 		mBluetoothButton.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +104,9 @@ public class GalaxyCarActivity extends Activity {
 				mBtHelper.sendStart();
 			}
 		});
-		
+
 		//add data handlers to each view or class
+		mDataHandler.registerListener(svr.getCar());
 		mDataHandler.registerListener((StevecView) findViewById(R.id.stevec));
 		mDataHandler.registerListener((SteeringWheelView) findViewById(R.id.steeringWheel));
 		mDataHandler.registerListener((PospeskiView) findViewById(R.id.pospeski));
@@ -125,7 +130,6 @@ public class GalaxyCarActivity extends Activity {
 		}else{
 			D.dbgv("turn off bluetoot");
 			mBtHelper.reset();
-
 		}
 	}
 

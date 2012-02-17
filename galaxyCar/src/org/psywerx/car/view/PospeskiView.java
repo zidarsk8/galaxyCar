@@ -14,6 +14,7 @@ import android.view.View;
 
 public class PospeskiView extends View implements DataListener{
 
+	private final float SIZE_FACTOR = 3f;
 	private Paint mPaint = null;
 	private Bitmap mPic = null;
 	private float mX = 0;
@@ -21,26 +22,29 @@ public class PospeskiView extends View implements DataListener{
 	private float mZ = 0;
 	private int mWidth = 0;
 	private int mHeigh = 0;
+	private static float ALPHA = 0.1f;
 
 	public PospeskiView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
 		mPic = BitmapFactory.decodeResource(getResources(), R.drawable.gmeter);
-		mWidth = mPic.getWidth() / 2;
-		mHeigh = mPic.getHeight() / 2;
+		mWidth = mPic.getWidth();
+		mHeigh = mPic.getHeight();
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setColor(Color.WHITE);
 		setXYZ(0,0,0);
 	}
 
 	public boolean setXYZ(float x, float y, float z) {
-		if ( x < -1 || x > 1 || y < -1 || y > 1 || z < -1 || z > 1 )
+		if ( x < -1 || x > 1 || y < -1 || y > 1 || z < -1 || z > 1 ){
 			return false;
+		}
 
-		this.mX = ( (x+1) * mWidth ) / 2;
-		this.mY = ( (y+1) * mHeigh ) / 2;
-		this.mZ = z*20 + 5;
-		this.postInvalidate();
+		mX = (1f-ALPHA) * mX + ALPHA* (((x+1) * mWidth ) / 2);
+		mY = (1f-ALPHA) * mY + ALPHA* (((y+1) * mHeigh ) / 2);
+		mZ = (1f-ALPHA) * mZ + ALPHA* (Math.abs(z*SIZE_FACTOR) + 4);
+
+		postInvalidate();
 		return true;
 	}
 
@@ -48,7 +52,7 @@ public class PospeskiView extends View implements DataListener{
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		canvas.drawBitmap(mPic, 0, 0, null);
-		canvas.drawCircle(this.mX, this.mY, this.mZ, mPaint);
+		canvas.drawCircle(mX, mY, mZ, mPaint);
 	}
 
 	public void updateData(float[] data) {

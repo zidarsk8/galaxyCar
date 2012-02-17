@@ -49,8 +49,9 @@ public class SteeringWheelView extends View implements DataListener{
 
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
+		//dissabled just to stop debug spamming :P
 		if (visibility == View.VISIBLE){
-			new Thread(mRotateThread).start();
+			//new Thread(mRotateThread).start();
 		}else{
 			mRotateThread.stop();
 		}
@@ -66,11 +67,13 @@ public class SteeringWheelView extends View implements DataListener{
 
 	public synchronized void rotateWheel(){
 		mRotate = (1f-mAlpha) * mRotate + mAlpha * mToAngle;
+		D.dbgv("rotating wheel for: "+mRotate);
 		this.postInvalidate();
 	}
 
 	public synchronized void updateData(float[] data) {
 		mToAngle = data[4]*ANGLE_FACTOR;
+		rotateWheel();
 	}
 
 }
