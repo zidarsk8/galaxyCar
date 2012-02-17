@@ -1,5 +1,6 @@
 package org.psywerx.car.view;
 
+import org.psywerx.car.D;
 import org.psywerx.car.DataListener;
 import org.psywerx.car.R;
 
@@ -27,8 +28,7 @@ public class SteeringWheelView extends View implements DataListener{
 					rotateWheel();
 				}
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				D.dbge("error in drawing wheel thread", e);
 			}
 		}
 		public void stop(){

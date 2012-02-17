@@ -11,6 +11,7 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 import org.psywerx.car.bluetooth.BtHelper;
 import org.psywerx.car.bluetooth.DeviceListActivity;
+import org.psywerx.car.view.PospeskiView;
 import org.psywerx.car.view.SteeringWheelView;
 import org.psywerx.car.view.StevecView;
 
@@ -83,7 +84,7 @@ public class GalaxyCarActivity extends Activity {
 			mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 			mGlView.setRenderer(svr);
 			mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-			mDataHandler.setmCarListener(svr.getCar());
+			mDataHandler.registerListener(svr.getCar());
 		}
 
 		mBluetoothButton = (ToggleButton) findViewById(R.id.bluetoothButton);
@@ -101,8 +102,9 @@ public class GalaxyCarActivity extends Activity {
 		});
 		
 		//add data handlers to each view or class
-		mDataHandler.setStevec((StevecView) findViewById(R.id.stevec));
-		mDataHandler.setmSteeringListener((SteeringWheelView) findViewById(R.id.steeringWheel));
+		mDataHandler.registerListener((StevecView) findViewById(R.id.stevec));
+		mDataHandler.registerListener((SteeringWheelView) findViewById(R.id.steeringWheel));
+		mDataHandler.registerListener((PospeskiView) findViewById(R.id.pospeski));
 	}
 
 	private void enableBluetooth() {

@@ -140,4 +140,11 @@
                 android:layout_marginTop="480dp"
                 android:layout_marginLeft="520dp" />
             
+            <org.psywerx.car.view.PospeskiView
+                android:id="@+id/pospeski"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="1090dp" />
+            
 </RelativeLayout>

@@ -1,36 +1,39 @@
 package org.psywerx.car;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Vector3d;
+
 
 public class DataHandler implements DataListener{
 	private int sillydebug = 0;
-	private DataListener mStevecListener;
-	private DataListener mCarListener;
-	private DataListener mGraphListener;
-	private DataListener mSteeringListener;
+
+	private ArrayList<DataListener> mDataListeners = new ArrayList<DataListener>();
 	
 	private ArrayList<float[]> mHistory;
 	private float[] mLastData;
+
+	private final Vector3d mOfsetVec = new Vector3d(-0.0430172172f, -0.0880380459f, 0.4048961114f);
+	private final Vector3d mDownVec = new Vector3d(0,0,-1);
+	private final AxisAngle4d mGRotateVector;
 	
 	private boolean mRunning;
 	private class UpdateViews implements Runnable{
 		public void run() {
 			try {
 				mLastData[4] -= 5f; 
+				// TODO: normalize g forces
 				
-				// update speed gauge data if listener available
-				if (mStevecListener != null){
-					mStevecListener.updateData(mLastData);
-				}
 				
-				if (mCarListener != null){
-					mCarListener.updateData(mLastData);
-				}
-				if (mGraphListener != null){
-					mGraphListener.updateData(mLastData);
-				}
-				if (mSteeringListener != null){
-					mSteeringListener.updateData(mLastData);
+				for (Iterator<DataListener> i = mDataListeners.iterator(); i.hasNext();){
+					DataListener dl = i.next();
+					if (dl != null){
+						dl.updateData(mLastData);
+					}else{
+						D.dbge("iterator data is null");
+					}
 				}
 				
 			} catch (Exception e) {
@@ -44,6 +47,10 @@ public class DataHandler implements DataListener{
 		
 	public DataHandler() {
 		mHistory = new ArrayList<float[]>();
+		Vector3d axis = new Vector3d();
+		axis.cross(mOfsetVec, new Vector3d(0,0,-1));
+		
+		mGRotateVector = new AxisAngle4d(axis, mDownVec.angle(mOfsetVec));
 	}
 	public void updateData(float[] data) {
 		mLastData = data;
@@ -59,13 +66,7 @@ public class DataHandler implements DataListener{
 		}
 	}
 	
-	public void setStevec(DataListener stevec) {
-		this.mStevecListener = stevec;
-	}
-	public void setmCarListener(DataListener mCarListener) {
-		this.mCarListener = mCarListener;
-	}
-	public void setmSteeringListener(DataListener mSteeringListener) {
-		this.mSteeringListener = mSteeringListener;
+	public void registerListener(DataListener listener) {
+		mDataListeners.add(listener);
 	}
 }
