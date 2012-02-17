@@ -1,6 +1,5 @@
 package org.psywerx.car.view;
 
-import org.psywerx.car.D;
 import org.psywerx.car.DataListener;
 import org.psywerx.car.R;
 
@@ -24,7 +23,7 @@ public class SteeringWheelView extends View implements DataListener{
 				run = true;
 				while (run){
 					Thread.sleep(20);
-					//D.dbgv("repainig wheel thread !!");
+					//D.dbgv("repainting wheel thread !!");
 					rotateWheel();
 				}
 			} catch (InterruptedException e) {
