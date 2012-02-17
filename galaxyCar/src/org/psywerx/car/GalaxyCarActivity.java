@@ -11,6 +11,7 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 import org.psywerx.car.bluetooth.BtHelper;
 import org.psywerx.car.bluetooth.DeviceListActivity;
+import org.psywerx.car.view.SteeringWheelView;
 import org.psywerx.car.view.StevecView;
 
 import android.app.Activity;
@@ -43,7 +44,7 @@ public class GalaxyCarActivity extends Activity {
 	private GLSurfaceView mGlView;
 	private WakeLock mWakeLock;
 	private BtHelper mBtHelper;
-	private Charts mChartView;
+	private Object mChartView;
 	private ToggleButton mBluetoothButton;
 	private ToggleButton mStartButton;
 	private DataHandler mDataHandler;
@@ -63,17 +64,16 @@ public class GalaxyCarActivity extends Activity {
 	}
 
 	private void init() {
-
-		LinearLayout layout = (LinearLayout)findViewById(R.id.chart); 
-		mChartView = (Charts) ChartFactory.getLineChartView(this, getDemoDataset(), getDemoRenderer());
-		layout.addView((View) mChartView, new LayoutParams		(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT)); 
-
 		mDataHandler = new DataHandler();
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-		StevecView sv = (StevecView) findViewById(R.id.stevec);
-		mDataHandler.setStevec(sv);
+		// TODO: these chart should be moved away into their own class
+		LinearLayout layout = (LinearLayout)findViewById(R.id.chart); 
+		mChartView = ChartFactory.getLineChartView(this, getDemoDataset(), getDemoRenderer());
+		layout.addView((View) mChartView, new LayoutParams		(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT)); 
 
+		
+		
 		mBtHelper = new BtHelper(getApplicationContext(),mDataHandler);
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
 		if (mGlView != null) {
@@ -99,6 +99,10 @@ public class GalaxyCarActivity extends Activity {
 				mBtHelper.sendStart();
 			}
 		});
+		
+		//add data handlers to each view or class
+		mDataHandler.setStevec((StevecView) findViewById(R.id.stevec));
+		mDataHandler.setmSteeringListener((SteeringWheelView) findViewById(R.id.steeringWheel));
 	}
 
 	private void enableBluetooth() {

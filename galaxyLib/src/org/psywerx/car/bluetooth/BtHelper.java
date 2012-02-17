@@ -12,7 +12,7 @@ import android.widget.Toast;
 public class BtHelper implements Runnable{
 	
 	private static final long REQUEST_TIMEOUT = 100;
-	private static final int REQUEST_PERIOD = 50;
+	private static final int REQUEST_PERIOD = 100;
 	public static final int MESSAGE_STATE_CHANGE = 1;
 	public static final int MESSAGE_READ = 2;
 	public static final int MESSAGE_WRITE = 3;
