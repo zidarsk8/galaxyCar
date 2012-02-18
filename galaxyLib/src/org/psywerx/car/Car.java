@@ -5,7 +5,7 @@ import javax.vecmath.Vector3d;
 
 public class Car implements DataListener{
 
-	private final float SPEED_FACTOR = 1;
+	private final float SPEED_FACTOR = 0.7f;
 	private final float TURN_FACTOR = 10;
 	private final float MAX_RADIUS = 100;
 
@@ -13,7 +13,7 @@ public class Car implements DataListener{
 	//private final float LINEAR = 1;
 
 	private ModelLoader models;
-	private Camera camera;
+	//private Camera camera;
 
 	private Model car;
 
@@ -29,8 +29,6 @@ public class Car implements DataListener{
 
 
 	public void update(){
-		mSpeed = 10;
-		mTurn = 5;
 
 		long time = System.nanoTime();
 		double elapsed = (time - mTimestamp)/ 1e9f;
@@ -55,52 +53,23 @@ public class Car implements DataListener{
 			newDirection.add(perpendicular);
 			newDirection.normalize();
 			newDirection.scale(dDistance*SPEED_FACTOR);
-			D.dbgv(String.format("alpha:  %.5f     pos:  %.4f  %.4f  %.4f ", alpha, mDirVec.x, mDirVec.y, mDirVec.z));
+			//D.dbgv(String.format("alpha:  %.5f     pos:  %.4f  %.4f  %.4f ", alpha, mDirVec.x, mDirVec.y, mDirVec.z));
 		}else{
 			newDirection.normalize();
 			newDirection.scale(dDistance*SPEED_FACTOR);
 		}
-		mPosition.add(newDirection);
-
 
 		double xArc = newDirection.angle(new Vector3d(1, 0, 0));
 		double zArc = newDirection.angle(new Vector3d(0, 0, -1));
 
-		if (xArc<=Math.PI) {
+		if (xArc <= Math.PI/2){
 			yaw = (float) Math.toDegrees(Math.PI + zArc);
 		}else{
-			yaw = (float) Math.toDegrees(Math.PI + zArc);
+			yaw = (float) Math.toDegrees(Math.PI - zArc);
 		}
 
+		mPosition.add(newDirection);
 		mDirVec = newDirection;
-
-
-
-
-		/*
-		float[] m = new float[6];
-		m[5] =10;
-		m[4] = 5;
-
-		// TODO: This sort of works for wheel turn 5, make it work better and for more values
-
-		//yaw += m[5]*0.0285;
-		skew += Math.log(m[5]);
-		if(skew > 1) skew = 1;
-		else if(skew < -1) skew = -1;
-
-		double tmpZ = Math.sin(5)*m[5];
-		double tmpX = Math.cos(5)*m[5];
-
-		x = (float) (tmpZ * Math.cos(alpha) - tmpX * Math.sin(alpha));
-		z = (float) (tmpX * Math.cos(alpha) + tmpZ * Math.sin(alpha));
-
-		float speed = (float) Math.pow(m[5],-3)*10;
-
-		alpha += speed;
-
-		yaw += 57*speed;
-		/**/
 	}
 
 	public void draw(GL10 gl) {
@@ -117,7 +86,7 @@ public class Car implements DataListener{
 		mPosition = new Vector3d(0, 0, -10);
 		models = m;
 		car = models.GetModel("car");
-		camera = c;
+		//camera = c;
 		mTimestamp = System.nanoTime();
 	}
 
@@ -127,7 +96,7 @@ public class Car implements DataListener{
 	}
 
 	public void updateData(float[] data) {
-		D.dbgv("updating car data "+data[4]);
+		//D.dbgv("updating car data "+data[4]);
 		setDirection(data[3],data[4]);
 	}
 
