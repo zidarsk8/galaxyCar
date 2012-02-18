@@ -9,6 +9,8 @@ public class Car implements DataListener{
 	private final float TURN_FACTOR = 10;
 	private final float MAX_RADIUS = 100;
 
+	private final int HISTORY_SIZE = 10000*9;
+
 	// change this if the turning circle radius is not linear function of the wheel turn value
 	//private final float LINEAR = 1;
 
@@ -26,10 +28,11 @@ public class Car implements DataListener{
 	private float mTurn = 0;
 	private long mTimestamp = 0;
 
+	private float[] mHistorArr = new float[HISTORY_SIZE];
+	private int mHistoryPosition = 0;
 
 
 	public void update(){
-
 		long time = System.nanoTime();
 		double elapsed = (time - mTimestamp)/ 1e9f;
 		mTimestamp = time;
@@ -40,13 +43,37 @@ public class Car implements DataListener{
 		}
 		
 		Vector3d newDirection = new Vector3d(mDirVec);
+		Vector3d perpendicular = new Vector3d(); // perpendicular to direction vector
+		perpendicular.cross(mDirVec, new Vector3d(0, 1, 0)); 
+		perpendicular.normalize();
+		mDirVec.normalize();
+		
+		Vector3d t1 = new Vector3d();
+		Vector3d t2 = new Vector3d();
+		Vector3d t3 = new Vector3d();
+		t1.add(mPosition,perpendicular);
+		t2.sub(mPosition,perpendicular);
+		t2.add(mPosition,mDirVec);
+		
+		//dodamo histor trikotnike
+		// TODO: smotko .. dej nared da se bojo se te trikotniki izrisoval
+		mHistorArr[mHistoryPosition]   = (float) t1.x;
+		mHistorArr[mHistoryPosition+1] = (float) t1.y;
+		mHistorArr[mHistoryPosition+2] = (float) t1.z;
+		mHistorArr[mHistoryPosition+3] = (float) t2.x;
+		mHistorArr[mHistoryPosition+4] = (float) t2.y;
+		mHistorArr[mHistoryPosition+5] = (float) t2.z;
+		mHistorArr[mHistoryPosition+6] = (float) t3.x;
+		mHistorArr[mHistoryPosition+7] = (float) t3.y;
+		mHistorArr[mHistoryPosition+8] = (float) t3.z;
+		
+		mHistoryPosition = (mHistoryPosition+9) % HISTORY_SIZE;
+		
 		if (mTurn != 0){
 			//double radious = (MAX_RADIUS - Math.pow(mTurn * TURN_FACTOR, LINEAR));
 			double radious = MAX_RADIUS - mTurn * TURN_FACTOR;
 			double alpha = Math.PI*2*dDistance/radious; // distance of the driven arc in angle degrees
 			// no need for translation rotation translation, cause of the small angles
-			Vector3d perpendicular = new Vector3d(); // perpendicular to direction vector
-			perpendicular.cross(mDirVec, new Vector3d(0, 1, 0)); 
 
 			//the new direction is a linear combination of old direction and the perpendicular vector
 			//according to the calculated angle	
