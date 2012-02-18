@@ -35,7 +35,10 @@ public class Car implements DataListener{
 		mTimestamp = time;
 		double dDistance = mSpeed * elapsed;
 
-
+		if (mSpeed == 0){
+			return;
+		}
+		
 		Vector3d newDirection = new Vector3d(mDirVec);
 		if (mTurn != 0){
 			//double radious = (MAX_RADIUS - Math.pow(mTurn * TURN_FACTOR, LINEAR));
@@ -58,7 +61,9 @@ public class Car implements DataListener{
 			newDirection.normalize();
 			newDirection.scale(dDistance*SPEED_FACTOR);
 		}
-
+		
+		mPosition.add(newDirection);
+		
 		double xArc = newDirection.angle(new Vector3d(1, 0, 0));
 		double zArc = newDirection.angle(new Vector3d(0, 0, -1));
 
@@ -68,8 +73,8 @@ public class Car implements DataListener{
 			yaw = (float) Math.toDegrees(Math.PI - zArc);
 		}
 
-		mPosition.add(newDirection);
 		mDirVec = newDirection;
+
 	}
 
 	public void draw(GL10 gl) {
