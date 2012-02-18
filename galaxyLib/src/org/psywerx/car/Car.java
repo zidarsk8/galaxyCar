@@ -14,7 +14,18 @@ public class Car implements DataListener{
 	protected float yaw = 180, pitch = 0, skew = 0;
 	private float alpha = 0;
 	
+	private float mSpeedFactor = 1;
+	private float mTurnFactor = 1;
+	private float mSpeed = 0;
+	private float mTurn = 0;
+	private long mTimestamp = 0;
+	
 	public void update(){
+		long time = System.nanoTime();
+		long elapsed = time - mTimestamp;
+		mTimestamp = time;
+		
+		
 		float[] m = new float[6];
 		m[5] =10;
 		m[4] = 5;
@@ -38,9 +49,6 @@ public class Car implements DataListener{
 		
 		yaw += 57*speed;
 		
-		//angle += m[5]*0.0005;
-		//pitch += 6f;
-		//skew += 5f;
 	}
 	
 	public void draw(GL10 gl) {
@@ -57,10 +65,15 @@ public class Car implements DataListener{
 		car = models.GetModel("car");
 		camera = c;
 	}
+	
+	private synchronized void setDirection(float speed, float s){
+		mSpeed = speed;
+		mTurn = s;
+	}
 
 	public void updateData(float[] data) {
-		// TODO Auto-generated method stub
-		
+		D.dbgv("updating car data "+data[4]);
+		setDirection(data[3],data[4]);
 	}
 
 

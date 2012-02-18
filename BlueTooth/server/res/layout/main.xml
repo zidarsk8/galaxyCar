@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2009 The Android Open Source Project
+<!--
+     Copyright (C) 2009 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,32 +16,44 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
-    <ListView android:id="@+id/in"
+    android:orientation="vertical" >
+
+    <ListView
+        android:id="@+id/in"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll"
         android:layout_weight="1"
-    />
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll" />
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
-        <EditText android:id="@+id/edit_text_out"
-            android:layout_width="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/button_dec"
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:layout_weight="3"
+            android:text="@string/dec" />
+
+        <Button
+            android:id="@+id/button_inc"
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:layout_weight="3"
+            android:text="@string/inc" />
+
+        <TextView
+            android:id="@+id/timout"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="bottom"
-        />
-        <Button android:id="@+id/button_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/send"
-        />
+            android:layout_weight="2"
+            android:text="@string/timeout"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
+
 </LinearLayout>

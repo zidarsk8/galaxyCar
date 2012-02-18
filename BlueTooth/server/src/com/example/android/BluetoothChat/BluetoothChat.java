@@ -30,8 +30,10 @@ import android.os.Message;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,7 @@ public class BluetoothChat extends Activity {
     public static final String TOAST = "toast";
 
     private static final int REQUEST_ENABLE_BT = 3;
+    private static int mTimeout = 100;
 
     // Layout Views
     private TextView mTitle;
@@ -98,6 +101,23 @@ public class BluetoothChat extends Activity {
             return;
         }
         readFileLoop();
+        
+        ((Button) findViewById(R.id.button_dec)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				setTimeout(0.8f);
+			}
+		});
+        ((Button) findViewById(R.id.button_inc)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				setTimeout(1.3f);
+			}
+		});
+        setTimeout(1f);
+    }
+    
+    private synchronized void setTimeout(float i){
+		mTimeout = Math.max(5, (int) (mTimeout * i));
+		((TextView) findViewById(R.id.timout)).setText("timeout: "+mTimeout);
     }
     
     public void readFileLoop(){
@@ -123,6 +143,7 @@ public class BluetoothChat extends Activity {
         	};
         }.start();
     }
+    
     
     
     @Override
@@ -262,7 +283,16 @@ public class BluetoothChat extends Activity {
                 }
                 if(readMessage.equals("podatki")){
                 	if ( mCurrentLine != null) {
-                		mChatService.write(mCurrentLine.getBytes());
+                		new Thread(){
+                			public void run() {
+                				try {
+									Thread.sleep(mTimeout);
+									writeLine();
+								} catch (Exception e) {
+									// TODO: handle exception
+								}
+                			};
+                		}.start();
                 	}else{
                 		D.dbge("Sending null !!!!!!!!!!");
                 	}
@@ -281,6 +311,11 @@ public class BluetoothChat extends Activity {
             }
         }
     };
+    
+    private synchronized void writeLine(){
+		D.dbgv("writing line: "+mCurrentLine);
+		mChatService.write(mCurrentLine.getBytes());
+    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         D.dbgd("onActivityResult " + resultCode);

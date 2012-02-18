@@ -67,6 +67,7 @@ public class BtHelper implements Runnable{
 
 	public void run(){
 		try{
+			mWait = true;
 			while (mWait){
 				Thread.sleep(REQUEST_TIMEOUT);
 				sendData();
@@ -74,7 +75,6 @@ public class BtHelper implements Runnable{
 		}catch(Exception e){
 			D.dbge("Bt helper running stuff ",e);
 		}
-		mWait = true;
 	}
 
 	public BtHelper(Context ctx, DataListener dl){

@@ -21,6 +21,8 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	public CarSurfaceViewRenderer(AssetManager asm, ModelLoader m) {
 		mModelLoader = m;
+		//init shapes needs to be here so we can add listeners to models (car)
+		initShapes();
 	}
 
 	public void onDrawFrame(GL10 gl) {
@@ -78,7 +80,6 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		gl.glLightfv(GL10.GL_LIGHT1, GL10.GL_POSITION, LightPosition, 0);
 		gl.glEnable(GL10.GL_LIGHT1); // Enable Light One
 
-		initShapes();
 	}
 
 	private void initShapes() {

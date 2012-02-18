@@ -18,7 +18,9 @@
     <string name="app_name">Bluetooth Chat</string>
 
     <!--  BluetoothChat -->
-    <string name="send">Send</string>
+    <string name="timeout">timeout</string>
+    <string name="dec">-5</string>
+    <string name="inc">+5</string>
     <string name="not_connected">You are not connected to a device</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>
     <string name="title_connecting">connecting...</string>
