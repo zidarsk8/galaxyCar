@@ -75,5 +75,8 @@ public class SteeringWheelView extends View implements DataListener{
 		mToAngle = data[4]*ANGLE_FACTOR;
 		rotateWheel();
 	}
+	public void setAlpha(float alpha) {
+		this.mAlpha = alpha;
+	}
 
 }
