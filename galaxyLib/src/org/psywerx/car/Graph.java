@@ -17,9 +17,12 @@ public class Graph {
 	private XYSeries series;
 	private GraphicalView mChartView;
 	private Thread mThread;
-	
+
+	private final int MAX_POINTS = 100;
+	private XYMultipleSeriesRenderer renderer;
+
 	public XYMultipleSeriesRenderer getDemoRenderer() {
-		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
+		renderer = new XYMultipleSeriesRenderer();
 		renderer.setInScroll(false);
 		renderer.setAxisTitleTextSize(16);
 		renderer.setChartTitleTextSize(20);
@@ -28,10 +31,10 @@ public class Graph {
 		renderer.setPointSize(5f);
 		renderer.setMargins(new int[] { 20, 30, 15, 0 });
 		XYSeriesRenderer r = new XYSeriesRenderer();
-		//r.setColor(Color.BLUE);
-		//r.setPointStyle(PointStyle.SQUARE);
-		//r.setFillBelowLine(true);
-		//r.setFillBelowLineColor(Color.WHITE);
+		// r.setColor(Color.BLUE);
+		// r.setPointStyle(PointStyle.SQUARE);
+		// r.setFillBelowLine(true);
+		// r.setFillBelowLineColor(Color.WHITE);
 		r.setFillPoints(true);
 		renderer.addSeriesRenderer(r);
 		r = new XYSeriesRenderer();
@@ -45,21 +48,15 @@ public class Graph {
 
 	public XYMultipleSeriesDataset getDemoDataset() {
 		dataset = new XYMultipleSeriesDataset();
-		final int nr = 2;
-		Random r = new Random();
-		for (int i = 0; i < SERIES_NR; i++) {
-			series = new XYSeries("Demo series " + (i + 1));
-			for (int k = 0; k < nr; k++) {
-				series.add(k, 20 + r.nextInt() % 100);
-			}
-			dataset.addSeries(series);
-		}
+		series = new XYSeries("Graf 1");
+		dataset.addSeries(series);
 		return dataset;
 	}
-	public void start(GraphicalView m){
-		
+
+	public void start(GraphicalView m) {
+
 		mChartView = m;
-		
+
 		mThread = new Thread() {
 			private Random random = new Random();
 
@@ -70,12 +67,15 @@ public class Graph {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					series.add(series.getItemCount(), 20 + random.nextInt() % 100);
+					series.add(series.getItemCount(),
+							20 + random.nextInt() % 100);
+					renderer.setXAxisMax(series.getMaxX());
+					renderer.setXAxisMin(series.getItemCount() - MAX_POINTS);
 					((GraphicalView) mChartView).repaint();
 				}
 			}
 		};
 		mThread.start();
 	}
-	
+
 }
