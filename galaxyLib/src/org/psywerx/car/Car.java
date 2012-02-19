@@ -13,7 +13,7 @@ public class Car implements DataListener{
 	private final float TURN_FACTOR = 100;
 	private final float MAX_RADIUS = 1000;
 
-	private final int HISTORY_SIZE = 10000*9;
+	private final int HISTORY_SIZE = 1000*9;
 
 	// change this if the turning circle radius is not linear function of the wheel turn value
 	//private final float LINEAR = 1;
@@ -39,8 +39,8 @@ public class Car implements DataListener{
 
 	public void update(){
 		
-		mTurn = 1;
-		mSpeed = 30;
+		mTurn = 0;
+		mSpeed = 5;
 		
 		long time = System.nanoTime();
 		double elapsed = (time - mTimestamp)/ 1e9f;
@@ -60,12 +60,14 @@ public class Car implements DataListener{
 		Vector3d t1 = new Vector3d();
 		Vector3d t2 = new Vector3d();
 		Vector3d t3 = new Vector3d();
-		t1.add(mPosition,perpendicular);
-		t2.sub(mPosition,perpendicular);
-		t2.add(mPosition,mDirVec);
+		
+		Vector3d center = new Vector3d((float)car.center[0],0,(float)car.center[2]);
+		center.add(mPosition);
+		t1.add(center,perpendicular);
+		t2.sub(center,perpendicular);
+		t3.add(center,mDirVec);
 		
 		//dodamo histor trikotnike
-		// TODO: smotko .. dej nared da se bojo se te trikotniki izrisoval
 		mHistorArr[mHistoryPosition]   = (float) t1.x;
 		mHistorArr[mHistoryPosition+1] = (float) t1.y;
 		mHistorArr[mHistoryPosition+2] = (float) t1.z;
@@ -120,10 +122,10 @@ public class Car implements DataListener{
 		car.rotate(gl, pitch, yaw, skew);
 		car.draw(gl);
 		
-		drawHistory(gl);
 		
 		
 		gl.glPopMatrix();
+		drawHistory(gl);
 	}
 
 	private void drawHistory(GL10 gl) {
