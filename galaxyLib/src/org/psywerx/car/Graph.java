@@ -20,6 +20,7 @@ public class Graph implements DataListener {
 
 	private final int MAX_POINTS = 500;
 	private XYMultipleSeriesRenderer renderer;
+	private int ticks = 0;
 
 	public XYMultipleSeriesRenderer getDemoRenderer() {
 		renderer = new XYMultipleSeriesRenderer();
@@ -59,7 +60,6 @@ public class Graph implements DataListener {
 
 		mThread = new Thread() {
 			private Random random = new Random();
-			private int ticks = 0;
 
 			public void run() {
 				while (true) {
@@ -85,7 +85,15 @@ public class Graph implements DataListener {
 	}
 
 	public void updateData(float[] data) {
+		if(series.getItemCount() > MAX_POINTS)
+			series.remove(0);
 		
+		series.add(ticks,
+				data[4]);
+		renderer.setXAxisMax(ticks);
+		renderer.setXAxisMin(ticks - MAX_POINTS);
+		((GraphicalView) mChartView).repaint();
+		ticks++;
 	}
 
 	public void setAlpha(float alpha) {

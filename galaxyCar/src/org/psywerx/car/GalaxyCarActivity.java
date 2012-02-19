@@ -83,7 +83,7 @@ public class GalaxyCarActivity extends Activity {
 		mChartView = ChartFactory.getLineChartView(this,
 				g.getDemoDataset(), g.getDemoRenderer());
 		
-		g.start((GraphicalView) mChartView);
+		//g.start((GraphicalView) mChartView);
 		
 		layout.addView((View) mChartView, new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
