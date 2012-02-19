@@ -29,10 +29,14 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
 		gl.glLoadIdentity();
-		camera.setView(gl);
-		//camera.set(-car.x, -4, -car.z-12f);
+		//camera.setView(gl);
+		//camera.set((float)-car.mPosition.x, -4, (float) (-car.mPosition.z-12f));
 		//camera.set(0, -5, -20f);
-		GLU.gluLookAt(gl, 0f, 25f, 10, 0, 0, 0, 0, 1, 0);
+		
+		// Fixed camera looking at car:
+		GLU.gluLookAt(gl, 0, 45f, 10f, (float)car.mPosition.x, 0, (float)car.mPosition.z, 0, 1, 0);
+		
+		
 		
 		gl.glEnable(GL10.GL_COLOR_MATERIAL);
 		gl.glEnable(GL10.GL_LIGHTING);
@@ -67,7 +71,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig arg1) {
 		gl.glShadeModel(GL10.GL_SMOOTH); // Enable Smooth Shading
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f); // Black Background
+		gl.glClearColor(255.0f, 255.0f, 255.0f, 1.0f); //hite  WgBackground
 		gl.glClearDepthf(1.0f); // Depth Buffer Setup
 		gl.glEnable(GL10.GL_DEPTH_TEST); // Enables Depth Testing
 		gl.glDepthFunc(GL10.GL_LEQUAL); // The Type Of Depth Testing To Do

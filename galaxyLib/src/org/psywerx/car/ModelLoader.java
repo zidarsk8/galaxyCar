@@ -102,7 +102,7 @@ public class ModelLoader{
 			// create a floating point buffer from the ByteBuffer
 			vertexBuffer[i] = vbb.asFloatBuffer(); 
 			// add the coordinates to the FloatBuffer
-			vertexBuffer[i].put(buff); 
+			vertexBuffer[i].put(buff);
 			// set the buffer to read the first coordinate
 			vertexBuffer[i].position(0); 
 			i++;

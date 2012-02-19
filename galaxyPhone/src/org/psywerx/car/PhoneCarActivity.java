@@ -1,5 +1,7 @@
 package org.psywerx.car;
 
+
+
 import org.psywerx.car.bluetooth.BtHelper;
 
 import android.app.Activity;
@@ -28,7 +30,7 @@ public class PhoneCarActivity extends Activity {
         
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-		mBtHelper = new BtHelper(getApplicationContext());
+		mBtHelper = new BtHelper(getApplicationContext(), null);
 		
         mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
         
@@ -36,7 +38,7 @@ public class PhoneCarActivity extends Activity {
 			mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 			mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 			mGlView.setRenderer(new CarSurfaceViewRenderer(getResources()
-					.getAssets(), new ModelLoader(this), mBtHelper));
+					.getAssets(), new ModelLoader(this)));
 			mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 		}
     }
