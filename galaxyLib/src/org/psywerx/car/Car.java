@@ -1,5 +1,9 @@
 package org.psywerx.car;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
 import javax.microedition.khronos.opengles.GL10;
 import javax.vecmath.Vector3d;
 
@@ -30,6 +34,7 @@ public class Car implements DataListener{
 
 	private float[] mHistorArr = new float[HISTORY_SIZE];
 	private int mHistoryPosition = 0;
+	private FloatBuffer history;
 
 
 	public void update(){
@@ -110,7 +115,35 @@ public class Car implements DataListener{
 		gl.glTranslatef((float)mPosition.x, (float)mPosition.y, (float)mPosition.z);
 		car.rotate(gl, pitch, yaw, skew);
 		car.draw(gl);
+		
+		drawHistory(gl);
+		
+		
 		gl.glPopMatrix();
+	}
+
+	private void drawHistory(GL10 gl) {
+		ByteBuffer vbb = ByteBuffer.allocateDirect(
+		// (# of coordinate values * 4 bytes per float)
+				mHistorArr.length * 4);
+		// use the device hardware's native byte order
+		vbb.order(ByteOrder.nativeOrder());
+		// create a floating point buffer from the ByteBuffer
+		history = vbb.asFloatBuffer();
+		// add the coordinates to the FloatBuffer
+		history.put(mHistorArr);
+		// set the buffer to read the first coordinate
+		history.position(0);
+
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+
+		gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
+		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, history);
+//		gl.glNormalPointer(GL10.GL_FLOAT, 0, normalBuffer[i]);
+		gl.glColor4f(0f, 0f, 255f, 1);
+		gl.glDrawArrays(GL10.GL_TRIANGLES, 0, (history.capacity()) / 3);
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+
 	}
 
 	public Car(ModelLoader m, Camera c) {
