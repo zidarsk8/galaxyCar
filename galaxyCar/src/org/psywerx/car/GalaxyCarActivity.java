@@ -11,6 +11,7 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 import org.psywerx.car.bluetooth.BtHelper;
 import org.psywerx.car.bluetooth.DeviceListActivity;
+import org.psywerx.car.seekbar.VerticalSeekBar;
 import org.psywerx.car.view.PospeskiView;
 import org.psywerx.car.view.SteeringWheelView;
 import org.psywerx.car.view.StevecView;
@@ -29,6 +30,7 @@ import android.os.PowerManager.WakeLock;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -46,6 +48,7 @@ public class GalaxyCarActivity extends Activity {
 	private WakeLock mWakeLock;
 	private BtHelper mBtHelper;
 	private Object mChartView;
+	private VerticalSeekBar mAlphaBar;
 	private ToggleButton mBluetoothButton;
 	private ToggleButton mStartButton;
 	private DataHandler mDataHandler;
@@ -88,6 +91,15 @@ public class GalaxyCarActivity extends Activity {
 		mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 		mGlView.setRenderer(svr);
 		mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+
+		mAlphaBar = (VerticalSeekBar) findViewById(R.id.alphaBar);
+		mAlphaBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				//TODO setAlpha
+			}
+			public void onStartTrackingTouch(SeekBar seekBar){}
+			public void onStopTrackingTouch(SeekBar seekBar){}
+		});
 
 		mBluetoothButton = (ToggleButton) findViewById(R.id.bluetoothButton);
 		mBluetoothButton.setOnClickListener(new View.OnClickListener() {
