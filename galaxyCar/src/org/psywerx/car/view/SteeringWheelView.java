@@ -67,7 +67,7 @@ public class SteeringWheelView extends View implements DataListener{
 
 	public synchronized void rotateWheel(){
 		mRotate = (1f-mAlpha) * mRotate + mAlpha * mToAngle;
-		D.dbgv("rotating wheel for: "+mRotate);
+		//D.dbgv("rotating wheel for: "+mRotate);
 		this.postInvalidate();
 	}
 

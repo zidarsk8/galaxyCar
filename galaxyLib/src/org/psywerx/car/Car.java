@@ -5,11 +5,11 @@ import javax.vecmath.Vector3d;
 
 public class Car implements DataListener{
 
-	private final float SPEED_FACTOR = 0.7f;
-	private final float TURN_FACTOR = 10;
-	private final float MAX_RADIUS = 100;
+	private final float SPEED_FACTOR = 0.05f;
+	private final float TURN_FACTOR = 2;
+	private final float MAX_RADIUS = 20;
 
-	private final int HISTORY_SIZE = 10000*9;
+	private final int HISTORY_SIZE = 1000*9;
 
 	// change this if the turning circle radius is not linear function of the wheel turn value
 	//private final float LINEAR = 1;
@@ -36,15 +36,15 @@ public class Car implements DataListener{
 		long time = System.nanoTime();
 		double elapsed = (time - mTimestamp)/ 1e9f;
 		mTimestamp = time;
-		double dDistance = mSpeed * elapsed;
-
+		double dDistance = mSpeed * elapsed * SPEED_FACTOR;
+		
 		if (mSpeed == 0){
 			return;
 		}
 		
 		Vector3d newDirection = new Vector3d(mDirVec);
 		Vector3d perpendicular = new Vector3d(); // perpendicular to direction vector
-		perpendicular.cross(mDirVec, new Vector3d(0, 1, 0)); 
+		perpendicular.cross(newDirection, new Vector3d(0,1,0));
 		perpendicular.normalize();
 		mDirVec.normalize();
 		
@@ -53,7 +53,7 @@ public class Car implements DataListener{
 		Vector3d t3 = new Vector3d();
 		t1.add(mPosition,perpendicular);
 		t2.sub(mPosition,perpendicular);
-		t2.add(mPosition,mDirVec);
+		t3.add(mPosition,mDirVec);
 		
 		//dodamo histor trikotnike
 		// TODO: smotko .. dej nared da se bojo se te trikotniki izrisoval
@@ -69,27 +69,31 @@ public class Car implements DataListener{
 		
 		mHistoryPosition = (mHistoryPosition+9) % HISTORY_SIZE;
 		
+		
+		
 		if (mTurn != 0){
 			//double radious = (MAX_RADIUS - Math.pow(mTurn * TURN_FACTOR, LINEAR));
-			double radious = MAX_RADIUS - mTurn * TURN_FACTOR;
+			double radious = MAX_RADIUS - Math.abs(mTurn) * TURN_FACTOR * (mTurn<0? -1:1);
 			double alpha = Math.PI*2*dDistance/radious; // distance of the driven arc in angle degrees
-			// no need for translation rotation translation, cause of the small angles
-
-			//the new direction is a linear combination of old direction and the perpendicular vector
-			//according to the calculated angle	
-
-			newDirection.scale(Math.cos(alpha));
-			perpendicular.scale(Math.sin(alpha));
-			newDirection.add(perpendicular);
+			perpendicular.scale(radious);
 			newDirection.normalize();
-			newDirection.scale(dDistance*SPEED_FACTOR);
-			//D.dbgv(String.format("alpha:  %.5f     pos:  %.4f  %.4f  %.4f ", alpha, mDirVec.x, mDirVec.y, mDirVec.z));
+			newDirection.scale(radious);
+
+			mPosition.add(perpendicular);
+			
+			newDirection.scale(Math.sin(alpha));
+			
+			perpendicular.scale(-Math.cos(alpha));
+			
+			perpendicular.add(newDirection);
+			
+			mPosition.add(perpendicular);
+			mDirVec.cross(perpendicular, new Vector3d(0, 1, 0));
+			
 		}else{
 			newDirection.normalize();
-			newDirection.scale(dDistance*SPEED_FACTOR);
+			newDirection.scale(dDistance);
 		}
-		
-		mPosition.add(newDirection);
 		
 		double xArc = newDirection.angle(new Vector3d(1, 0, 0));
 		double zArc = newDirection.angle(new Vector3d(0, 0, -1));
@@ -100,9 +104,11 @@ public class Car implements DataListener{
 			yaw = (float) Math.toDegrees(Math.PI - zArc);
 		}
 
-		mDirVec = newDirection;
-
 	}
+	
+//	private void printV(String ime,Vector3d mPosition){
+//		D.dbgv(String.format(ime+" :  %.4f  %.4f  %.4f ", mPosition.x, mPosition.y, mPosition.z));
+//	}
 
 	public void draw(GL10 gl) {
 		update();
@@ -131,7 +137,5 @@ public class Car implements DataListener{
 		//D.dbgv("updating car data "+data[4]);
 		setDirection(data[3],data[4]);
 	}
-
-
-
+	
 }
