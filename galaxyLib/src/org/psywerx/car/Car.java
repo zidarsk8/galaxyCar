@@ -10,8 +10,8 @@ import javax.vecmath.Vector3d;
 public class Car implements DataListener{
 
 	private final float SPEED_FACTOR = 0.7f;
-	private final float TURN_FACTOR = 10;
-	private final float MAX_RADIUS = 100;
+	private final float TURN_FACTOR = 100;
+	private final float MAX_RADIUS = 1000;
 
 	private final int HISTORY_SIZE = 10000*9;
 
@@ -23,8 +23,8 @@ public class Car implements DataListener{
 
 	private Model car;
 
-	Vector3d mDirVec = null;
-	Vector3d mPosition = null;
+	protected Vector3d mDirVec = null;
+	protected Vector3d mPosition = null;
 	protected float yaw = 180, pitch = 0, skew = 0;
 	//private float alpha = 0;
 
@@ -38,6 +38,10 @@ public class Car implements DataListener{
 
 
 	public void update(){
+		
+		mTurn = 1;
+		mSpeed = 30;
+		
 		long time = System.nanoTime();
 		double elapsed = (time - mTimestamp)/ 1e9f;
 		mTimestamp = time;

@@ -30,9 +30,9 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		
 		gl.glLoadIdentity();
 		camera.setView(gl);
-		//camera.set(-car.x, -4, -car.z-12f);
+		camera.set((float)-car.mPosition.x, -4, (float) (-car.mPosition.z-12f));
 		//camera.set(0, -5, -20f);
-		GLU.gluLookAt(gl, 0f, 25f, 10, 0, 0, 0, 0, 1, 0);
+		//GLU.gluLookAt(gl, 0f, 25f, 10, 0, 0, 0, 0, 1, 0);
 		
 		gl.glEnable(GL10.GL_COLOR_MATERIAL);
 		gl.glEnable(GL10.GL_LIGHTING);
