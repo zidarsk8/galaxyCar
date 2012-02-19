@@ -80,4 +80,14 @@ public class DataHandler implements DataListener{
 			mDataListeners.add(listener);
 		}
 	}
+	public void setAlpha(float alpha) {
+		for (Iterator<DataListener> i = mDataListeners.iterator(); i.hasNext();){
+			DataListener dl = i.next();
+			if (dl != null){
+				dl.setAlpha(alpha);
+			}else{
+				D.dbge("iterator data is null");
+			}
+		}
+	}
 }

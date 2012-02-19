@@ -66,4 +66,8 @@ public class StevecView extends View implements DataListener{
 		//D.dbgv("updating stevec view with speed: "+data[3]);
 		setSpeed(data[3]);
 	}
+
+	public void setAlpha(float alpha) {
+		this.mAlpha = alpha;
+	}
 }

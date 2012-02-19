@@ -26,7 +26,7 @@ public class Car implements DataListener{
 	protected Vector3d mDirVec = null;
 	protected Vector3d mPosition = null;
 	protected float yaw = 180, pitch = 0, skew = 0;
-	//private float alpha = 0;
+	private float mAlpha = 0;
 
 	private float mSpeed = 0;
 	private float mTurn = 0;
@@ -173,6 +173,10 @@ public class Car implements DataListener{
 	public void updateData(float[] data) {
 		//D.dbgv("updating car data "+data[4]);
 		setDirection(data[3],data[4]);
+	}
+
+	public void setAlpha(float alpha) {
+		this.mAlpha = alpha;
 	}
 	
 }
