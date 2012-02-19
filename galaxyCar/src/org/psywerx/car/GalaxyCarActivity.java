@@ -1,15 +1,7 @@
 package org.psywerx.car;
 
-import java.util.Random;
-
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
-import org.achartengine.chart.PointStyle;
-import org.achartengine.model.TimeSeries;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYSeries;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
 import org.psywerx.car.bluetooth.BtHelper;
 import org.psywerx.car.bluetooth.DeviceListActivity;
 import org.psywerx.car.seekbar.VerticalSeekBar;
@@ -22,7 +14,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -38,6 +29,7 @@ import android.widget.ToggleButton;
 public class GalaxyCarActivity extends Activity {
 
 	// Intent request codes
+	public static final long THREAD_REFRESH_PERIOD = 50;
 	private static final int REQUEST_CONNECT_DEVICE = 2;
 	private static final int REQUEST_ENABLE_BT = 3;
 
@@ -53,10 +45,6 @@ public class GalaxyCarActivity extends Activity {
 	private ToggleButton mBluetoothButton;
 	private ToggleButton mStartButton;
 	private DataHandler mDataHandler;
-	private TimeSeries timeSeries;
-	private Thread mThread;
-	private XYSeries series;
-	private XYMultipleSeriesDataset dataset;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -198,45 +186,6 @@ public class GalaxyCarActivity extends Activity {
 		default:
 			super.onActivityResult(requestCode, resultCode, data);
 		}
-	}
-
-	private XYMultipleSeriesRenderer getDemoRenderer() {
-		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
-		renderer.setInScroll(false);
-		renderer.setAxisTitleTextSize(16);
-		renderer.setChartTitleTextSize(20);
-		renderer.setLabelsTextSize(15);
-		renderer.setLegendTextSize(15);
-		renderer.setPointSize(5f);
-		renderer.setMargins(new int[] { 20, 30, 15, 0 });
-		XYSeriesRenderer r = new XYSeriesRenderer();
-		//r.setColor(Color.BLUE);
-		//r.setPointStyle(PointStyle.SQUARE);
-		//r.setFillBelowLine(true);
-		//r.setFillBelowLineColor(Color.WHITE);
-		r.setFillPoints(true);
-		renderer.addSeriesRenderer(r);
-		r = new XYSeriesRenderer();
-		r.setPointStyle(PointStyle.CIRCLE);
-		r.setColor(Color.GREEN);
-		r.setFillPoints(true);
-		return renderer;
-	}
-
-	private static final int SERIES_NR = 1;
-
-	private XYMultipleSeriesDataset getDemoDataset() {
-		dataset = new XYMultipleSeriesDataset();
-		final int nr = 2;
-		Random r = new Random();
-		for (int i = 0; i < SERIES_NR; i++) {
-			series = new XYSeries("Demo series " + (i + 1));
-			for (int k = 0; k < nr; k++) {
-				series.add(k, 20 + r.nextInt() % 100);
-			}
-			dataset.addSeries(series);
-		}
-		return dataset;
 	}
 
 	@Override

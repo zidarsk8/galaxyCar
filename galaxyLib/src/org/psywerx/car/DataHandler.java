@@ -21,7 +21,7 @@ public class DataHandler implements DataListener{
 	private final Matrix3d mRotMatrix;
 
 	private boolean mRunning;
-	private class UpdateViews implements Runnable{
+	private class UpdateViews {
 		public void run() {
 			try {
 				mLastData[4] -= 5f; 
@@ -71,7 +71,8 @@ public class DataHandler implements DataListener{
 
 		if (!mRunning){
 			mRunning = true;
-			new Thread(mUpdateViews).start();
+			//new Thread(mUpdateViews).start();
+			mUpdateViews.run();
 		}
 	}
 
