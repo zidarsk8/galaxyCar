@@ -5,6 +5,7 @@ import java.util.Random;
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.PointStyle;
+import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
@@ -49,6 +50,10 @@ public class GalaxyCarActivity extends Activity {
 	private ToggleButton mBluetoothButton;
 	private ToggleButton mStartButton;
 	private DataHandler mDataHandler;
+	private TimeSeries timeSeries;
+	private Thread mThread;
+	private XYSeries series;
+	private XYMultipleSeriesDataset dataset;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -57,9 +62,11 @@ public class GalaxyCarActivity extends Activity {
 		setContentView(R.layout.main);
 
 		// Get wake lock:
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		mWakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Sandboc lock");
-		mWakeLock.acquire();
+		 PowerManager pm = (PowerManager)
+		 getSystemService(Context.POWER_SERVICE);
+		 mWakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK,
+		 "Sandboc lock");
+		 mWakeLock.acquire();
 
 		init();
 	}
@@ -69,16 +76,33 @@ public class GalaxyCarActivity extends Activity {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		// TODO: these chart should be moved away into their own class
-		LinearLayout layout = (LinearLayout)findViewById(R.id.chart); 
-		mChartView = ChartFactory.getLineChartView(this, getDemoDataset(), getDemoRenderer());
-		layout.addView((View) mChartView, new LayoutParams		(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT)); 
+		LinearLayout layout = (LinearLayout) findViewById(R.id.chart);
+		mChartView = (GraphicalView) ChartFactory.getLineChartView(this,
+				getDemoDataset(), getDemoRenderer());
+		layout.addView((View) mChartView, new LayoutParams(
+				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
+		mThread = new Thread() {
+			private Random random = new Random();
 
+			public void run() {
+				while (true) {
+					try {
+						Thread.sleep(2000L);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					series.add(series.getItemCount(), 20 + random.nextInt() % 100);
+					((GraphicalView) mChartView).repaint();
+				}
+			}
+		};
+		
 
-		mBtHelper = new BtHelper(getApplicationContext(),mDataHandler);
+		mBtHelper = new BtHelper(getApplicationContext(), mDataHandler);
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
-		if (mGlView == null){
-			//cant show stuff if you cant show stuff right :P
+		if (mGlView == null) {
+			// cant show stuff if you cant show stuff right :P
 			finish();
 			return;
 		}
@@ -103,15 +127,20 @@ public class GalaxyCarActivity extends Activity {
 			}
 		});
 
-		//add data handlers to each view or class
+		// add data handlers to each view or class
 		mDataHandler.registerListener(svr.getCar());
 		mDataHandler.registerListener((StevecView) findViewById(R.id.stevec));
-		mDataHandler.registerListener((SteeringWheelView) findViewById(R.id.steeringWheel));
-		mDataHandler.registerListener((PospeskiView) findViewById(R.id.pospeski));
+		mDataHandler
+				.registerListener((SteeringWheelView) findViewById(R.id.steeringWheel));
+		mDataHandler
+				.registerListener((PospeskiView) findViewById(R.id.pospeski));
+		
+		
+		mThread.start();
 	}
 
 	private void enableBluetooth() {
-		if (mBluetoothButton.isChecked()){
+		if (mBluetoothButton.isChecked()) {
 			D.dbgv("starting bluetooth thingy");
 			if (mBluetoothAdapter == null) {
 				Toast.makeText(getApplicationContext(),
@@ -125,7 +154,7 @@ public class GalaxyCarActivity extends Activity {
 						DeviceListActivity.class);
 				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 			}
-		}else{
+		} else {
 			D.dbgv("turn off bluetoot");
 			mBtHelper.reset();
 		}
@@ -138,9 +167,10 @@ public class GalaxyCarActivity extends Activity {
 		switch (requestCode) {
 		case REQUEST_CONNECT_DEVICE:
 			if (resultCode == Activity.RESULT_OK) {
-				String address = data.getExtras()
-						.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+				String address = data.getExtras().getString(
+						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+				BluetoothDevice device = mBluetoothAdapter
+						.getRemoteDevice(address);
 				mBtHelper.connect(device, false);
 				new Thread(mBtHelper).start();
 			}
@@ -152,16 +182,18 @@ public class GalaxyCarActivity extends Activity {
 				enableBluetooth();
 			} else {
 				// User did not enable Bluetooth or an error occurred
-				//Toast.makeText(getApplicationContext(), R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
+				// Toast.makeText(getApplicationContext(),
+				// R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
 			}
 			break;
-		default: 
+		default:
 			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
 	private XYMultipleSeriesRenderer getDemoRenderer() {
 		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
+		renderer.setInScroll(false);
 		renderer.setAxisTitleTextSize(16);
 		renderer.setChartTitleTextSize(20);
 		renderer.setLabelsTextSize(15);
@@ -169,30 +201,27 @@ public class GalaxyCarActivity extends Activity {
 		renderer.setPointSize(5f);
 		renderer.setMargins(new int[] { 20, 30, 15, 0 });
 		XYSeriesRenderer r = new XYSeriesRenderer();
-		r.setColor(Color.BLUE);
-		r.setPointStyle(PointStyle.SQUARE);
-		r.setFillBelowLine(true);
-		r.setFillBelowLineColor(Color.WHITE);
+		//r.setColor(Color.BLUE);
+		//r.setPointStyle(PointStyle.SQUARE);
+		//r.setFillBelowLine(true);
+		//r.setFillBelowLineColor(Color.WHITE);
 		r.setFillPoints(true);
 		renderer.addSeriesRenderer(r);
 		r = new XYSeriesRenderer();
 		r.setPointStyle(PointStyle.CIRCLE);
 		r.setColor(Color.GREEN);
 		r.setFillPoints(true);
-		renderer.addSeriesRenderer(r);
-		renderer.setAxesColor(Color.DKGRAY);
-		renderer.setLabelsColor(Color.LTGRAY);
 		return renderer;
 	}
 
-	private static final int SERIES_NR = 2;
+	private static final int SERIES_NR = 1;
 
 	private XYMultipleSeriesDataset getDemoDataset() {
-		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-		final int nr = 10;
+		dataset = new XYMultipleSeriesDataset();
+		final int nr = 2;
 		Random r = new Random();
 		for (int i = 0; i < SERIES_NR; i++) {
-			XYSeries series = new XYSeries("Demo series " + (i + 1));
+			series = new XYSeries("Demo series " + (i + 1));
 			for (int k = 0; k < nr; k++) {
 				series.add(k, 20 + r.nextInt() % 100);
 			}
@@ -204,7 +233,7 @@ public class GalaxyCarActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		((GraphicalView) mChartView).repaint(); 
+		((GraphicalView) mChartView).repaint();
 	}
 
 }
