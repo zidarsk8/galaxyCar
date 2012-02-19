@@ -100,11 +100,19 @@
                 android:background="@android:color/black"
                 android:orientation="horizontal" />
     
+            <org.psywerx.car.seekbar.VerticalSeekBar
+                android:id="@+id/alphaBar"
+                android:progressDrawable="@drawable/seekbar_progress"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="400dp" />
+
             <android.opengl.GLSurfaceView
                 android:id="@+id/glSurface"
                 android:layout_marginTop="40dp"
-                android:layout_marginLeft="480dp"
-                android:layout_width="750dp"
+                android:layout_marginLeft="500dp"
+                android:layout_width="730dp"
                 android:layout_height="400dp" />
 
             <ToggleButton
