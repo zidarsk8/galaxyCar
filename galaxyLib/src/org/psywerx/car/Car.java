@@ -13,7 +13,7 @@ public class Car implements DataListener{
 	private final float TURN_FACTOR = 2;
 	private final float MAX_RADIUS = 20;
 
-	private final int HISTORY_SIZE = 2000*9;
+	private final int HISTORY_SIZE = 2000*18;
 
 	// change this if the turning circle radius is not linear function of the wheel turn value
 	//private final float LINEAR = 1;
@@ -57,12 +57,15 @@ public class Car implements DataListener{
 		Vector3d t1 = new Vector3d();
 		Vector3d t2 = new Vector3d();
 		Vector3d t3 = new Vector3d();
+		Vector3d t4 = new Vector3d();
 		
 		Vector3d center = new Vector3d((float)car.center[0],0,(float)car.center[2]);
 		center.add(mPosition);
+		
 		t1.add(center,perpendicular);
 		t2.sub(center,perpendicular);
-		t3.add(center,mDirVec);
+		t3.add(t1, mDirVec);
+		t4.add(t2, mDirVec);
 		
 		//dodamo histor trikotnike
 		mHistorArr[mHistoryPosition]   = (float) t1.x;
@@ -74,6 +77,17 @@ public class Car implements DataListener{
 		mHistorArr[mHistoryPosition+6] = (float) t3.x;
 		mHistorArr[mHistoryPosition+7] = (float) t3.y;
 		mHistorArr[mHistoryPosition+8] = (float) t3.z;
+		mHistoryPosition+=9;
+		mHistorArr[mHistoryPosition]   = (float) t2.x;
+		mHistorArr[mHistoryPosition+1] = (float) t2.y;
+		mHistorArr[mHistoryPosition+2] = (float) t2.z;
+		mHistorArr[mHistoryPosition+3] = (float) t4.x;
+		mHistorArr[mHistoryPosition+4] = (float) t4.y;
+		mHistorArr[mHistoryPosition+5] = (float) t4.z;
+		mHistorArr[mHistoryPosition+6] = (float) t3.x;
+		mHistorArr[mHistoryPosition+7] = (float) t3.y;
+		mHistorArr[mHistoryPosition+8] = (float) t3.z;
+
 		
 		mHistoryPosition = (mHistoryPosition+9) % HISTORY_SIZE;
 		
