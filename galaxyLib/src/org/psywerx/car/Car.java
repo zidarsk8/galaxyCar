@@ -14,7 +14,6 @@ public class Car implements DataListener{
 	private final float MAX_RADIUS = 20;
 
 	private final int HISTORY_SIZE = 1000*9;
-	private final int HISTORY_SIZE = 1000*9;
 
 	// change this if the turning circle radius is not linear function of the wheel turn value
 	//private final float LINEAR = 1;
