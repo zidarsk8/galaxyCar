@@ -22,7 +22,7 @@ public class PospeskiView extends View implements DataListener{
 	private float mZ = 0;
 	private int mWidth = 0;
 	private int mHeigh = 0;
-	private static float ALPHA = 0.1f;
+	private float mAlpha = 0.1f;
 
 	public PospeskiView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -40,9 +40,9 @@ public class PospeskiView extends View implements DataListener{
 			return false;
 		}
 
-		mX = (1f-ALPHA) * mX + ALPHA* (((x+1) * mWidth ) / 2);
-		mY = (1f-ALPHA) * mY + ALPHA* (((y+1) * mHeigh ) / 2);
-		mZ = (1f-ALPHA) * mZ + ALPHA* (Math.abs(z*SIZE_FACTOR) + 4);
+		mX = (1f-mAlpha) * mX + mAlpha* (((x+1) * mWidth ) / 2);
+		mY = (1f-mAlpha) * mY + mAlpha* (((y+1) * mHeigh ) / 2);
+		mZ = (1f-mAlpha) * mZ + mAlpha* (Math.abs(z*SIZE_FACTOR) + 4);
 
 		postInvalidate();
 		return true;
@@ -57,5 +57,9 @@ public class PospeskiView extends View implements DataListener{
 
 	public void updateData(float[] data) {
 		setXYZ(data[0], data[1], data[2]);
+	}
+
+	public void setAlpha(float alpha) {
+		this.mAlpha = alpha;
 	}
 }

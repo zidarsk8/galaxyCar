@@ -108,7 +108,8 @@ public class GalaxyCarActivity extends Activity {
 		mAlphaBar = (VerticalSeekBar) findViewById(R.id.alphaBar);
 		mAlphaBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				//TODO setAlpha
+				float p = progress/100f;
+				mDataHandler.setAlpha(p*p);
 			}
 			public void onStartTrackingTouch(SeekBar seekBar){}
 			public void onStopTrackingTouch(SeekBar seekBar){}

@@ -100,7 +100,7 @@ public class BluetoothChat extends Activity {
 			finish();
 			return;
 		}
-		//readFileLoop();
+		readFileLoop();
 
 		((Button) findViewById(R.id.button_dec)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -284,8 +284,9 @@ public class BluetoothChat extends Activity {
 
 				if(readMessage.equals("start")){
 					D.dbgv("sending start");
-					mChatService.write("start pressed".getBytes());
+					//mChatService.write("start pressed".getBytes());
 					timestamp = System.nanoTime();
+					writeTestLoop();
 				}
 				if(readMessage.equals("stop")){
 					D.dbgv("sending stop");
@@ -328,16 +329,29 @@ public class BluetoothChat extends Activity {
 
 	protected void writeTestLoop(){
 		if (timestamp == 0) return;
-		long cur = System.nanoTime();
-		if (cur-timestamp < 5){
-			mChatService.write(("0.2332,0.1,0.41,10,0").getBytes());
-		}else if (cur-timestamp < 5+Math.PI*10){
+		long cur = System.nanoTime()-timestamp;
+		cur /= 1e8;
+		cur %= 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2  +  46  +  3*Math.PI*16/2  +  Math.PI*12  +  Math.PI*10 + 8;
+		//D.dbgv("time "+cur );
+		if       (cur < 5  ){
 			mChatService.write(("0.2332,0.1,0.41,10,5").getBytes());
-		}else  if (cur-timestamp < 5+Math.PI*10+5){
+		}else if (cur < 5  +  Math.PI*10){
+			mChatService.write(("0.2332,0.1,0.41,10,10").getBytes());
+		}else if (cur < 5  +  Math.PI*10  +  15){
+			mChatService.write(("0.2332,0.1,0.41,10,5").getBytes());
+		}else if (cur < 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2){
+			mChatService.write(("0.2332,0.1,0.41,10,3").getBytes());
+		}else if (cur < 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2  +  46){
+			mChatService.write(("0.2332,0.1,0.41,10,5").getBytes());
+		}else if (cur < 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2  +  46  +  3*Math.PI*16/2){
+			mChatService.write(("0.2332,0.1,0.41,10,3").getBytes());
+		}else if (cur < 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2  +  46  +  3*Math.PI*16/2  +  Math.PI*12){
+			mChatService.write(("0.2332,0.1,0.41,10,1").getBytes());
+		}else if (cur < 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2  +  46  +  3*Math.PI*16/2  +  Math.PI*12  +  Math.PI*10){
 			mChatService.write(("0.2332,0.1,0.41,10,0").getBytes());
-		}else if (cur-timestamp < 5+Math.PI*10+5+3*Math.PI*16/2){
-			mChatService.write(("0.2332,0.1,0.41,10,-2").getBytes());
-		}else if (cur-timestamp < 5+Math.PI*10+5+3*Math.PI*16/2+20){
+		}else if (cur < 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2  +  46  +  3*Math.PI*16/2  +  Math.PI*12  +  Math.PI*10 + 8){
+			mChatService.write(("0.2332,0.1,0.41,10,5").getBytes());
+		}else {
 			mChatService.write(("0.2332,0.1,0.41,10,0").getBytes());
 		}
 	}

@@ -4,10 +4,10 @@ import android.util.Log;
 
 public class D { 
 	private static final String TAG = "DEBUG ";
-	protected static boolean showDBGV = false;
-	protected static boolean showDBGI = false;
-	protected static boolean showDBGD = false;
-	protected static boolean showDBGW = false;
+	protected static boolean showDBGV = true;
+	protected static boolean showDBGI = true;
+	protected static boolean showDBGD = true;
+	protected static boolean showDBGW = true;
 	protected static boolean showDBGE = true;
 	protected static boolean showFullClassName = false;
 

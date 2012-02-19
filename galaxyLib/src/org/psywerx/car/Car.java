@@ -9,11 +9,11 @@ import javax.vecmath.Vector3d;
 
 public class Car implements DataListener{
 
-	private final float SPEED_FACTOR = 0.1f;
+	private final float SPEED_FACTOR = 1f;
 	private final float TURN_FACTOR = 2;
 	private final float MAX_RADIUS = 20;
 
-	private final int HISTORY_SIZE = 1000*9;
+	private final int HISTORY_SIZE = 10000*9;
 
 	// change this if the turning circle radius is not linear function of the wheel turn value
 	//private final float LINEAR = 1;
@@ -26,7 +26,7 @@ public class Car implements DataListener{
 	protected Vector3d mDirVec = null;
 	protected Vector3d mPosition = null;
 	protected float yaw = 180, pitch = 0, skew = 0;
-	//private float alpha = 0;
+	private float mAlpha = 0;
 
 	private float mSpeed = 0;
 	private float mTurn = 0;
@@ -47,9 +47,10 @@ public class Car implements DataListener{
 			return;
 		}
 		
+		Vector3d norm = new Vector3d(0,(mTurn<0? -1:1),0);
 		Vector3d newDirection = new Vector3d(mDirVec);
 		Vector3d perpendicular = new Vector3d(); // perpendicular to direction vector
-		perpendicular.cross(newDirection, new Vector3d(0,1,0));
+		perpendicular.cross(newDirection, norm);
 		perpendicular.normalize();
 		mDirVec.normalize();
 		
@@ -80,8 +81,8 @@ public class Car implements DataListener{
 		
 		if (mTurn != 0){
 			//double radious = (MAX_RADIUS - Math.pow(mTurn * TURN_FACTOR, LINEAR));
-			double radious = MAX_RADIUS - Math.abs(mTurn) * TURN_FACTOR * (mTurn<0? -1:1);
-			double alpha = Math.PI*2*dDistance/radious; // distance of the driven arc in angle degrees
+			double radious = MAX_RADIUS - Math.abs(mTurn) * TURN_FACTOR ;
+			double alpha = dDistance/radious; // distance of the driven arc in angle degrees
 			perpendicular.scale(radious);
 			newDirection.normalize();
 			newDirection.scale(radious);
@@ -95,7 +96,7 @@ public class Car implements DataListener{
 			perpendicular.add(newDirection);
 			
 			mPosition.add(perpendicular);
-			mDirVec.cross(perpendicular, new Vector3d(0, 1, 0));
+			mDirVec.cross(perpendicular, norm);
 			
 		}else{
 			newDirection.normalize();
@@ -172,6 +173,10 @@ public class Car implements DataListener{
 	public void updateData(float[] data) {
 		//D.dbgv("updating car data "+data[4]);
 		setDirection(data[3],data[4]);
+	}
+
+	public void setAlpha(float alpha) {
+		this.mAlpha = alpha;
 	}
 	
 }
