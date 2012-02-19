@@ -9,7 +9,7 @@ import javax.vecmath.Vector3d;
 
 public class Car implements DataListener{
 
-	private final float SPEED_FACTOR = 0.05f;
+	private final float SPEED_FACTOR = 0.1f;
 	private final float TURN_FACTOR = 2;
 	private final float MAX_RADIUS = 20;
 
@@ -38,14 +38,10 @@ public class Car implements DataListener{
 
 
 	public void update(){
-		
-		mTurn = 0;
-		mSpeed = 5;
-		
 		long time = System.nanoTime();
 		double elapsed = (time - mTimestamp)/ 1e9f;
 		mTimestamp = time;
-		double dDistance = mSpeed * elapsed * SPEED_FACTOR;
+		double dDistance = mSpeed * elapsed * SPEED_FACTOR; // m/s
 		
 		if (mSpeed == 0){
 			return;
@@ -104,6 +100,7 @@ public class Car implements DataListener{
 		}else{
 			newDirection.normalize();
 			newDirection.scale(dDistance);
+			mPosition.add(newDirection);
 		}
 		
 		double xArc = newDirection.angle(new Vector3d(1, 0, 0));

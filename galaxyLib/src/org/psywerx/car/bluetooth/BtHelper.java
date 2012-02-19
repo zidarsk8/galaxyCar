@@ -115,6 +115,11 @@ public class BtHelper implements Runnable{
 	 */
 	public synchronized void recieveData(String data){
 		try {
+			if ("start pressed".equals(data)){
+				D.dbge("recieved "+data);
+				sendData();
+				return;
+			}
 			String[] arr = data.split(",");
 			if (arr.length != 5 ){
 				D.dbge("wrong data set: "+data);
