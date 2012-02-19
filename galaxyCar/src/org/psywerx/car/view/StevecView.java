@@ -23,9 +23,14 @@ public class StevecView extends View implements DataListener{
 	private float mRotate = 0;
 	private float mSpeed = 0;
 	private float mAlpha = 0.3f;
-	private int mDistance = 0;
+	private double mDistance = 0;
+	private long mTimestamp = 0;
 
 	public boolean setSpeed(float speed) {
+		long ct = System.nanoTime();
+		mDistance += speed*(mTimestamp-ct)/1e9;
+		mTimestamp = ct;
+		
 		mSpeed = (1.0f-mAlpha)*mSpeed + mAlpha * speed;
 		float temp = -30+2.3f*mSpeed;
 		if (temp < MIN_ROTATE || temp > MAX_ROTATE)
@@ -34,17 +39,10 @@ public class StevecView extends View implements DataListener{
 		this.postInvalidate();
 		return true;
 	}
-
-	public boolean setDistance(int x) {
-		if (x < 0 || x > 9999)
-			return false;
-		this.mDistance = x;
-		this.postInvalidate();
-		return true;
-	}
-
+	
 	public StevecView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		mTimestamp = System.nanoTime();
 		mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mTextPaint.setColor(Color.LTGRAY);
 		mTextPaint.setTextSize(29);
@@ -65,6 +63,7 @@ public class StevecView extends View implements DataListener{
 	public void updateData(float[] data) {
 		//D.dbgv("updating stevec view with speed: "+data[3]);
 		setSpeed(data[3]);
+		
 	}
 
 	public void setAlpha(float alpha) {
