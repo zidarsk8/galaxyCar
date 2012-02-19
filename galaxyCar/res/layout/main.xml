@@ -89,70 +89,71 @@
             
     </LinearLayout>
     -->
-    
-    
-            <LinearLayout
-                android:id="@+id/chart"
-                android:layout_marginTop="40dp"
-                android:layout_marginLeft="40dp"
-                android:layout_width="400dp"
-                android:layout_height="400dp"
-                android:background="@android:color/black"
-                android:orientation="horizontal" />
-    
-            <org.psywerx.car.seekbar.VerticalSeekBar
-                android:id="@+id/alphaBar"
-                android:progressDrawable="@drawable/seekbar_progress"
-                android:layout_marginTop="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="400dp" />
 
-            <android.opengl.GLSurfaceView
-                android:id="@+id/glSurface"
-                android:layout_marginTop="40dp"
-                android:layout_marginLeft="500dp"
-                android:layout_width="730dp"
-                android:layout_height="400dp" />
+    <LinearLayout
+        android:id="@+id/chart"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="40dp"
+        android:background="@android:color/black"
+        android:orientation="horizontal" />
 
-            <ToggleButton
-                android:id="@+id/bluetoothButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="620dp"
-                android:layout_marginLeft="10dp"
-                android:textOff=""
-				android:textOn=""
-        		android:background="@drawable/bluetooth_button" />
-            <ToggleButton
-                android:id="@+id/powerButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="540dp"
-                android:layout_marginLeft="150dp"
-                android:textOff="Start"
-				android:textOn="Stop"
-        		android:background="@drawable/power_button" />
-            
-            <org.psywerx.car.view.StevecView
-                android:id="@+id/stevec"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="480dp"
-                android:layout_marginLeft="880dp" />
-            
-            <org.psywerx.car.view.SteeringWheelView
-                android:id="@+id/steeringWheel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="480dp"
-                android:layout_marginLeft="520dp" />
-            
-            <org.psywerx.car.view.PospeskiView
-                android:id="@+id/pospeski"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:layout_marginLeft="1090dp" />
-            
+    <org.psywerx.car.seekbar.VerticalSeekBar
+        android:id="@+id/alphaBar"
+        android:layout_width="wrap_content"
+        android:layout_height="400dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="40dp"
+        android:progress="50"
+        android:progressDrawable="@drawable/seekbar_progress" />
+
+    <android.opengl.GLSurfaceView
+        android:id="@+id/glSurface"
+        android:layout_width="730dp"
+        android:layout_height="400dp"
+        android:layout_marginLeft="500dp"
+        android:layout_marginTop="40dp" />
+
+    <ToggleButton
+        android:id="@+id/bluetoothButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="620dp"
+        android:background="@drawable/bluetooth_button"
+        android:textOff=""
+        android:textOn="" />
+
+    <ToggleButton
+        android:id="@+id/powerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="540dp"
+        android:background="@drawable/power_button"
+        android:textOff="Start"
+        android:textOn="Stop" />
+
+    <org.psywerx.car.view.StevecView
+        android:id="@+id/stevec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="880dp"
+        android:layout_marginTop="480dp" />
+
+    <org.psywerx.car.view.SteeringWheelView
+        android:id="@+id/steeringWheel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="520dp"
+        android:layout_marginTop="480dp" />
+
+    <org.psywerx.car.view.PospeskiView
+        android:id="@+id/pospeski"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1090dp"
+        android:layout_marginTop="50dp" />
+
 </RelativeLayout>

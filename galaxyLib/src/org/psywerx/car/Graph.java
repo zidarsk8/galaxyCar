@@ -84,9 +84,12 @@ public class Graph implements DataListener {
 		mThread.start();
 	}
 
-	@Override
 	public void updateData(float[] data) {
+		
+	}
 
+	public void setAlpha(float alpha) {
+		
 	}
 
 }
