@@ -42,7 +42,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		gl.glEnable(GL10.GL_LIGHTING);
 		
 		car.draw(gl);
-		cesta.draw(gl);
+		//cesta.draw(gl);
 
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);

@@ -99,7 +99,7 @@ public class GalaxyCarActivity extends Activity {
 		mStartButton = (ToggleButton) findViewById(R.id.powerButton);
 		mStartButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				mBtHelper.sendStart();
+				toggleStart();
 			}
 		});
 
@@ -108,6 +108,14 @@ public class GalaxyCarActivity extends Activity {
 		mDataHandler.registerListener((StevecView) findViewById(R.id.stevec));
 		mDataHandler.registerListener((SteeringWheelView) findViewById(R.id.steeringWheel));
 		mDataHandler.registerListener((PospeskiView) findViewById(R.id.pospeski));
+	}
+	
+	private void toggleStart(){
+		if (mStartButton.isChecked()){
+			mBtHelper.sendStart();
+		}else{
+			mBtHelper.sendStop();
+		}
 	}
 
 	private void enableBluetooth() {
