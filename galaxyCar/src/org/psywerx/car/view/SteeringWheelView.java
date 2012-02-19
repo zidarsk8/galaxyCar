@@ -2,6 +2,7 @@ package org.psywerx.car.view;
 
 import org.psywerx.car.D;
 import org.psywerx.car.DataListener;
+import org.psywerx.car.GalaxyCarActivity;
 import org.psywerx.car.R;
 
 import android.content.Context;
@@ -23,7 +24,7 @@ public class SteeringWheelView extends View implements DataListener{
 			try {
 				run = true;
 				while (run){
-					Thread.sleep(20);
+					Thread.sleep(GalaxyCarActivity.THREAD_REFRESH_PERIOD);
 					//D.dbgv("repainting wheel thread !!");
 					rotateWheel();
 				}
@@ -51,7 +52,7 @@ public class SteeringWheelView extends View implements DataListener{
 	protected void onWindowVisibilityChanged(int visibility) {
 		//dissabled just to stop debug spamming :P
 		if (visibility == View.VISIBLE){
-			//new Thread(mRotateThread).start();
+			new Thread(mRotateThread).start();
 		}else{
 			mRotateThread.stop();
 		}

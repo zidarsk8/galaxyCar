@@ -26,7 +26,6 @@ public class Car implements DataListener{
 	protected Vector3d mDirVec = null;
 	protected Vector3d mPosition = null;
 	protected float yaw = 180, pitch = 0, skew = 0;
-	private float mAlpha = 0;
 
 	private float mSpeed = 0;
 	private float mTurn = 0;
@@ -190,7 +189,6 @@ public class Car implements DataListener{
 	}
 
 	public void setAlpha(float alpha) {
-		this.mAlpha = alpha;
 	}
 	
 }
