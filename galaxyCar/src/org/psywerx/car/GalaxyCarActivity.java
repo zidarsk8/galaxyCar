@@ -75,28 +75,17 @@ public class GalaxyCarActivity extends Activity {
 		mDataHandler = new DataHandler();
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-		// TODO: these chart should be moved away into their own class
+		Graph g = new Graph();
 		LinearLayout layout = (LinearLayout) findViewById(R.id.chart);
-		mChartView = (GraphicalView) ChartFactory.getLineChartView(this,
-				getDemoDataset(), getDemoRenderer());
+		mChartView = ChartFactory.getLineChartView(this,
+				g.getDemoDataset(), g.getDemoRenderer());
+		
+		g.start((GraphicalView) mChartView);
+		
 		layout.addView((View) mChartView, new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
-		mThread = new Thread() {
-			private Random random = new Random();
 
-			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(2000L);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					series.add(series.getItemCount(), 20 + random.nextInt() % 100);
-					((GraphicalView) mChartView).repaint();
-				}
-			}
-		};
 		
 
 		mBtHelper = new BtHelper(getApplicationContext(), mDataHandler);
@@ -136,7 +125,6 @@ public class GalaxyCarActivity extends Activity {
 				.registerListener((PospeskiView) findViewById(R.id.pospeski));
 		
 		
-		mThread.start();
 	}
 	
 	private void toggleStart(){
