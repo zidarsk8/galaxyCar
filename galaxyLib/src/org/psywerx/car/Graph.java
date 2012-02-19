@@ -11,14 +11,14 @@ import org.achartengine.renderer.XYSeriesRenderer;
 
 import android.graphics.Color;
 
-public class Graph {
+public class Graph implements DataListener {
 
 	private XYMultipleSeriesDataset dataset;
 	private XYSeries series;
 	private GraphicalView mChartView;
 	private Thread mThread;
 
-	private final int MAX_POINTS = 100;
+	private final int MAX_POINTS = 500;
 	private XYMultipleSeriesRenderer renderer;
 
 	public XYMultipleSeriesRenderer getDemoRenderer() {
@@ -59,23 +59,34 @@ public class Graph {
 
 		mThread = new Thread() {
 			private Random random = new Random();
+			private int ticks = 0;
 
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(500L);
+						Thread.sleep(50L);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					series.add(series.getItemCount(),
+					if(series.getItemCount() > MAX_POINTS)
+						series.remove(0);
+					
+					series.add(ticks,
 							20 + random.nextInt() % 100);
-					renderer.setXAxisMax(series.getMaxX());
-					renderer.setXAxisMin(series.getItemCount() - MAX_POINTS);
+					renderer.setXAxisMax(ticks);
+					renderer.setXAxisMin(ticks - MAX_POINTS);
 					((GraphicalView) mChartView).repaint();
+					
+					ticks++;
 				}
 			}
 		};
 		mThread.start();
+	}
+
+	@Override
+	public void updateData(float[] data) {
+
 	}
 
 }
