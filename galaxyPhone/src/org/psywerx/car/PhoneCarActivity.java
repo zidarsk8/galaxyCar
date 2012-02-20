@@ -30,7 +30,7 @@ public class PhoneCarActivity extends Activity {
         
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-		mBtHelper = new BtHelper(getApplicationContext(), null);
+		mBtHelper = new BtHelper(getApplicationContext(), null, null);
 		
         mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
         

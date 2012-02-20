@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -29,6 +30,7 @@ public class ModelLoader{
 		models.put("car", InitModel("car"));
 		//models.put("cesta", InitModel("cesta"));
 		Model cesta = InitModel("world");
+		cesta.textureScale = 2;
 		addTexture("kvadrat.bmp", cesta);
 		models.put("cesta2", cesta);
 	}
@@ -40,14 +42,12 @@ public class ModelLoader{
 			bitmap = BitmapFactory.decodeStream(is);
 			mo.mBitmap = bitmap;
 			is.close();
-			float[] texture = {
-					480.398628f,	-480.182594f,
-					-470.785633f,	-480.182617f,
-					-470.78566f, 480.001675f,
-					480.398628f, -480.182594f,
-					-470.78566f,	480.001675f,
-					480.398624f,	480.001678f
-			};
+			float[] texture = new float[mo.vertices.length*2/3];
+			for (int i = 0,j = 0; i < mo.vertices.length; i++) {
+				if(i%3==1) continue;
+				texture[j++] = mo.vertices[i]/mo.textureScale;
+			}
+			D.dbgd(Arrays.toString(texture));
 			
 			ByteBuffer byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
 			byteBuf.order(ByteOrder.nativeOrder());
@@ -118,7 +118,7 @@ public class ModelLoader{
 		int i = 0;
 		
 		float x = 0,y = 0,z = 0;
-		
+		ByteBuffer vbb = null;
 		
 		while((line = brc.readLine()) != null){
 			String[] modString = line.split(",");
@@ -128,7 +128,9 @@ public class ModelLoader{
 				buff[j++] = Float.parseFloat(a);
 			}
 			x += buff[0]; y += buff[1]; z += buff[2];
-			ByteBuffer vbb = ByteBuffer.allocateDirect(
+			if(type == "v")
+				m.vertices = buff;
+			vbb = ByteBuffer.allocateDirect(
 					// (# of coordinate values * 4 bytes per float)
 					buff.length * 4);
 			// use the device hardware's native byte order
