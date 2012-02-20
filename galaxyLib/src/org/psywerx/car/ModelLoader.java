@@ -2,6 +2,7 @@ package org.psywerx.car;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -10,10 +11,11 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class ModelLoader{
 	
-	private float[] mTh; //track history
 	protected float mTrackWidth = 0.2f;
 	protected float[][] mModels;
 	protected float[][] mNormals;
@@ -25,7 +27,40 @@ public class ModelLoader{
 		// TODO: go over all the .csv files in assets and generate models on based on csv file name
 		this.ctx = ctx;
 		models.put("car", InitModel("car"));
-		models.put("cesta", InitModel("cesta"));
+		//models.put("cesta", InitModel("cesta"));
+		Model cesta = InitModel("world");
+		addTexture("kvadrat.bmp", cesta);
+		models.put("cesta2", cesta);
+	}
+	private void addTexture(String tex, Model mo) {
+		try {
+			InputStream is = ctx.getAssets().open(tex,AssetManager.ACCESS_STREAMING);
+			Bitmap bitmap = null;
+			//BitmapFactory is an Android graphics utility for images
+			bitmap = BitmapFactory.decodeStream(is);
+			mo.mBitmap = bitmap;
+			is.close();
+			float[] texture = {
+					480.398628f,	-480.182594f,
+					-470.785633f,	-480.182617f,
+					-470.78566f, 480.001675f,
+					480.398628f, -480.182594f,
+					-470.78566f,	480.001675f,
+					480.398624f,	480.001678f
+			};
+			
+			ByteBuffer byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
+			byteBuf.order(ByteOrder.nativeOrder());
+			mo.textureBuffer = byteBuf.asFloatBuffer();
+			
+			
+			mo.textureBuffer.put(texture);
+			mo.textureBuffer.position(0);
+			
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	public Model GetModel(String model){
 		return models.get(model);
@@ -36,7 +71,6 @@ public class ModelLoader{
 		Model m = new Model();
 
 		try{
-			
 			InputStreamReader src = new InputStreamReader(ctx.getAssets().open(model+".c.csv",AssetManager.ACCESS_STREAMING));
 			BufferedReader brc = new BufferedReader(src);
 			String line;
@@ -113,29 +147,4 @@ public class ModelLoader{
 		return vertexBuffer;
 
 	}
-
-	/**
-	 *	turn track history array into triangle array for OpenGL.
-	 */
-	protected float[] getTrackMesh(){
-		// TODO: move somplace else :)
-		return getTrackMesh(mTrackWidth);
-	}
-	
-	/**
-	 *	turn track history array into triangle array for OpenGL, 
-	 *	and specify the displayed track width.
-	 *	@param w track width
-	 */
-	protected float[] getTrackMesh(float w){
-		//TODO: finish this, and make up a model for track history
-		int size = mTh.length;
-		float[] mesh = new float[size*3];
-		//mesh[0] = mth.
-		for (int i=1; i<size-1; i++){
-			
-		}
-		return mesh;
-	}
-	
 }
