@@ -123,6 +123,7 @@ public class BtHelper implements Runnable{
 	 * 
 	 * @param data csv string recieved from bluetooth (x,y,z,speed,turn)
 	 */
+	String[] arr ;
 	public synchronized void recieveData(String data){
 		//D.dbge("recieved "+data);
 		try {
@@ -130,7 +131,7 @@ public class BtHelper implements Runnable{
 				sendData();
 				return;
 			}
-			String[] arr = data.split(",");
+			arr= data.split(",");
 			if (arr.length != 5 ){
 				D.dbge("wrong data set: "+data);
 				return;
