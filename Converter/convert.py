@@ -87,7 +87,6 @@ def convert(fileName):
 			clr += c + ","
 		
 		clr = clr[:-1] + "\n"
-
 	print("writing: "+fileName+".v.csv")
 	f = open('../galaxyCar/assets/' + fileName + '.v.csv', 'w')
 	f.write(arr)
@@ -104,6 +103,24 @@ def convert(fileName):
 	f = open('../galaxyCar/assets/' + fileName + '.n.csv', 'w')
 	f.write(nor)
 	f.close()
+
+	print("writing: "+fileName+".v.csv")
+	f = open('../galaxyPhone/assets/' + fileName + '.v.csv', 'w')
+	f.write(arr)
+	f.close()
+	
+	
+	print("writing: "+fileName+".c.csv")
+	f = open('../galaxyPhone/assets/' + fileName + '.c.csv', 'w')
+	f.write(clr)
+	f.close()
+	
+	
+	print("writing: "+fileName+".n.csv")
+	f = open('../galaxyPhone/assets/' + fileName + '.n.csv', 'w')
+	f.write(nor)
+	f.close()
+
 
 
 for ar in range(1,len(sys.argv)):
