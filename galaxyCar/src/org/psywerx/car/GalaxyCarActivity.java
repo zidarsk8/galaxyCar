@@ -201,7 +201,6 @@ public class GalaxyCarActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mGraph.stopThread();
 	}
 
 }

@@ -36,7 +36,7 @@ public class Graph implements DataListener {
 
 		public void stop() {
 			run = false;
-			running = false;
+			//running = false;
 		}
 
 		public boolean isRunning() {
@@ -49,7 +49,7 @@ public class Graph implements DataListener {
 	private GraphicalView mChartView;
 	private Thread mThread;
 
-	private final int MAX_POINTS = 500;
+	private final int MAX_POINTS = 100;
 	private XYMultipleSeriesRenderer renderer;
 	private int ticks = 0;
 	private final UpdateGraph mUpdateGraph = new UpdateGraph();
@@ -132,10 +132,6 @@ public class Graph implements DataListener {
 		// ((GraphicalView) mChartView).repaint();
 		ticks++;
 		updateGraph();
-//		Log.d("SMOTKO", Boolean.toString(mUpdateGraph.isRunning()));
-//		if (!mUpdateGraph.isRunning()) {
-//			mUpdateGraph.run();
-//		}
 	}
 
 	public void setAlpha(float alpha) {
