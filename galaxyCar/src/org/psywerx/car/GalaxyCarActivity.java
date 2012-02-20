@@ -38,7 +38,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	public static final String DEVICE_NAME = "device_name";
 
 	private int mViewMode = 0; // 0 = normal view, 1 = Gl view, 2 = graph view
-	
+
 	private BluetoothAdapter mBluetoothAdapter;
 
 	private GLSurfaceView mGlView;
@@ -50,6 +50,10 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private ToggleButton mStartButton;
 	private DataHandler mDataHandler;
 	private Graph mGraph;
+	private boolean mRefreshThread = true;
+	private SteeringWheelView mSteeringWheelView;
+	private PospeskiView mPospeskiView;
+	private StevecView mStevecView;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -58,11 +62,11 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		setContentView(R.layout.main);
 
 		// Get wake lock:
-		 PowerManager pm = (PowerManager)
-		 getSystemService(Context.POWER_SERVICE);
-		 mWakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK,
-		 "Sandboc lock");
-		 mWakeLock.acquire();
+		PowerManager pm = (PowerManager)
+				getSystemService(Context.POWER_SERVICE);
+		mWakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK,
+				"Sandboc lock");
+		mWakeLock.acquire();
 
 		init();
 	}
@@ -71,16 +75,16 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		mDataHandler = new DataHandler();
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		mGraph = new Graph();
-		
+
 		LinearLayout layout = (LinearLayout) findViewById(R.id.chart);
 		mChartView = ChartFactory.getLineChartView(this,
 				mGraph.getDemoDataset(), mGraph.getDemoRenderer());
-		
+
 		mGraph.start((GraphicalView) mChartView);
-		
+
 		layout.addView((View) mChartView, new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-		
+
 		mBtHelper = new BtHelper(getApplicationContext(), this, mDataHandler);
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
 		if (mGlView == null) {
@@ -93,8 +97,8 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 		mGlView.setRenderer(svr);
 		mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-		
-		
+
+
 		((Button) findViewById(R.id.expandGlButton)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if (mViewMode == 0){
@@ -118,7 +122,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		mAlphaBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				float p = progress/100f;
-				mDataHandler.setAlpha(p*p);
+				mDataHandler.setAlpha(p*p); 
 			}
 			public void onStartTrackingTouch(SeekBar seekBar){}
 			public void onStopTrackingTouch(SeekBar seekBar){}
@@ -138,19 +142,32 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 			}
 		});
 
+		mSteeringWheelView = (SteeringWheelView) findViewById(R.id.steeringWheel);
+		mPospeskiView = (PospeskiView) findViewById(R.id.pospeski);
+		mStevecView = (StevecView) findViewById(R.id.stevec);
 		// add data handlers to each view or class
 		mDataHandler.registerListener(svr.getCar());
-		mDataHandler.registerListener((StevecView) findViewById(R.id.stevec));
-		mDataHandler
-				.registerListener((SteeringWheelView) findViewById(R.id.steeringWheel));
-		mDataHandler
-				.registerListener((PospeskiView) findViewById(R.id.pospeski));
+		mDataHandler.registerListener(mStevecView);
+		mDataHandler.registerListener(mSteeringWheelView);
+		mDataHandler.registerListener(mPospeskiView);
 		mDataHandler
 		.registerListener(mGraph);
-		
-		
+
+		new Thread(){
+			public void run() {
+				while(mRefreshThread){
+					try {
+						Thread.sleep(100);
+						mPospeskiView.postInvalidate();
+						mSteeringWheelView.postInvalidate();
+						mStevecView.postInvalidate();
+					} catch (InterruptedException e) {
+					}
+				}
+			};
+		}.start();
 	}
-	
+
 	private void toggleStart(){
 		if (!mBluetoothButton.isChecked()) {
 			mStartButton.setChecked(false);
@@ -225,7 +242,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		super.onResume();
 		((GraphicalView) mChartView).repaint();
 	}
-	
+
 	private void toNormalView(){
 		D.dbgv("switching to normal view");
 		mViewMode = 0;
@@ -243,6 +260,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		mBluetoothButton.setChecked(false);
 		mBtHelper.reset();
 		mStartButton.setChecked(false);
+		mRefreshThread  = false;
 		//TODO stop all threads
 	}
 
