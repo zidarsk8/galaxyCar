@@ -4,6 +4,7 @@ import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.psywerx.car.bluetooth.BtHelper;
 import org.psywerx.car.bluetooth.DeviceListActivity;
+import org.psywerx.car.bluetooth.BtListener;
 import org.psywerx.car.seekbar.VerticalSeekBar;
 import org.psywerx.car.view.PospeskiView;
 import org.psywerx.car.view.SteeringWheelView;
@@ -19,7 +20,6 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -28,7 +28,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class GalaxyCarActivity extends Activity {
+public class GalaxyCarActivity extends Activity implements BtListener{
 
 	// Intent request codes
 	public static final long THREAD_REFRESH_PERIOD = 50;
@@ -81,7 +81,7 @@ public class GalaxyCarActivity extends Activity {
 		layout.addView((View) mChartView, new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		
-		mBtHelper = new BtHelper(getApplicationContext(), mDataHandler);
+		mBtHelper = new BtHelper(getApplicationContext(), this, mDataHandler);
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
 		if (mGlView == null) {
 			finish();// cant show stuff if you cant show stuff right :P
@@ -152,6 +152,10 @@ public class GalaxyCarActivity extends Activity {
 	}
 	
 	private void toggleStart(){
+		if (!mBluetoothButton.isChecked()) {
+			mStartButton.setChecked(false);
+			return;
+		}
 		if (mStartButton.isChecked()){
 			mBtHelper.sendStart();
 		}else{
@@ -165,6 +169,7 @@ public class GalaxyCarActivity extends Activity {
 			if (mBluetoothAdapter == null) {
 				Toast.makeText(getApplicationContext(),
 						"Bluetooth is not available", Toast.LENGTH_LONG).show();
+				mBluetoothButton.setChecked(false);
 			} else if (!mBluetoothAdapter.isEnabled()) {
 				Intent enableIntent = new Intent(
 						BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -176,7 +181,8 @@ public class GalaxyCarActivity extends Activity {
 			}
 		} else {
 			D.dbgv("turn off bluetoot");
-			mBtHelper.reset();
+			btUnaviable();
+			//mBtHelper.reset();
 		}
 	}
 
@@ -194,16 +200,19 @@ public class GalaxyCarActivity extends Activity {
 				mBtHelper.connect(device, false);
 				new Thread(mBtHelper).start();
 			}
+			else {
+				Toast.makeText(getApplicationContext(),
+						"Bluetooth is not available", Toast.LENGTH_LONG).show();
+				mBluetoothButton.setChecked(false);				
+			}
 			break;
 		case REQUEST_ENABLE_BT:
-			// When the request to enable Bluetooth returns
 			if (resultCode == Activity.RESULT_OK) {
-				// Bluetooth is now enabled, so set up a chat session
 				enableBluetooth();
 			} else {
-				// User did not enable Bluetooth or an error occurred
-				// Toast.makeText(getApplicationContext(),
-				// R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(),
+						"Bluetooth is not available", Toast.LENGTH_LONG).show();
+				mBluetoothButton.setChecked(false);
 			}
 			break;
 		default:
@@ -228,6 +237,13 @@ public class GalaxyCarActivity extends Activity {
 	private void toGraphView(){
 		D.dbgv("switching to graph view");
 		mViewMode = 2;
+	}
+
+	public void btUnaviable() {
+		mBluetoothButton.setChecked(false);
+		mBtHelper.reset();
+		mStartButton.setChecked(false);
+		//TODO stop all threads
 	}
 
 }

@@ -17,9 +17,12 @@ public class BtHelper implements Runnable{
 	public static final int MESSAGE_WRITE = 3;
 	public static final int MESSAGE_DEVICE_NAME = 4;
 	public static final int MESSAGE_TOAST = 5;
+	public static final int MESSAGE_TOAST_FAIL = 6;
 	public static final String TOAST = "toast";
+	
 
 	private Context mContext = null;
+	private BtListener mBtListener = null;
 	private BluetoothChatService mBluetoothService = null;
 	private DataListener mDataListener = null;
 
@@ -61,6 +64,11 @@ public class BtHelper implements Runnable{
 				Toast.makeText(mContext, msg.getData().getString(TOAST),
 						Toast.LENGTH_SHORT).show();
 				break;
+			case MESSAGE_TOAST_FAIL:
+				Toast.makeText(mContext, msg.getData().getString(TOAST),
+						Toast.LENGTH_SHORT).show();
+				mBtListener.btUnaviable();
+				break;
 			}
 		}
 	};
@@ -77,8 +85,9 @@ public class BtHelper implements Runnable{
 		}
 	}
 
-	public BtHelper(Context ctx, DataListener dl){
+	public BtHelper(Context ctx, BtListener btl, DataListener dl){
 		mContext = ctx;
+		mBtListener = btl;
 		mBluetoothService = new BluetoothChatService(ctx, mHandler);
 		mDataListener = dl;
 	}
