@@ -25,7 +25,6 @@ public class Graph implements DataListener {
 				running = true;
 				while (run) {
 					Thread.sleep(THREAD_REFRESH_PERIOD);
-					Log.d("SMOTKO", "run");
 					updateGraph();
 				}
 			} catch (InterruptedException e) {
@@ -119,7 +118,6 @@ public class Graph implements DataListener {
 	}
 	public synchronized void updateGraph() {
 		((GraphicalView) mChartView).repaint();
-		Log.d("SMOTKO", "Updating graph");
 	}
 
 	public synchronized void updateData(float[] data) {
@@ -129,7 +127,6 @@ public class Graph implements DataListener {
 		series.add(ticks, data[4]);
 		renderer.setXAxisMax(ticks);
 		renderer.setXAxisMin(ticks - MAX_POINTS);
-		// ((GraphicalView) mChartView).repaint();
 		ticks++;
 		updateGraph();
 	}
