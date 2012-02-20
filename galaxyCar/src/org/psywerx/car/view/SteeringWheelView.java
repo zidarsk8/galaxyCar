@@ -1,8 +1,6 @@
 package org.psywerx.car.view;
 
-import org.psywerx.car.D;
 import org.psywerx.car.DataListener;
-import org.psywerx.car.GalaxyCarActivity;
 import org.psywerx.car.R;
 
 import android.content.Context;
@@ -18,25 +16,25 @@ public class SteeringWheelView extends View implements DataListener{
 	private float mToAngle = 0.0f;
 	private float mAlpha = 0.1f;
 
-	private class RotateWheel implements Runnable{
-		private boolean run = true;
-		public void run() {
-			try {
-				run = true;
-				while (run){
-					Thread.sleep(GalaxyCarActivity.THREAD_REFRESH_PERIOD);
-					//D.dbgv("repainting wheel thread !!");
-					rotateWheel();
-				}
-			} catch (InterruptedException e) {
-				D.dbge("error in drawing wheel thread", e);
-			}
-		}
-		public void stop(){
-			run = false;
-		}
-	};
-	private final RotateWheel mRotateThread = new RotateWheel();
+//	private class RotateWheel implements Runnable{
+//		private boolean run = true;
+//		public void run() {
+//			try {
+//				run = true;
+//				while (run){
+//					Thread.sleep(GalaxyCarActivity.THREAD_REFRESH_PERIOD);
+//					//D.dbgv("repainting wheel thread !!");
+//					rotateWheel();
+//				}
+//			} catch (InterruptedException e) {
+//				D.dbge("error in drawing wheel thread", e);
+//			}
+//		}
+//		public void stop(){
+//			run = false;
+//		}
+//	};
+//	private final RotateWheel mRotateThread = new RotateWheel();
 
 	public SteeringWheelView(Context context) {
 		super(context);
@@ -51,11 +49,11 @@ public class SteeringWheelView extends View implements DataListener{
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		//dissabled just to stop debug spamming :P
-		if (visibility == View.VISIBLE){
-			new Thread(mRotateThread).start();
-		}else{
-			mRotateThread.stop();
-		}
+//		if (visibility == View.VISIBLE){
+//			new Thread(mRotateThread).start();
+//		}else{
+//			mRotateThread.stop();
+//		}
 		super.onWindowVisibilityChanged(visibility);
 	}
 
@@ -69,6 +67,7 @@ public class SteeringWheelView extends View implements DataListener{
 	public synchronized void rotateWheel(){
 		mRotate = (1f-mAlpha) * mRotate + mAlpha * mToAngle;
 		//D.dbgv("rotating wheel for: "+mRotate);
+		
 		this.postInvalidate();
 	}
 
