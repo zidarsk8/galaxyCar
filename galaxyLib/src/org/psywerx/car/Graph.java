@@ -10,8 +10,39 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import android.graphics.Color;
+import android.util.Log;
 
 public class Graph implements DataListener {
+
+	private class UpdateGraph implements Runnable {
+		public static final long THREAD_REFRESH_PERIOD = 50;
+		private boolean run = true;
+		private boolean running = false;
+
+		public void run() {
+			try {
+				run = true;
+				running = true;
+				while (run) {
+					Thread.sleep(THREAD_REFRESH_PERIOD);
+					Log.d("SMOTKO", "run");
+					updateGraph();
+				}
+			} catch (InterruptedException e) {
+				D.dbge("Error updating graph", e);
+				running = false;
+			}
+		}
+
+		public void stop() {
+			run = false;
+			running = false;
+		}
+
+		public boolean isRunning() {
+			return running;
+		}
+	}
 
 	private XYMultipleSeriesDataset dataset;
 	private XYSeries series;
@@ -21,6 +52,7 @@ public class Graph implements DataListener {
 	private final int MAX_POINTS = 500;
 	private XYMultipleSeriesRenderer renderer;
 	private int ticks = 0;
+	private final UpdateGraph mUpdateGraph = new UpdateGraph();
 
 	public XYMultipleSeriesRenderer getDemoRenderer() {
 		renderer = new XYMultipleSeriesRenderer();
@@ -58,46 +90,56 @@ public class Graph implements DataListener {
 
 		mChartView = m;
 
-		mThread = new Thread() {
-			private Random random = new Random();
-
-			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(50L);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					if(series.getItemCount() > MAX_POINTS)
-						series.remove(0);
-					
-					series.add(ticks,
-							20 + random.nextInt() % 100);
-					renderer.setXAxisMax(ticks);
-					renderer.setXAxisMin(ticks - MAX_POINTS);
-					((GraphicalView) mChartView).repaint();
-					
-					ticks++;
-				}
-			}
-		};
-		mThread.start();
+//		mThread = new Thread() {
+//			private Random random = new Random();
+//
+//			public void run() {
+//				while (true) {
+//					try {
+//						Thread.sleep(50L);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+//					if (series.getItemCount() > MAX_POINTS)
+//						series.remove(0);
+//
+//					series.add(ticks, 20 + random.nextInt() % 100);
+//					renderer.setXAxisMax(ticks);
+//					renderer.setXAxisMin(ticks - MAX_POINTS);
+//					((GraphicalView) mChartView).repaint();
+//
+//					ticks++;
+//				}
+//			}
+//		};
+//		mThread.start();
+	}
+	public void stopThread(){
+		mUpdateGraph.stop();
+	}
+	public synchronized void updateGraph() {
+		((GraphicalView) mChartView).repaint();
+		Log.d("SMOTKO", "Updating graph");
 	}
 
-	public void updateData(float[] data) {
-		if(series.getItemCount() > MAX_POINTS)
+	public synchronized void updateData(float[] data) {
+		if (series.getItemCount() > MAX_POINTS)
 			series.remove(0);
-		
-		series.add(ticks,
-				data[4]);
+
+		series.add(ticks, data[4]);
 		renderer.setXAxisMax(ticks);
 		renderer.setXAxisMin(ticks - MAX_POINTS);
-		((GraphicalView) mChartView).repaint();
+		// ((GraphicalView) mChartView).repaint();
 		ticks++;
+		updateGraph();
+//		Log.d("SMOTKO", Boolean.toString(mUpdateGraph.isRunning()));
+//		if (!mUpdateGraph.isRunning()) {
+//			mUpdateGraph.run();
+//		}
 	}
 
 	public void setAlpha(float alpha) {
-		
+
 	}
 
 }

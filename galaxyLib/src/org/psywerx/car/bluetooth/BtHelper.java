@@ -115,7 +115,7 @@ public class BtHelper implements Runnable{
 	 * @param data csv string recieved from bluetooth (x,y,z,speed,turn)
 	 */
 	public synchronized void recieveData(String data){
-		D.dbge("recieved "+data);
+//		D.dbge("recieved "+data);
 		try {
 			if ("start pressed".equals(data)){
 				sendData();

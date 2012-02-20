@@ -19,6 +19,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
@@ -45,6 +46,7 @@ public class GalaxyCarActivity extends Activity {
 	private ToggleButton mBluetoothButton;
 	private ToggleButton mStartButton;
 	private DataHandler mDataHandler;
+	private Graph mGraph;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -65,13 +67,13 @@ public class GalaxyCarActivity extends Activity {
 	private void init() {
 		mDataHandler = new DataHandler();
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-		Graph g = new Graph();
+		mGraph = new Graph();
+		
 		LinearLayout layout = (LinearLayout) findViewById(R.id.chart);
 		mChartView = ChartFactory.getLineChartView(this,
-				g.getDemoDataset(), g.getDemoRenderer());
+				mGraph.getDemoDataset(), mGraph.getDemoRenderer());
 		
-		//g.start((GraphicalView) mChartView);
+		mGraph.start((GraphicalView) mChartView);
 		
 		layout.addView((View) mChartView, new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
@@ -124,6 +126,8 @@ public class GalaxyCarActivity extends Activity {
 				.registerListener((SteeringWheelView) findViewById(R.id.steeringWheel));
 		mDataHandler
 				.registerListener((PospeskiView) findViewById(R.id.pospeski));
+		mDataHandler
+		.registerListener(mGraph);
 		
 		
 	}
@@ -192,6 +196,12 @@ public class GalaxyCarActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		((GraphicalView) mChartView).repaint();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mGraph.stopThread();
 	}
 
 }
