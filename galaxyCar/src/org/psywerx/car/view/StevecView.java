@@ -28,7 +28,7 @@ public class StevecView extends View implements DataListener{
 
 	public boolean setSpeed(float speed) {
 		long ct = System.nanoTime();
-		mDistance += speed*(mTimestamp-ct)/1e9;
+		mDistance += speed*(ct-mTimestamp)/1e10;
 		mTimestamp = ct;
 		
 		mSpeed = (1.0f-mAlpha)*mSpeed + mAlpha * speed;
