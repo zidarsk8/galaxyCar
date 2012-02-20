@@ -173,6 +173,7 @@ public class Car implements DataListener{
 		mDirVec = new Vector3d(0, 0, -1);
 		mPosition = new Vector3d(0, 0, -10);
 		models = m;
+		//car = models.GetModel("car");
 		car = models.GetModel("car");
 		//camera = c;
 		mTimestamp = System.nanoTime();

@@ -18,10 +18,11 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	float[] LightPosition = { 0.0f, 0.0f, 2.0f, 1.0f };
 
 	private Car car;
-	private Model cesta;
+	//private Model cesta;
 	private Camera camera;
 
 	private Model cesta2;
+	private SteeringWheel mSteeringWheel;
 	private int[] textures = new int[1];
 
 	public CarSurfaceViewRenderer(AssetManager asm, ModelLoader m) {
@@ -68,7 +69,9 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		cesta2.draw(gl, textures);
 		
 		gl.glLoadIdentity();
-		
+
+		mSteeringWheel.draw(gl);
+
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
@@ -119,6 +122,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		car = new Car(mModelLoader, camera);
 		//cesta = mModelLoader.GetModel("cesta");
 		cesta2 = mModelLoader.GetModel("cesta2");
+		mSteeringWheel = new SteeringWheel(mModelLoader, camera);
 	}
 	public Car getCar() {
 		return car;

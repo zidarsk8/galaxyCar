@@ -27,8 +27,14 @@ public class ModelLoader{
 	public ModelLoader(Context ctx){
 		// TODO: go over all the .csv files in assets and generate models on based on csv file name
 		this.ctx = ctx;
+		
+		//add car model
 		models.put("car", InitModel("car"));
-		//models.put("cesta", InitModel("cesta"));
+		
+		//add steering_wheel
+		models.put("steering_wheel", InitModel("steering_wheel"));
+		
+		//add cesta model
 		Model cesta = InitModel("world");
 		cesta.textureScale = 2;
 		addTexture("kvadrat.png", cesta);
