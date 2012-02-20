@@ -29,7 +29,7 @@ public class ModelLoader{
 		models.put("car", InitModel("car"));
 		//models.put("cesta", InitModel("cesta"));
 		Model cesta = InitModel("world");
-		addTexture("kvadrat.bmp", cesta);
+		addTexture("kvadrat.png", cesta);
 		models.put("cesta2", cesta);
 	}
 	private void addTexture(String tex, Model mo) {
