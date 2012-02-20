@@ -41,31 +41,31 @@ public class Car implements DataListener{
 		double elapsed = (time - mTimestamp)/ 1e9f;
 		mTimestamp = time;
 		double dDistance = mSpeed * elapsed * SPEED_FACTOR; // m/s
-		
+
 		if (mSpeed == 0){
 			return;
 		}
-		
+
 		Vector3d norm = new Vector3d(0,(mTurn<0? -1:1),0);
 		Vector3d newDirection = new Vector3d(mDirVec);
 		Vector3d perpendicular = new Vector3d(); // perpendicular to direction vector
 		perpendicular.cross(newDirection, norm);
 		perpendicular.normalize();
 		mDirVec.normalize();
-		
+
 		Vector3d t1 = new Vector3d();
 		Vector3d t2 = new Vector3d();
 		Vector3d t3 = new Vector3d();
 		Vector3d t4 = new Vector3d();
-		
+
 		Vector3d center = new Vector3d((float)car.center[0],0,(float)car.center[2]);
 		center.add(mPosition);
-		
+
 		t1.add(center,perpendicular);
 		t2.sub(center,perpendicular);
 		t3.add(t1, mDirVec);
 		t4.add(t2, mDirVec);
-		
+
 		//dodamo histor trikotnike
 		mHistorArr[mHistoryPosition]   = (float) t1.x;
 		mHistorArr[mHistoryPosition+1] = (float) t1.y;
@@ -87,11 +87,11 @@ public class Car implements DataListener{
 		mHistorArr[mHistoryPosition+7] = (float) t3.y;
 		mHistorArr[mHistoryPosition+8] = (float) t3.z;
 
-		
+
 		mHistoryPosition = (mHistoryPosition+9) % HISTORY_SIZE;
-		
-		
-		
+
+
+
 		if (mTurn != 0){
 			//double radious = (MAX_RADIUS - Math.pow(mTurn * TURN_FACTOR, LINEAR));
 			double radious = MAX_RADIUS - Math.abs(mTurn) * TURN_FACTOR ;
@@ -101,22 +101,22 @@ public class Car implements DataListener{
 			newDirection.scale(radious);
 
 			mPosition.add(perpendicular);
-			
+
 			newDirection.scale(Math.sin(alpha));
-			
+
 			perpendicular.scale(-Math.cos(alpha));
-			
+
 			perpendicular.add(newDirection);
-			
+
 			mPosition.add(perpendicular);
 			mDirVec.cross(perpendicular, norm);
-			
+
 		}else{
 			newDirection.normalize();
 			newDirection.scale(dDistance);
 			mPosition.add(newDirection);
 		}
-		
+
 		double xArc = newDirection.angle(new Vector3d(1, 0, 0));
 		double zArc = newDirection.angle(new Vector3d(0, 0, -1));
 
@@ -127,10 +127,10 @@ public class Car implements DataListener{
 		}
 
 	}
-	
-//	private void printV(String ime,Vector3d mPosition){
-//		D.dbgv(String.format(ime+" :  %.4f  %.4f  %.4f ", mPosition.x, mPosition.y, mPosition.z));
-//	}
+
+	//	private void printV(String ime,Vector3d mPosition){
+	//		D.dbgv(String.format(ime+" :  %.4f  %.4f  %.4f ", mPosition.x, mPosition.y, mPosition.z));
+	//	}
 
 	public void draw(GL10 gl) {
 		update();
@@ -138,21 +138,14 @@ public class Car implements DataListener{
 		gl.glTranslatef((float)mPosition.x, (float)mPosition.y, (float)mPosition.z);
 		car.rotate(gl, pitch, yaw, skew);
 		car.draw(gl);
-		
-		
-		
+
+
+
 		gl.glPopMatrix();
 		drawHistory(gl);
 	}
 
 	private void drawHistory(GL10 gl) {
-		ByteBuffer vbb = ByteBuffer.allocateDirect(
-		// (# of coordinate values * 4 bytes per float)
-				mHistorArr.length * 4);
-		// use the device hardware's native byte order
-		vbb.order(ByteOrder.nativeOrder());
-		// create a floating point buffer from the ByteBuffer
-		history = vbb.asFloatBuffer();
 		// add the coordinates to the FloatBuffer
 		history.put(mHistorArr);
 		// set the buffer to read the first coordinate
@@ -162,7 +155,7 @@ public class Car implements DataListener{
 
 		gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
 		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, history);
-//		gl.glNormalPointer(GL10.GL_FLOAT, 0, normalBuffer[i]);
+		//		gl.glNormalPointer(GL10.GL_FLOAT, 0, normalBuffer[i]);
 		gl.glColor4f(0f, 0f, 255f, 1);
 		gl.glDrawArrays(GL10.GL_TRIANGLES, 0, (history.capacity()) / 3);
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
@@ -170,6 +163,13 @@ public class Car implements DataListener{
 	}
 
 	public Car(ModelLoader m, Camera c) {
+		ByteBuffer vbb = ByteBuffer.allocateDirect(
+				// (# of coordinate values * 4 bytes per float)
+				mHistorArr.length * 4);
+		// use the device hardware's native byte order
+		vbb.order(ByteOrder.nativeOrder());
+		// create a floating point buffer from the ByteBuffer
+		history = vbb.asFloatBuffer();
 		mDirVec = new Vector3d(0, 0, -1);
 		mPosition = new Vector3d(0, 0, -10);
 		models = m;
@@ -190,5 +190,5 @@ public class Car implements DataListener{
 
 	public void setAlpha(float alpha) {
 	}
-	
+
 }

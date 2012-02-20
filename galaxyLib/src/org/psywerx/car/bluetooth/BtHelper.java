@@ -102,7 +102,7 @@ public class BtHelper implements Runnable{
 	}
 
 	public synchronized void sendData(){
-		D.dbgv("send data");
+		//D.dbgv("send data");
 		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED){
 			mWait = false;
 			mBluetoothService.write("podatki".getBytes());
@@ -115,7 +115,7 @@ public class BtHelper implements Runnable{
 	 * @param data csv string recieved from bluetooth (x,y,z,speed,turn)
 	 */
 	public synchronized void recieveData(String data){
-		D.dbge("recieved "+data);
+		//D.dbge("recieved "+data);
 		try {
 			if ("start pressed".equals(data)){
 				sendData();

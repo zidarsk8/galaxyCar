@@ -21,6 +21,7 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -35,6 +36,8 @@ public class GalaxyCarActivity extends Activity {
 
 	public static final String DEVICE_NAME = "device_name";
 
+	private int mViewMode = 0; // 0 = normal view, 1 = Gl view, 2 = graph view
+	
 	private BluetoothAdapter mBluetoothAdapter;
 
 	private GLSurfaceView mGlView;
@@ -75,15 +78,11 @@ public class GalaxyCarActivity extends Activity {
 		
 		layout.addView((View) mChartView, new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-
-
 		
-
 		mBtHelper = new BtHelper(getApplicationContext(), mDataHandler);
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
 		if (mGlView == null) {
-			// cant show stuff if you cant show stuff right :P
-			finish();
+			finish();// cant show stuff if you cant show stuff right :P
 			return;
 		}
 		CarSurfaceViewRenderer svr = new CarSurfaceViewRenderer(getResources()
@@ -92,6 +91,26 @@ public class GalaxyCarActivity extends Activity {
 		mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 		mGlView.setRenderer(svr);
 		mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+		
+		
+		((Button) findViewById(R.id.expandGlButton)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if (mViewMode == 0){
+					toGLView();
+				}else{
+					toNormalView();
+				}
+			}
+		});
+		((Button) findViewById(R.id.expandGraphButton)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if (mViewMode == 0){
+					toGraphView();
+				}else{
+					toNormalView();
+				}
+			}
+		});
 
 		mAlphaBar = (VerticalSeekBar) findViewById(R.id.alphaBar);
 		mAlphaBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -192,6 +211,19 @@ public class GalaxyCarActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		((GraphicalView) mChartView).repaint();
+	}
+	
+	private void toNormalView(){
+		D.dbgv("switching to normal view");
+		mViewMode = 0;
+	}
+	private void toGLView(){
+		D.dbgv("switching to gl view");
+		mViewMode = 1;
+	}
+	private void toGraphView(){
+		D.dbgv("switching to graph view");
+		mViewMode = 2;
 	}
 
 }

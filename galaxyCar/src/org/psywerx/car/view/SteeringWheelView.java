@@ -51,11 +51,11 @@ public class SteeringWheelView extends View implements DataListener{
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		//dissabled just to stop debug spamming :P
-		if (visibility == View.VISIBLE){
-			new Thread(mRotateThread).start();
-		}else{
-			mRotateThread.stop();
-		}
+//		if (visibility == View.VISIBLE){
+//			new Thread(mRotateThread).start();
+//		}else{
+//			mRotateThread.stop();
+//		}
 		super.onWindowVisibilityChanged(visibility);
 	}
 
