@@ -47,6 +47,7 @@ public class StevecView extends View implements DataListener{
 		mTextPaint.setColor(Color.LTGRAY);
 		mTextPaint.setTextSize(29);
 		mTextPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Digitaldream.ttf"));
+		setSpeed(0);
 	}
 
 	@Override
