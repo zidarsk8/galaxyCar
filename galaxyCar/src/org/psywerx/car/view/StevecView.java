@@ -35,8 +35,8 @@ public class StevecView extends View implements DataListener{
 		float temp = -30+2.3f*mSpeed;
 		if (temp < MIN_ROTATE || temp > MAX_ROTATE)
 			return false;
-		this.mRotate = temp;
-		this.postInvalidate();
+		mRotate = temp;
+		//postInvalidate();
 		return true;
 	}
 	
@@ -52,7 +52,6 @@ public class StevecView extends View implements DataListener{
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
 		canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.speedgaugeclean), 0, 0, null);
 		canvas.drawText(FORMATTER.format(mDistance), 85, 187, mTextPaint);
 		canvas.save();

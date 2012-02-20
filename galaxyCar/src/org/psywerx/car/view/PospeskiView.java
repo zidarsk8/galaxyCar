@@ -44,13 +44,13 @@ public class PospeskiView extends View implements DataListener{
 		mY = (1f-mAlpha) * mY + mAlpha* (((y+1) * mHeigh ) / 2);
 		mZ = (1f-mAlpha) * mZ + mAlpha* (Math.abs(z*SIZE_FACTOR) + 4);
 
-		postInvalidate();
+		//postInvalidate();
 		return true;
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
+		//super.onDraw(canvas);
 		canvas.drawBitmap(mPic, 0, 0, null);
 		canvas.drawCircle(mX, mY, mZ, mPaint);
 	}

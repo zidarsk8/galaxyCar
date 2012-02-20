@@ -47,19 +47,8 @@ public class SteeringWheelView extends View implements DataListener{
 	}
 
 	@Override
-	protected void onWindowVisibilityChanged(int visibility) {
-		//dissabled just to stop debug spamming :P
-//		if (visibility == View.VISIBLE){
-//			new Thread(mRotateThread).start();
-//		}else{
-//			mRotateThread.stop();
-//		}
-		super.onWindowVisibilityChanged(visibility);
-	}
-
-	@Override
 	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
+		//super.onDraw(canvas);
 		canvas.rotate(mRotate,128,128);
 		canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.steering_wheel_small), 0, 0, null);
 	}
@@ -67,8 +56,7 @@ public class SteeringWheelView extends View implements DataListener{
 	public synchronized void rotateWheel(){
 		mRotate = (1f-mAlpha) * mRotate + mAlpha * mToAngle;
 		//D.dbgv("rotating wheel for: "+mRotate);
-		
-		this.postInvalidate();
+		//postInvalidate();
 	}
 
 	public synchronized void updateData(float[] data) {
