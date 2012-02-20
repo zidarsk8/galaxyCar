@@ -11,12 +11,14 @@ public class Model {
 	public FloatBuffer vertexBuffer[];
 	public FloatBuffer normalBuffer[];
 	public FloatBuffer textureBuffer;
+	public float textureScale = 1;
 	protected float[] center = {0f, 0f, 0f};
 	//private float angle = 0;
 	public float colors[][];
 	public int count;
 	public Bitmap mBitmap = null;
 	//private float[] rot = {0f, 0f, 0f};
+	public float[] vertices;
 
 	public void draw(GL10 gl){
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
