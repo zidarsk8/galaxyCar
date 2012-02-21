@@ -1,53 +1,55 @@
 package org.psywerx.car;
 
-import java.util.Random;
-
-import org.achartengine.GraphicalView;
-import org.achartengine.chart.PointStyle;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
-import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import android.graphics.Color;
-import android.util.Log;
 
 public class Graph implements DataListener {
 
-	private XYMultipleSeriesDataset datasetAll;
+	/**
+	 * The maximum number of points drawn on graphs
+	 */
+	private final int MAX_POINTS = 100;
+
+	/**
+	 * Fields that contain graph data
+	 */
 	private XYSeries mGx;
 	private XYSeries mGy;
 	private XYSeries mGz;
 	private XYSeries mRevs;
 	private XYSeries mTurn;
-	private GraphicalView mChartView;
-	private Thread randomDataGenerator;
-	private Thread repaintGraph;
-
-	private final int MAX_POINTS = 100;
-	private XYMultipleSeriesRenderer renderer;
-	private int ticks = 0;
+	
+	/**
+	 *  Graph styles and renderers
+	 */
+	private XYMultipleSeriesDataset datasetAll;
 	private XYMultipleSeriesDataset datasetTurn;
 	private XYMultipleSeriesDataset datasetRevs;
 	private XYMultipleSeriesDataset datasetG;
+	private XYMultipleSeriesRenderer renderer;
 	private XYMultipleSeriesRenderer rendererTurn;
 	private XYMultipleSeriesRenderer rendererRevs;
 	private XYMultipleSeriesRenderer rendererG;
-	private GraphicalView mChartViewAll;
-	private GraphicalView mChartViewTurn;
-	private GraphicalView mChartViewRevs;
-	private GraphicalView mChartViewG;
 
-	public Graph(){
+	private int ticks = 0;
+
+	public Graph() {
+		
+		// Init the series
 		mTurn = new XYSeries("Turn");
 		mRevs = new XYSeries("Revs");
 		mGx = new XYSeries("Gx");
 		mGy = new XYSeries("Gy");
 		mGz = new XYSeries("Gz");
+		
 	}
-	
+
 	public XYMultipleSeriesRenderer getRendererAll() {
+		// Init the renderer
 		renderer = new XYMultipleSeriesRenderer();
 		renderer.setInScroll(false);
 		renderer.setAxisTitleTextSize(16);
@@ -56,37 +58,34 @@ public class Graph implements DataListener {
 		renderer.setLegendTextSize(15);
 		renderer.setPointSize(5f);
 		renderer.setMargins(new int[] { 20, 30, 15, 0 });
-		XYSeriesRenderer r = new XYSeriesRenderer();
-		r.setFillPoints(true);
-		renderer.addSeriesRenderer(r);
 		
+		XYSeriesRenderer r1 = new XYSeriesRenderer();
+		r1.setFillPoints(true);
+		renderer.addSeriesRenderer(r1);
+
 		XYSeriesRenderer r2 = new XYSeriesRenderer();
 		r2.setColor(Color.RED);
 		r2.setFillPoints(true);
 		renderer.addSeriesRenderer(r2);
-		
+
 		XYSeriesRenderer r3 = new XYSeriesRenderer();
 		r3.setColor(Color.YELLOW);
 		r3.setFillPoints(true);
 		renderer.addSeriesRenderer(r3);
-		
+
 		XYSeriesRenderer r4 = new XYSeriesRenderer();
 		r4.setColor(Color.GREEN);
 		r4.setFillPoints(true);
 		renderer.addSeriesRenderer(r4);
-		
+
 		XYSeriesRenderer r5 = new XYSeriesRenderer();
 		r5.setColor(Color.MAGENTA);
 		r5.setFillPoints(true);
 		renderer.addSeriesRenderer(r5);
-		
-		
-		r = new XYSeriesRenderer();
-		r.setPointStyle(PointStyle.CIRCLE);
-		r.setColor(Color.GREEN);
-		r.setFillPoints(true);
+
 		return renderer;
 	}
+
 	public XYMultipleSeriesRenderer getRendererG() {
 		rendererG = new XYMultipleSeriesRenderer();
 		rendererG.setInScroll(false);
@@ -96,17 +95,17 @@ public class Graph implements DataListener {
 		rendererG.setLegendTextSize(15);
 		rendererG.setPointSize(5f);
 		rendererG.setMargins(new int[] { 20, 30, 15, 0 });
-		
+
 		XYSeriesRenderer r3 = new XYSeriesRenderer();
 		r3.setColor(Color.YELLOW);
 		r3.setFillPoints(true);
 		rendererG.addSeriesRenderer(r3);
-		
+
 		XYSeriesRenderer r4 = new XYSeriesRenderer();
 		r4.setColor(Color.GREEN);
 		r4.setFillPoints(true);
 		rendererG.addSeriesRenderer(r4);
-		
+
 		XYSeriesRenderer r5 = new XYSeriesRenderer();
 		r5.setColor(Color.MAGENTA);
 		r5.setFillPoints(true);
@@ -114,7 +113,10 @@ public class Graph implements DataListener {
 
 		return rendererG;
 	}
+
 	public XYMultipleSeriesRenderer getRendererTurn() {
+		
+		// Init the renderer
 		rendererTurn = new XYMultipleSeriesRenderer();
 		rendererTurn.setInScroll(false);
 		rendererTurn.setAxisTitleTextSize(16);
@@ -123,14 +125,16 @@ public class Graph implements DataListener {
 		rendererTurn.setLegendTextSize(15);
 		rendererTurn.setPointSize(5f);
 		rendererTurn.setMargins(new int[] { 20, 30, 15, 0 });
+		
 		XYSeriesRenderer r = new XYSeriesRenderer();
 		r.setColor(Color.BLUE);
 		r.setFillPoints(true);
 		rendererTurn.addSeriesRenderer(r);
-		
 		return rendererTurn;
 	}
+
 	public XYMultipleSeriesRenderer getRendererRevs() {
+		
 		rendererRevs = new XYMultipleSeriesRenderer();
 		rendererRevs.setInScroll(false);
 		rendererRevs.setAxisTitleTextSize(16);
@@ -139,16 +143,13 @@ public class Graph implements DataListener {
 		rendererRevs.setLegendTextSize(15);
 		rendererRevs.setPointSize(5f);
 		rendererRevs.setMargins(new int[] { 20, 30, 15, 0 });
+		
 		XYSeriesRenderer r = new XYSeriesRenderer();
 		r.setColor(Color.RED);
 		r.setFillPoints(true);
 		rendererRevs.addSeriesRenderer(r);
-		
 		return rendererRevs;
 	}
-	
-	
-	private static final int SERIES_NR = 1;
 
 	public XYMultipleSeriesDataset getDatasetAll() {
 		datasetAll = new XYMultipleSeriesDataset();
@@ -159,16 +160,19 @@ public class Graph implements DataListener {
 		datasetAll.addSeries(mGz);
 		return datasetAll;
 	}
+
 	public XYMultipleSeriesDataset getDatasetTurn() {
 		datasetTurn = new XYMultipleSeriesDataset();
 		datasetTurn.addSeries(mTurn);
 		return datasetTurn;
 	}
+
 	public XYMultipleSeriesDataset getDatasetRevs() {
 		datasetRevs = new XYMultipleSeriesDataset();
 		datasetRevs.addSeries(mRevs);
 		return datasetRevs;
 	}
+
 	public XYMultipleSeriesDataset getDatasetG() {
 		datasetG = new XYMultipleSeriesDataset();
 		datasetG.addSeries(mGx);
@@ -177,52 +181,34 @@ public class Graph implements DataListener {
 		return datasetG;
 	}
 
-	public void start(GraphicalView m, GraphicalView t, GraphicalView r, GraphicalView g) {
+	/**
+	 * Function used to generate random data
+	 */
+//	public void start() {
+//
+//		
+//		Thread randomDataGenerator = new Thread() {
+//			private Random random = new Random();
+//
+//			public void run() {
+//				while (true) {
+//					try {
+//						Thread.sleep(50L);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+//					updateData(new float[] { random.nextFloat(),
+//							random.nextFloat(), random.nextFloat(),
+//							random.nextFloat(), random.nextFloat() });
+//				}
+//			}
+//		};
+//		randomDataGenerator.start();
+//	}
 
-		mChartViewAll = m;
-		mChartViewTurn = t;
-		mChartViewRevs = r;
-		mChartViewG = g;
-
-		randomDataGenerator = new Thread() {
-			private Random random = new Random();
-
-			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(50L);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					updateData(new float[]{random.nextFloat(), random.nextFloat(), random.nextFloat(), random.nextFloat(), random.nextFloat()});
-				}
-			}
-		};
-		//randomDataGenerator.start();
-		repaintGraph = new Thread() {
-			public static final long THREAD_REFRESH_PERIOD = 50;
-			private Random random = new Random();
-
-			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(THREAD_REFRESH_PERIOD);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					//((GraphicalView) mChartViewAll).repaint();
-				}
-			}
-		};
-		repaintGraph.start();
-	}
-	public synchronized void updateGraph() {
-		
-	}
-	
 	public synchronized void updateData(float[] data) {
-		
-		// warning ugly looking code ahead:
+
+		// We need to remove data points or else the rendering becomes slow
 		if (mTurn.getItemCount() > MAX_POINTS)
 			mTurn.remove(0);
 		if (mGx.getItemCount() > MAX_POINTS)
@@ -234,23 +220,26 @@ public class Graph implements DataListener {
 		if (mRevs.getItemCount() > MAX_POINTS)
 			mRevs.remove(0);
 
-		mTurn.add(ticks, data[4]);
 		mGx.add(ticks, data[0]);
 		mGy.add(ticks, data[1]);
 		mGz.add(ticks, data[2]);
 		mRevs.add(ticks, data[3]);
+		mTurn.add(ticks, data[4]);
+
 		
+		// Set the X axis to always point to the beginning and end of the graph
 		renderer.setXAxisMax(ticks);
 		renderer.setXAxisMin(ticks - MAX_POINTS);
-		
+
 		rendererG.setXAxisMax(ticks);
 		rendererG.setXAxisMin(ticks - MAX_POINTS);
-		
+
 		rendererTurn.setXAxisMax(ticks);
 		rendererTurn.setXAxisMin(ticks - MAX_POINTS);
-		
+
 		rendererRevs.setXAxisMax(ticks);
 		rendererRevs.setXAxisMin(ticks - MAX_POINTS);
+		
 		ticks++;
 	}
 

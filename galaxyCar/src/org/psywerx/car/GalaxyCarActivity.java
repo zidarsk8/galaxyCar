@@ -99,9 +99,7 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		mChartViewG = ChartFactory.getLineChartView(this, mGraph.getDatasetG(),
 				mGraph.getRendererG());
 
-		mGraph.start((GraphicalView) mChartViewAll,
-				(GraphicalView) mChartViewTurn, (GraphicalView) mChartViewRevs,
-				(GraphicalView) mChartViewG);
+		//mGraph.start();
 
 		graphAll.addView((View) mChartViewAll, new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
