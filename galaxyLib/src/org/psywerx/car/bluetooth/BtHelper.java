@@ -9,9 +9,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
-public class BtHelper implements Runnable{
+public class BtHelper {
 
-	private static final long REQUEST_TIMEOUT = 100;
 	public static final int MESSAGE_STATE_CHANGE = 1;
 	public static final int MESSAGE_READ = 2;
 	public static final int MESSAGE_WRITE = 3;
@@ -19,14 +18,13 @@ public class BtHelper implements Runnable{
 	public static final int MESSAGE_TOAST = 5;
 	public static final int MESSAGE_TOAST_FAIL = 6;
 	public static final String TOAST = "toast";
-	
 
 	private Context mContext = null;
 	private BtListener mBtListener = null;
 	private BluetoothChatService mBluetoothService = null;
 	private DataListener mDataListener = null;
 
-	private boolean mWait = true;
+	private String[] arr ;
 
 	private final Handler mHandler = new Handler(){
 
@@ -67,29 +65,18 @@ public class BtHelper implements Runnable{
 			case MESSAGE_TOAST_FAIL:
 				Toast.makeText(mContext, msg.getData().getString(TOAST),
 						Toast.LENGTH_SHORT).show();
+				mDataListener.updateData(new float[]{0,0,0,5,0});
 				mBtListener.btUnaviable();
 				break;
 			}
 		}
 	};
 
-	public void run(){
-		try{
-			mWait = true;
-			while (mWait){
-				Thread.sleep(REQUEST_TIMEOUT);
-				sendData();
-			}
-		}catch(Exception e){
-			D.dbge("Bt helper running stuff ",e);
-		}
-	}
-
 	public BtHelper(Context ctx, BtListener btl, DataListener dl){
 		mContext = ctx;
 		mBtListener = btl;
 		mBluetoothService = new BluetoothChatService(ctx, mHandler);
-		mDataListener = dl;
+		mDataListener = dl;		
 	}
 
 	public void connect(BluetoothDevice device, boolean secure){
@@ -98,6 +85,7 @@ public class BtHelper implements Runnable{
 
 	public void reset(){
 		mBluetoothService.stop();
+		mDataListener.updateData(new float[5]);
 	}
 
 	public synchronized void sendStart(){
@@ -106,14 +94,15 @@ public class BtHelper implements Runnable{
 	}
 
 	public synchronized void sendStop(){
-		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED)
+		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED){
 			mBluetoothService.write("stop".getBytes());
+			mDataListener.updateData(new float[]{0,0,0,5,0});
+		}
 	}
 
 	public synchronized void sendData(){
 		//D.dbgv("send data");
 		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED){
-			mWait = false;
 			mBluetoothService.write("podatki".getBytes());
 		}
 	}
@@ -123,30 +112,29 @@ public class BtHelper implements Runnable{
 	 * 
 	 * @param data csv string recieved from bluetooth (x,y,z,speed,turn)
 	 */
-	String[] arr ;
 	public synchronized void recieveData(String data){
 		//D.dbge("recieved "+data);
 		try {
+			final int len = 5;
+			float[] cur = new float[len];
 			if ("start pressed".equals(data)){
 				sendData();
-				return;
-			}
-			arr= data.split(",");
-			if (arr.length != 5 ){
-				D.dbge("wrong data set: "+data);
-				return;
-			}
-			int len = arr.length;
-			float[] cur = new float[len];
-			for (int i = 0; i < len; i++){
-				cur[i] = Float.parseFloat(arr[i]);
+			}else if ("stop pressed".equals(data)){
+				
+			}else{
+				arr= data.split(",");
+				if (arr.length != 5 ){
+					D.dbge("wrong data set: "+data);
+					return;
+				}
+				for (int i = 0; i < len; i++){
+					cur[i] = Float.parseFloat(arr[i]);
+				}
+				sendData();
 			}
 			mDataListener.updateData(cur);
-
 		} catch (Exception e) {
 			D.dbge("error recieving data fro bluetooth",e);
-		}finally{
-			sendData();
 		}
 	}
 

@@ -216,7 +216,6 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 				BluetoothDevice device = mBluetoothAdapter
 						.getRemoteDevice(address);
 				mBtHelper.connect(device, false);
-				new Thread(mBtHelper).start();
 			}
 			else {
 				Toast.makeText(getApplicationContext(),
@@ -268,6 +267,12 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		btUnaviable();
+	}
+	
 	public void btUnaviable() {
 		mBluetoothButton.setChecked(false);
 		mBtHelper.reset();
