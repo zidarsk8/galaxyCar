@@ -45,7 +45,6 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private WakeLock mWakeLock;
 	private Vibrator mVib = null;
 	private BtHelper mBtHelper;
-	private Object mChartView;
 	private VerticalSeekBar mAlphaBar;
 	private ToggleButton mBluetoothButton;
 	private ToggleButton mStartButton;
@@ -159,8 +158,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		mAlphaBar = (VerticalSeekBar) findViewById(R.id.alphaBar);
 		mAlphaBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				float p = progress/100f;
-				mDataHandler.setAlpha(p*p); 
+				mDataHandler.setAlpha(progress); 
 			}
 			public void onStartTrackingTouch(SeekBar seekBar){}
 			public void onStopTrackingTouch(SeekBar seekBar){}
