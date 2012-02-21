@@ -118,10 +118,28 @@
 
         <LinearLayout
             android:id="@+id/chartGL2"
-            android:layout_width="1000dp"
+            android:layout_width="565dp"
             android:layout_height="400dp"
             android:layout_marginLeft="60dp"
             android:layout_marginTop="40dp"
+            android:background="@android:color/black"
+            android:orientation="horizontal" />
+
+        <LinearLayout
+            android:id="@+id/chartGL3"
+            android:layout_width="565dp"
+            android:layout_height="400dp"
+            android:layout_marginLeft="665dp"
+            android:layout_marginTop="40dp"
+            android:background="@android:color/black"
+            android:orientation="horizontal" />
+
+        <LinearLayout
+            android:id="@+id/chartGL4"
+            android:layout_width="1170dp"
+            android:layout_height="230dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="480dp"
             android:background="@android:color/black"
             android:orientation="horizontal" />
 
@@ -151,8 +169,8 @@
 
         <android.opengl.GLSurfaceView
             android:id="@+id/glSurfaceBig"
-            android:layout_width="1230dp"
-            android:layout_height="800dp"
+            android:layout_width="1170dp"
+            android:layout_height="670dp"
             android:layout_marginLeft="60dp"
             android:layout_marginTop="40dp" />
 
