@@ -119,8 +119,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 		mBtHelper = new BtHelper(getApplicationContext(), this, mDataHandler);
 
-		svr = new CarSurfaceViewRenderer(getResources()
-				.getAssets(), new ModelLoader(this));
+		svr = new CarSurfaceViewRenderer(new ModelLoader(this));
 
 
 
@@ -139,7 +138,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 			
 			@Override
 			public void onClick(View v) {
-						svr.cameraPosition = (svr.cameraPosition + 1)%4;
+						svr.nextCameraPosition();
 				
 			}
 		});

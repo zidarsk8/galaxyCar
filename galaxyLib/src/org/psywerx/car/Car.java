@@ -54,7 +54,6 @@ public class Car implements DataListener{
 		if (mSpeed == 0){
 			return;
 		}
-
 		Vector3d norm = new Vector3d(0,(mTurn<0? -1:1),0);
 		Vector3d newDirection = new Vector3d(mDirVec);
 		Vector3d perpendicular = new Vector3d(); // perpendicular to direction vector

@@ -32,16 +32,14 @@ public class PhoneCarActivity extends Activity {
 		if (mGlView != null) {
 			mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 			mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-			mCarSurface = new CarSurfaceViewRenderer(
-					getResources().getAssets(), new ModelLoader(this));
+			mCarSurface = new CarSurfaceViewRenderer(new ModelLoader(this));
 			mGlView.setRenderer(mCarSurface);
 			mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 			mGlView.setOnClickListener(new View.OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
-					mCarSurface.cameraPosition = (mCarSurface.cameraPosition + 1) % 4;
-
+					mCarSurface.nextCameraPosition();
 				}
 			});
 		}
