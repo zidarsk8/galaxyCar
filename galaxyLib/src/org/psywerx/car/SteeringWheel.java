@@ -17,7 +17,7 @@ public class SteeringWheel implements DataListener{
 	protected float yaw = 0, pitch = -90, skew = 0;
 
 	public void update(){
-		yaw += 0.001f;
+		yaw += 1f;
 	}
 
 	//	private void printV(String ime,Vector3d mPosition){
@@ -35,7 +35,7 @@ public class SteeringWheel implements DataListener{
 	
 	public SteeringWheel(ModelLoader m, Camera c) {
 		// use the device hardware's native byte order
-		mPosition = new Vector3d(-1, 0, -4);
+		mPosition = new Vector3d(-1.2, -0.5f, -2);
 		models = m;
 		//mSteeringWheel = models.GetModel("mSteeringWheel");
 		mSteeringWheel = models.GetModel("steering_wheel");
@@ -53,5 +53,6 @@ public class SteeringWheel implements DataListener{
 
 	public void setAlpha(float alpha) {
 	}
+	
 
 }

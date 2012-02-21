@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -36,8 +37,6 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private static final int REQUEST_ENABLE_BT = 3;
 
 	public static final String DEVICE_NAME = "device_name";
-
-	private int mViewMode = 0; // 0 = normal view, 1 = Gl view, 2 = graph view
 
 	private BluetoothAdapter mBluetoothAdapter;
 
@@ -101,20 +100,22 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 		((Button) findViewById(R.id.expandGlButton)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (mViewMode == 0){
-					toGLView();
-				}else{
-					toNormalView();
-				}
+				toGLView();
 			}
 		});
 		((Button) findViewById(R.id.expandGraphButton)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (mViewMode == 0){
-					toGraphView();
-				}else{
-					toNormalView();
-				}
+				toGraphView();
+			}
+		});
+		((Button) findViewById(R.id.normalViewButton)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				toNormalView();
+			}
+		});
+		((Button) findViewById(R.id.normalViewButton2)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				toNormalView();
 			}
 		});
 
@@ -158,9 +159,9 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 				while(mRefreshThread){
 					try {
 						Thread.sleep(100);
-						mPospeskiView.postInvalidate();
-						mSteeringWheelView.postInvalidate();
-						mStevecView.postInvalidate();
+						//mPospeskiView.postInvalidate();
+						//mSteeringWheelView.postInvalidate();
+						//mStevecView.postInvalidate();
 					} catch (InterruptedException e) {
 					}
 				}
@@ -245,15 +246,26 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 	private void toNormalView(){
 		D.dbgv("switching to normal view");
-		mViewMode = 0;
-	}
-	private void toGLView(){
-		D.dbgv("switching to gl view");
-		mViewMode = 1;
+		//		mGlView.setPadding(500, 40, 30, 30);
+		//		mGlView.setLayoutParams(new RelativeLayout.LayoutParams(730, 400));
+		((RelativeLayout) findViewById(R.id.normalViewLayou)).setVisibility(View.VISIBLE);
+		((RelativeLayout) findViewById(R.id.graphViewLayou)).setVisibility(View.INVISIBLE);
+		((RelativeLayout) findViewById(R.id.glViewLayou)).setVisibility(View.INVISIBLE);
 	}
 	private void toGraphView(){
 		D.dbgv("switching to graph view");
-		mViewMode = 2;
+		((RelativeLayout) findViewById(R.id.normalViewLayou)).setVisibility(View.INVISIBLE);
+		((RelativeLayout) findViewById(R.id.graphViewLayou)).setVisibility(View.VISIBLE);
+		((RelativeLayout) findViewById(R.id.glViewLayou)).setVisibility(View.INVISIBLE);
+	}
+	private void toGLView(){
+		D.dbgv("switching to gl view  "+mGlView.getHeight()+"  "+mGlView.getWidth());
+		//		mGlView.setLayoutParams(new RelativeLayout.LayoutParams(400, 400));
+		//		mGlView.setPadding(600, 600, 50, 50);
+		((RelativeLayout) findViewById(R.id.normalViewLayou)).setVisibility(View.INVISIBLE);
+		((RelativeLayout) findViewById(R.id.graphViewLayou)).setVisibility(View.INVISIBLE);
+		((RelativeLayout) findViewById(R.id.glViewLayou)).setVisibility(View.VISIBLE);
+
 	}
 
 	public void btUnaviable() {
