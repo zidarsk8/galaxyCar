@@ -56,6 +56,10 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private PospeskiView mPospeskiView;
 	private StevecView mStevecView;
 	private int mViewMode; //0 normal 1 gl 2 graph
+	private GraphicalView mChartViewAll;
+	private GraphicalView mChartViewTurn;
+	private GraphicalView mChartViewRevs;
+	private GraphicalView mChartViewG;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -81,13 +85,35 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		mGraph = new Graph();
 
-		LinearLayout layout = (LinearLayout) findViewById(R.id.chart);
-		mChartView = ChartFactory.getLineChartView(this,
-				mGraph.getDemoDataset(), mGraph.getDemoRenderer());
+		LinearLayout graphAll = (LinearLayout) findViewById(R.id.chart);
+		mChartViewAll = ChartFactory.getLineChartView(this,
+				mGraph.getDatasetAll(), mGraph.getRendererAll());
 
-		mGraph.start((GraphicalView) mChartView);
+		LinearLayout graphTurn = (LinearLayout) findViewById(R.id.chartGL2);
+		mChartViewTurn = ChartFactory.getLineChartView(this,
+				mGraph.getDatasetTurn(), mGraph.getRendererTurn());
+		
+		LinearLayout graphRevs = (LinearLayout) findViewById(R.id.chartGL3);
+		mChartViewRevs = ChartFactory.getLineChartView(this,
+				mGraph.getDatasetRevs(), mGraph.getRendererRevs());
+		
+		LinearLayout graphG = (LinearLayout) findViewById(R.id.chartGL4);
+		mChartViewG = ChartFactory.getLineChartView(this,
+				mGraph.getDatasetG(), mGraph.getRendererG());
+		
+		mGraph.start((GraphicalView) mChartViewAll, (GraphicalView) mChartViewTurn, 
+				(GraphicalView) mChartViewRevs, (GraphicalView) mChartViewG);
 
-		layout.addView((View) mChartView, new LayoutParams(
+		graphAll.addView((View) mChartViewAll, new LayoutParams(
+				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		
+		graphTurn.addView((View) mChartViewTurn, new LayoutParams(
+				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		
+		graphRevs.addView((View) mChartViewRevs, new LayoutParams(
+				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		
+		graphG.addView((View) mChartViewG, new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
 		mBtHelper = new BtHelper(getApplicationContext(), this, mDataHandler);
@@ -169,12 +195,24 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 			public void run() {
 				while(mRefreshThread){
 					try {
-						Thread.sleep(50);
-						if (mViewMode == 0){
+						switch (mViewMode) {
+						case 0:
+							Thread.sleep(100);
 							mPospeskiView.postInvalidate();
 							mSteeringWheelView.postInvalidate();
 							mStevecView.postInvalidate();
+							mChartViewAll.repaint();
+							break;
+						case 2:
+							Thread.sleep(50);
+							mChartViewRevs.repaint();
+							mChartViewTurn.repaint();
+							mChartViewG.repaint();
+							break;
+						default:
+							Thread.sleep(100);
 						}
+
 					} catch (InterruptedException e) {
 					}
 				}
@@ -255,7 +293,6 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		((GraphicalView) mChartView).repaint();
 	}
 
 	private void toNormalView(){
