@@ -33,7 +33,7 @@ public class SteeringWheel implements DataListener{
 		gl.glPopMatrix();
 	}
 	
-	public SteeringWheel(ModelLoader m, Camera c) {
+	public SteeringWheel(ModelLoader m) {
 		// use the device hardware's native byte order
 		mPosition = new Vector3d(-1.2, -0.5f, -2);
 		models = m;

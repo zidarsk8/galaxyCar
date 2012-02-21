@@ -21,7 +21,6 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private Car car;
 	//private Model cesta;
-	private Camera camera;
 
 	private Model cesta2;
 	private SteeringWheel mSteeringWheel;
@@ -168,11 +167,10 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	}
 
 	private void initShapes() {
-		camera = new Camera();
-		car = new Car(mModelLoader, camera);
+		car = new Car(mModelLoader);
 		//cesta = mModelLoader.GetModel("cesta");
 		cesta2 = mModelLoader.GetModel("cesta2");
-		mSteeringWheel = new SteeringWheel(mModelLoader, camera);
+		mSteeringWheel = new SteeringWheel(mModelLoader);
 	}
 	public Car getCar() {
 		return car;

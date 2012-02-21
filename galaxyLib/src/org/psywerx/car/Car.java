@@ -184,7 +184,7 @@ public class Car implements DataListener{
 
 	}
 
-	public Car(ModelLoader m, Camera c) {
+	public Car(ModelLoader m) {
 		ByteBuffer vbb = ByteBuffer.allocateDirect(
 				// (# of coordinate values * 4 bytes per float)
 				mHistorArr.length * 4);
