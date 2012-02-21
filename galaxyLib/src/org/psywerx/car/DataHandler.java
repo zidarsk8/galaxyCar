@@ -75,7 +75,7 @@ public class DataHandler implements DataListener{
 
 		mRotMatrix = new Matrix3d();
 		mRotMatrix.set(new AxisAngle4d(axis, mDownVec.angle(mOfsetVec))); //set rotation component
-		
+		mAlpha = 1;
 	}
 
 	public void registerListener(DataListener listener) {
