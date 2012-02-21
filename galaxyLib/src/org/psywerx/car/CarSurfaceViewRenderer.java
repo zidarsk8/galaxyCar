@@ -56,23 +56,58 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		} catch (IllegalArgumentException e) {
 		}
 	}
-
+	float[] v = new float[6];
 	public void onDrawFrame(GL10 gl) {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
 		gl.glLoadIdentity();
+		float alpha = 0.05f;
+		float[] newV = new float[6];
 		switch(cameraPosition){
 		case 0:
-			GLU.gluLookAt(gl, 0, 45f, 10f, (float)car.mPosition.x, 0, (float)car.mPosition.z, 0, 1, 0);
+			newV[0] = 0f;
+			newV[1] = 45f;
+			newV[2] = 10f;
+			
+			newV[3] = (float)car.mPosition.x;
+			newV[4] = 0f;
+			newV[5] = (float)car.mPosition.z;
+			
 			break;
 		case 1:
-			camera.setView(gl);
-			camera.set((float)-car.mPosition.x, -4, (float) (-car.mPosition.z-12f));
+			newV[0] = (float)car.mPosition.x;
+			newV[1] = 2f;
+			newV[2] = (float)car.mPosition.z-14;
+			
+			newV[3] = (float)car.mPosition.x;
+			newV[4] = 0f;
+			newV[5] = (float)car.mPosition.z;
 			break;
 		case 2:
-			GLU.gluLookAt(gl, (float)car.mPosition.x, 45f, (float)car.mPosition.z, (float)car.mPosition.x, 0, (float)car.mPosition.z, 0, 1, 0);
+			//GLU.gluLookAt(gl, (float)car.mPosition.x-10, 45f, (float)car.mPosition.z-10, (float)car.mPosition.x, 0, (float)car.mPosition.z, 0, 1, 0);
+			newV[0] =  (float)car.mPosition.x-10;
+			newV[1] = 45f;
+			newV[2] = (float)car.mPosition.z-10;
+			
+			newV[3] = (float)car.mPosition.x;
+			newV[4] = 0f;
+			newV[5] = (float)car.mPosition.z;
+			
 			break;
+		case 3:
+			//float[] v = car.getLookAtVector();
+			newV[0] = (float)(car.mPosition.x-car.mDirVec.x);
+			newV[1] = (float)car.mPosition.y;
+			newV[2] = (float)(car.mPosition.z-car.mDirVec.z);
+			newV[3] = (float)(car.mPosition.x+car.mDirVec.x);
+			newV[4] = (float)(car.mPosition.y+car.mDirVec.y);
+			newV[5] = (float)(car.mPosition.z+car.mDirVec.z);
+			
 		}
+		for(int i=0; i<6; i++){
+			v[i] = v[i]*(1-alpha) + newV[i]*alpha;
+		}
+		GLU.gluLookAt(gl, v[0], v[1]+4f, v[2], v[3], v[4], v[5], 0, 1, 0);
 		//camera.set(0, -5, -20f);
 		
 		// Fixed camera looking at car:

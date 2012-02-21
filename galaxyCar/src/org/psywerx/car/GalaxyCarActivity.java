@@ -139,7 +139,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 			
 			@Override
 			public void onClick(View v) {
-						svr.cameraPosition = (svr.cameraPosition + 1)%3;
+						svr.cameraPosition = (svr.cameraPosition + 1)%4;
 				
 			}
 		});

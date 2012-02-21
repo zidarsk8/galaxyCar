@@ -3,9 +3,12 @@ package org.psywerx.car;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.LinkedList;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.vecmath.Vector3d;
+
+import android.view.View;
 
 public class Car implements DataListener{
 
@@ -29,6 +32,8 @@ public class Car implements DataListener{
 
 	protected Vector3d mDirVec = null;
 	protected Vector3d mPosition = null;
+	private LinkedList<Vector3d> mHistoryPos = new LinkedList<Vector3d>();
+	private LinkedList<Vector3d> mHistoryLook = new LinkedList<Vector3d>();
 	protected float yaw = 180, pitch = 0, skew = 0;
 
 	private float mSpeed = 0;
@@ -135,7 +140,14 @@ public class Car implements DataListener{
 		}else{
 			yaw = (float) Math.toDegrees(Math.PI - zArc);
 		}
-
+		
+		mHistoryPos.add(new Vector3d(mPosition));
+		mHistoryLook.add(new Vector3d(mDirVec));
+		
+		while (mHistoryPos.size() > 20){
+			mHistoryPos.removeFirst();
+			mHistoryLook.removeFirst();
+		}
 	}
 
 	//	private void printV(String ime,Vector3d mPosition){
@@ -202,4 +214,10 @@ public class Car implements DataListener{
 	public void setAlpha(float alpha) {
 	}
 
+	protected float[] getLookAtVector(){
+		Vector3d a = mHistoryPos.getFirst();
+		Vector3d b = mHistoryLook.getFirst();
+		return new float[]{(float)a.x,(float)a.y,(float)a.z, (float)a.x+(float)b.x, (float)a.y+(float)b.y, (float)a.z+(float)b.z};
+	}
+	
 }
