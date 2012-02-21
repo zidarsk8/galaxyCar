@@ -42,7 +42,6 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private BluetoothAdapter mBluetoothAdapter;
 
 	private GLSurfaceView mGlView;
-	private GLSurfaceView mGlViewBig;
 	private WakeLock mWakeLock;
 	private Vibrator mVib = null;
 	private BtHelper mBtHelper;
@@ -56,6 +55,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private SteeringWheelView mSteeringWheelView;
 	private PospeskiView mPospeskiView;
 	private StevecView mStevecView;
+	private int mViewMode; //0 normal 1 gl 2 graph
 
 	/** Called when the activity is first created. */
 	@Override
@@ -76,6 +76,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	}
 
 	private void init() {
+		mViewMode = 0;
 		mDataHandler = new DataHandler();
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		mGraph = new Graph();
@@ -97,7 +98,6 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		
 		
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
-		mGlViewBig = (GLSurfaceView) findViewById(R.id.glSurfaceBig);
 		if (mGlView == null) {
 			finish();// cant show stuff if you cant show stuff right :P
 			return;
@@ -107,12 +107,6 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 		mGlView.setRenderer(svr);
 		mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-
-		mGlViewBig.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
-		mGlViewBig.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-		mGlViewBig.setRenderer(svr);
-		mGlViewBig.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-		mGlViewBig.setVisibility(GLSurfaceView.INVISIBLE);
 		
 
 		((Button) findViewById(R.id.expandGlButton)).setOnClickListener(new View.OnClickListener() {
@@ -264,31 +258,52 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 	private void toNormalView(){
 		D.dbgv("switching to normal view");
-		//		mGlView.setPadding(500, 40, 30, 30);
-		//		mGlView.setLayoutParams(new RelativeLayout.LayoutParams(730, 400));
-		((RelativeLayout) findViewById(R.id.normalViewLayou)).setVisibility(View.VISIBLE);
+		switch (mViewMode) {
+		case 1:
+			RelativeLayout glViewLayou = ((RelativeLayout) findViewById(R.id.glViewLayou));
+			RelativeLayout normalViewLayou = ((RelativeLayout) findViewById(R.id.normalViewLayou));
+			glViewLayou.removeView(mGlView);
+			normalViewLayou.addView(mGlView);
+			findViewById(R.id.expandGlButton).bringToFront();
+			normalViewLayou.setVisibility(View.VISIBLE);
+			glViewLayou.setVisibility(View.INVISIBLE);
+			
+			RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(730, 400);
+			l.setMargins(500, 40, 0, 0);
+			mGlView.setLayoutParams(l);
+			break;
+		case 2:
+			((RelativeLayout) findViewById(R.id.normalViewLayou)).setVisibility(View.VISIBLE);
+			((RelativeLayout) findViewById(R.id.glViewLayou)).setVisibility(View.INVISIBLE);	
+			break;
+		}
 		((RelativeLayout) findViewById(R.id.graphViewLayou)).setVisibility(View.INVISIBLE);
-		((RelativeLayout) findViewById(R.id.glViewLayou)).setVisibility(View.INVISIBLE);
-		mGlViewBig.setVisibility(GLSurfaceView.INVISIBLE);
-		mGlView.setVisibility(GLSurfaceView.VISIBLE);
+		mViewMode = 0;
 	}
+	
 	private void toGraphView(){
 		D.dbgv("switching to graph view");
 		((RelativeLayout) findViewById(R.id.normalViewLayou)).setVisibility(View.INVISIBLE);
 		((RelativeLayout) findViewById(R.id.graphViewLayou)).setVisibility(View.VISIBLE);
 		((RelativeLayout) findViewById(R.id.glViewLayou)).setVisibility(View.INVISIBLE);
-		mGlViewBig.setVisibility(GLSurfaceView.INVISIBLE);
-		mGlView.setVisibility(GLSurfaceView.INVISIBLE);
+		mViewMode = 2;
 	}
 	private void toGLView(){
 		D.dbgv("switching to gl view  "+mGlView.getHeight()+"  "+mGlView.getWidth());
-		//		mGlView.setLayoutParams(new RelativeLayout.LayoutParams(400, 400));
-		//		mGlView.setPadding(600, 600, 50, 50);
-		((RelativeLayout) findViewById(R.id.normalViewLayou)).setVisibility(View.INVISIBLE);
 		((RelativeLayout) findViewById(R.id.graphViewLayou)).setVisibility(View.INVISIBLE);
-		((RelativeLayout) findViewById(R.id.glViewLayou)).setVisibility(View.VISIBLE);
-		mGlViewBig.setVisibility(GLSurfaceView.VISIBLE);
-		mGlView.setVisibility(GLSurfaceView.INVISIBLE);
+		
+		RelativeLayout glViewLayou = ((RelativeLayout) findViewById(R.id.glViewLayou));
+		RelativeLayout normalViewLayou = ((RelativeLayout) findViewById(R.id.normalViewLayou));
+		normalViewLayou.removeView(mGlView);
+		glViewLayou.addView(mGlView);
+		findViewById(R.id.normalViewButton2).bringToFront();
+		normalViewLayou.setVisibility(View.INVISIBLE);
+		glViewLayou.setVisibility(View.VISIBLE);
+		
+		RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(1170, 670);
+		l.setMargins(60, 40, 0, 0);
+		mGlView.setLayoutParams(l);
+		mViewMode = 1;
 	}
 
 	@Override

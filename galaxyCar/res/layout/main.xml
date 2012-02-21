@@ -167,13 +167,6 @@
             android:src="@drawable/alubg" >
         </ImageView>
 
-        <android.opengl.GLSurfaceView
-            android:id="@+id/glSurfaceBig"
-            android:layout_width="1170dp"
-            android:layout_height="670dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="40dp" />
-
         <Button
             android:id="@+id/normalViewButton2"
             android:layout_width="wrap_content"
