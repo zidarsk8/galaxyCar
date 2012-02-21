@@ -59,6 +59,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private GraphicalView mChartViewTurn;
 	private GraphicalView mChartViewRevs;
 	private GraphicalView mChartViewG;
+	private CarSurfaceViewRenderer svr;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -117,7 +118,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 		mBtHelper = new BtHelper(getApplicationContext(), this, mDataHandler);
 
-		CarSurfaceViewRenderer svr = new CarSurfaceViewRenderer(getResources()
+		svr = new CarSurfaceViewRenderer(getResources()
 				.getAssets(), new ModelLoader(this));
 
 
@@ -133,6 +134,14 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		mGlView.setRenderer(svr);
 		mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
+		mGlView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+						svr.cameraPosition = (svr.cameraPosition + 1)%4;
+				
+			}
+		});
 
 		((Button) findViewById(R.id.expandGlButton)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -200,6 +209,11 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 							mSteeringWheelView.postInvalidate();
 							mStevecView.postInvalidate();
 							mChartViewAll.repaint();
+							break;
+						case 1:
+							Thread.sleep(100);
+//							mPospeskiView.postInvalidate();
+//							mStevecView.postInvalidate();
 							break;
 						case 2:
 							Thread.sleep(50);
@@ -300,11 +314,11 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 			RelativeLayout glViewLayou = ((RelativeLayout) findViewById(R.id.glViewLayou));
 			RelativeLayout normalViewLayou = ((RelativeLayout) findViewById(R.id.normalViewLayou));
 			glViewLayou.removeView(mGlView);
-			glViewLayou.removeView(mPospeskiView);
-			glViewLayou.removeView(mStevecView);
+			//glViewLayou.removeView(mPospeskiView);
+			//glViewLayou.removeView(mStevecView);
 			normalViewLayou.addView(mGlView);
-			normalViewLayou.addView(mPospeskiView);
-			normalViewLayou.addView(mStevecView);
+			//normalViewLayou.addView(mPospeskiView);
+			//normalViewLayou.addView(mStevecView);
 			findViewById(R.id.expandGlButton).bringToFront();
 			normalViewLayou.setVisibility(View.VISIBLE);
 			glViewLayou.setVisibility(View.INVISIBLE);
@@ -336,11 +350,11 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		RelativeLayout glViewLayou = ((RelativeLayout) findViewById(R.id.glViewLayou));
 		RelativeLayout normalViewLayou = ((RelativeLayout) findViewById(R.id.normalViewLayou));
 		normalViewLayou.removeView(mGlView);
-		normalViewLayou.removeView(mPospeskiView);
-		normalViewLayou.removeView(mStevecView);
+		//normalViewLayou.removeView(mPospeskiView);
+		//normalViewLayou.removeView(mStevecView);
 		glViewLayou.addView(mGlView);
-		glViewLayou.addView(mPospeskiView);
-		glViewLayou.addView(mStevecView);
+		//glViewLayou.addView(mPospeskiView);
+		//glViewLayou.addView(mStevecView);
 		findViewById(R.id.normalViewButton2).bringToFront();
 		normalViewLayou.setVisibility(View.INVISIBLE);
 		glViewLayou.setVisibility(View.VISIBLE);

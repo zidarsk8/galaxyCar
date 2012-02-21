@@ -3,9 +3,12 @@ package org.psywerx.car;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.LinkedList;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.vecmath.Vector3d;
+
+import android.view.View;
 
 public class Car implements DataListener{
 
@@ -29,6 +32,8 @@ public class Car implements DataListener{
 
 	protected Vector3d mDirVec = null;
 	protected Vector3d mPosition = null;
+	private LinkedList<Vector3d> mHistoryPos = new LinkedList<Vector3d>();
+	private LinkedList<Vector3d> mHistoryLook = new LinkedList<Vector3d>();
 	protected float yaw = 180, pitch = 0, skew = 0;
 
 	private float mSpeed = 0;
@@ -77,23 +82,23 @@ public class Car implements DataListener{
 
 			//dodamo histor trikotnike
 			mHistorArr[mHistoryPosition]   = (float) t1.x;
-			mHistorArr[mHistoryPosition+1] = 1f;
+			mHistorArr[mHistoryPosition+1] = 0.2f;
 			mHistorArr[mHistoryPosition+2] = (float) t1.z;
 			mHistorArr[mHistoryPosition+3] = (float) t2.x;
-			mHistorArr[mHistoryPosition+4] = 1f;
+			mHistorArr[mHistoryPosition+4] = 0.2f;
 			mHistorArr[mHistoryPosition+5] = (float) t2.z;
 			mHistorArr[mHistoryPosition+6] = (float) t3.x;
-			mHistorArr[mHistoryPosition+7] = 1f;
+			mHistorArr[mHistoryPosition+7] = 0.2f;
 			mHistorArr[mHistoryPosition+8] = (float) t3.z;
 			mHistoryPosition+=9;
 			mHistorArr[mHistoryPosition]   = (float) t2.x;
-			mHistorArr[mHistoryPosition+1] = 1f;
+			mHistorArr[mHistoryPosition+1] = 0.2f;
 			mHistorArr[mHistoryPosition+2] = (float) t2.z;
 			mHistorArr[mHistoryPosition+3] = (float) t4.x;
-			mHistorArr[mHistoryPosition+4] = 1f;
+			mHistorArr[mHistoryPosition+4] = 0.2f;
 			mHistorArr[mHistoryPosition+5] = (float) t4.z;
 			mHistorArr[mHistoryPosition+6] = (float) t3.x;
-			mHistorArr[mHistoryPosition+7] = 1f;
+			mHistorArr[mHistoryPosition+7] = 0.2f;
 			mHistorArr[mHistoryPosition+8] = (float) t3.z;
 
 
@@ -135,7 +140,14 @@ public class Car implements DataListener{
 		}else{
 			yaw = (float) Math.toDegrees(Math.PI - zArc);
 		}
-
+		
+		mHistoryPos.add(new Vector3d(mPosition));
+		mHistoryLook.add(new Vector3d(mDirVec));
+		
+		while (mHistoryPos.size() > 20){
+			mHistoryPos.removeFirst();
+			mHistoryLook.removeFirst();
+		}
 	}
 
 	//	private void printV(String ime,Vector3d mPosition){
@@ -181,7 +193,7 @@ public class Car implements DataListener{
 		// create a floating point buffer from the ByteBuffer
 		history = vbb.asFloatBuffer();
 		mDirVec = new Vector3d(0, 0, -1);
-		mPosition = new Vector3d(0, 1.5f, -10);
+		mPosition = new Vector3d(0, 0.2f, -10);
 		models = m;
 		//car = models.GetModel("car");
 		car = models.GetModel("car");
@@ -202,4 +214,10 @@ public class Car implements DataListener{
 	public void setAlpha(float alpha) {
 	}
 
+	protected float[] getLookAtVector(){
+		Vector3d a = mHistoryPos.getFirst();
+		Vector3d b = mHistoryLook.getFirst();
+		return new float[]{(float)a.x,(float)a.y,(float)a.z, (float)a.x+(float)b.x, (float)a.y+(float)b.y, (float)a.z+(float)b.z};
+	}
+	
 }
