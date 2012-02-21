@@ -41,6 +41,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private BluetoothAdapter mBluetoothAdapter;
 
 	private GLSurfaceView mGlView;
+	private GLSurfaceView mGlViewBig;
 	private WakeLock mWakeLock;
 	private BtHelper mBtHelper;
 	private Object mChartView;
@@ -85,18 +86,30 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
 		mBtHelper = new BtHelper(getApplicationContext(), this, mDataHandler);
+		
+		CarSurfaceViewRenderer svr = new CarSurfaceViewRenderer(getResources()
+				.getAssets(), new ModelLoader(this));
+		
+		
+		
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
+		mGlViewBig = (GLSurfaceView) findViewById(R.id.glSurfaceBig);
 		if (mGlView == null) {
 			finish();// cant show stuff if you cant show stuff right :P
 			return;
 		}
-		CarSurfaceViewRenderer svr = new CarSurfaceViewRenderer(getResources()
-				.getAssets(), new ModelLoader(this));
+		
 		mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 		mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 		mGlView.setRenderer(svr);
 		mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
+		mGlViewBig.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+		mGlViewBig.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+		mGlViewBig.setRenderer(svr);
+		mGlViewBig.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+		mGlViewBig.setVisibility(GLSurfaceView.INVISIBLE);
+		
 
 		((Button) findViewById(R.id.expandGlButton)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -250,12 +263,16 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		((RelativeLayout) findViewById(R.id.normalViewLayou)).setVisibility(View.VISIBLE);
 		((RelativeLayout) findViewById(R.id.graphViewLayou)).setVisibility(View.INVISIBLE);
 		((RelativeLayout) findViewById(R.id.glViewLayou)).setVisibility(View.INVISIBLE);
+		mGlViewBig.setVisibility(GLSurfaceView.INVISIBLE);
+		mGlView.setVisibility(GLSurfaceView.VISIBLE);
 	}
 	private void toGraphView(){
 		D.dbgv("switching to graph view");
 		((RelativeLayout) findViewById(R.id.normalViewLayou)).setVisibility(View.INVISIBLE);
 		((RelativeLayout) findViewById(R.id.graphViewLayou)).setVisibility(View.VISIBLE);
 		((RelativeLayout) findViewById(R.id.glViewLayou)).setVisibility(View.INVISIBLE);
+		mGlViewBig.setVisibility(GLSurfaceView.INVISIBLE);
+		mGlView.setVisibility(GLSurfaceView.INVISIBLE);
 	}
 	private void toGLView(){
 		D.dbgv("switching to gl view  "+mGlView.getHeight()+"  "+mGlView.getWidth());
@@ -264,7 +281,8 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		((RelativeLayout) findViewById(R.id.normalViewLayou)).setVisibility(View.INVISIBLE);
 		((RelativeLayout) findViewById(R.id.graphViewLayou)).setVisibility(View.INVISIBLE);
 		((RelativeLayout) findViewById(R.id.glViewLayou)).setVisibility(View.VISIBLE);
-
+		mGlViewBig.setVisibility(GLSurfaceView.VISIBLE);
+		mGlView.setVisibility(GLSurfaceView.INVISIBLE);
 	}
 
 	@Override

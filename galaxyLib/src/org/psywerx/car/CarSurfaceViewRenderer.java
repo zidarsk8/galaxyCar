@@ -1,5 +1,7 @@
 package org.psywerx.car;
 
+import java.security.InvalidParameterException;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
@@ -47,7 +49,10 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, cesta2.mBitmap, 0);
 
 		// Clean up
-		cesta2.mBitmap.recycle();
+		try {
+			//cesta2.mBitmap.recycle();
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 	public void onDrawFrame(GL10 gl) {

@@ -132,9 +132,7 @@
             android:layout_marginLeft="70dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/expand_button" />
-
     </RelativeLayout>
-
 
     <RelativeLayout
         android:id="@+id/glViewLayou"
@@ -151,6 +149,13 @@
             android:src="@drawable/alubg" >
         </ImageView>
 
+        <android.opengl.GLSurfaceView
+            android:id="@+id/glSurfaceBig"
+            android:layout_width="1230dp"
+            android:layout_height="800dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="40dp" />
+
         <Button
             android:id="@+id/normalViewButton2"
             android:layout_width="wrap_content"
@@ -158,7 +163,6 @@
             android:layout_marginLeft="70dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/expand_button" />
-
     </RelativeLayout>
-    
+
 </RelativeLayout>
