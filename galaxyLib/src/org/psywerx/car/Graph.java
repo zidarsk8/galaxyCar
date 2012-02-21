@@ -52,6 +52,7 @@ public class Graph implements DataListener {
 	private XYMultipleSeriesRenderer renderer;
 	private int ticks = 0;
 	private final UpdateGraph mUpdateGraph = new UpdateGraph();
+	private Thread mThread2;
 
 	public XYMultipleSeriesRenderer getDemoRenderer() {
 		renderer = new XYMultipleSeriesRenderer();
@@ -89,35 +90,42 @@ public class Graph implements DataListener {
 
 		mChartView = m;
 
-//		mThread = new Thread() {
-//			private Random random = new Random();
-//
-//			public void run() {
-//				while (true) {
-//					try {
-//						Thread.sleep(50L);
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					}
-//					if (series.getItemCount() > MAX_POINTS)
-//						series.remove(0);
-//
-//					series.add(ticks, 20 + random.nextInt() % 100);
-//					renderer.setXAxisMax(ticks);
-//					renderer.setXAxisMin(ticks - MAX_POINTS);
-//					((GraphicalView) mChartView).repaint();
-//
-//					ticks++;
-//				}
-//			}
-//		};
-//		mThread.start();
+		mThread = new Thread() {
+			private Random random = new Random();
+
+			public void run() {
+				while (true) {
+					try {
+						Thread.sleep(50L);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					updateData(new float[]{random.nextFloat(), random.nextFloat(), random.nextFloat(), random.nextFloat(), random.nextFloat()});
+				}
+			}
+		};
+		//mThread.start();
+		mThread2 = new Thread() {
+			private Random random = new Random();
+
+			public void run() {
+				while (true) {
+					try {
+						Thread.sleep(50L);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					((GraphicalView) mChartView).repaint();
+				}
+			}
+		};
+		mThread2.start();
 	}
 	public void stopThread(){
 		mUpdateGraph.stop();
 	}
 	public synchronized void updateGraph() {
-		((GraphicalView) mChartView).repaint();
+		
 	}
 
 	public synchronized void updateData(float[] data) {
@@ -128,7 +136,6 @@ public class Graph implements DataListener {
 		renderer.setXAxisMax(ticks);
 		renderer.setXAxisMin(ticks - MAX_POINTS);
 		ticks++;
-		updateGraph();
 	}
 
 	public void setAlpha(float alpha) {
