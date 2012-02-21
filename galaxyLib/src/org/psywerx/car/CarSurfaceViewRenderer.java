@@ -26,6 +26,8 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	private Model cesta2;
 	private SteeringWheel mSteeringWheel;
 	private int[] textures = new int[1];
+	
+	public int cameraPosition = 0;
 
 	public CarSurfaceViewRenderer(AssetManager asm, ModelLoader m) {
 		mModelLoader = m;
@@ -59,13 +61,21 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
 		gl.glLoadIdentity();
-		// TODO: If stavek change camera zidar
-		//camera.setView(gl);
-		//camera.set((float)-car.mPosition.x, -4, (float) (-car.mPosition.z-12f));
+		switch(cameraPosition){
+		case 0:
+			GLU.gluLookAt(gl, 0, 45f, 10f, (float)car.mPosition.x, 0, (float)car.mPosition.z, 0, 1, 0);
+			break;
+		case 1:
+			camera.setView(gl);
+			camera.set((float)-car.mPosition.x, -4, (float) (-car.mPosition.z-12f));
+			break;
+		case 2:
+			GLU.gluLookAt(gl, (float)car.mPosition.x, 45f, (float)car.mPosition.z, (float)car.mPosition.x, 0, (float)car.mPosition.z, 0, 1, 0);
+			break;
+		}
 		//camera.set(0, -5, -20f);
 		
 		// Fixed camera looking at car:
-		GLU.gluLookAt(gl, 0, 45f, 10f, (float)car.mPosition.x, 0, (float)car.mPosition.z, 0, 1, 0);
 		
 		gl.glEnable(GL10.GL_COLOR_MATERIAL);
 		gl.glEnable(GL10.GL_LIGHTING);

@@ -60,6 +60,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private GraphicalView mChartViewTurn;
 	private GraphicalView mChartViewRevs;
 	private GraphicalView mChartViewG;
+	private CarSurfaceViewRenderer svr;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -118,7 +119,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 		mBtHelper = new BtHelper(getApplicationContext(), this, mDataHandler);
 
-		CarSurfaceViewRenderer svr = new CarSurfaceViewRenderer(getResources()
+		svr = new CarSurfaceViewRenderer(getResources()
 				.getAssets(), new ModelLoader(this));
 
 
@@ -134,6 +135,14 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		mGlView.setRenderer(svr);
 		mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
+		mGlView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+						svr.cameraPosition = (svr.cameraPosition + 1)%3;
+				
+			}
+		});
 
 		((Button) findViewById(R.id.expandGlButton)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -202,6 +211,11 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 							mSteeringWheelView.postInvalidate();
 							mStevecView.postInvalidate();
 							mChartViewAll.repaint();
+							break;
+						case 1:
+							Thread.sleep(100);
+//							mPospeskiView.postInvalidate();
+//							mStevecView.postInvalidate();
 							break;
 						case 2:
 							Thread.sleep(50);
