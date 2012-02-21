@@ -70,12 +70,12 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		gl.glEnable(GL10.GL_COLOR_MATERIAL);
 		gl.glEnable(GL10.GL_LIGHTING);
 		
-		car.draw(gl);
 		cesta2.draw(gl, textures);
+		car.draw(gl);
 		
 		gl.glLoadIdentity();
 
-		mSteeringWheel.draw(gl);
+		//mSteeringWheel.draw(gl);
 
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);

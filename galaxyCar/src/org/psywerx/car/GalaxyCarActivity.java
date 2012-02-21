@@ -71,7 +71,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		mWakeLock.acquire();
 
 		mVib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		
+
 		init();
 	}
 
@@ -91,23 +91,23 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
 		mBtHelper = new BtHelper(getApplicationContext(), this, mDataHandler);
-		
+
 		CarSurfaceViewRenderer svr = new CarSurfaceViewRenderer(getResources()
 				.getAssets(), new ModelLoader(this));
-		
-		
-		
+
+
+
 		mGlView = (GLSurfaceView) findViewById(R.id.glSurface);
 		if (mGlView == null) {
 			finish();// cant show stuff if you cant show stuff right :P
 			return;
 		}
-		
+
 		mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 		mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 		mGlView.setRenderer(svr);
 		mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-		
+
 
 		((Button) findViewById(R.id.expandGlButton)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -169,10 +169,12 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 			public void run() {
 				while(mRefreshThread){
 					try {
-						Thread.sleep(100);
-						//mPospeskiView.postInvalidate();
-						//mSteeringWheelView.postInvalidate();
-						//mStevecView.postInvalidate();
+						Thread.sleep(50);
+						if (mViewMode == 0){
+							mPospeskiView.postInvalidate();
+							mSteeringWheelView.postInvalidate();
+							mStevecView.postInvalidate();
+						}
 					} catch (InterruptedException e) {
 					}
 				}
@@ -267,7 +269,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 			findViewById(R.id.expandGlButton).bringToFront();
 			normalViewLayou.setVisibility(View.VISIBLE);
 			glViewLayou.setVisibility(View.INVISIBLE);
-			
+
 			RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(730, 400);
 			l.setMargins(500, 40, 0, 0);
 			mGlView.setLayoutParams(l);
@@ -280,7 +282,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		((RelativeLayout) findViewById(R.id.graphViewLayou)).setVisibility(View.INVISIBLE);
 		mViewMode = 0;
 	}
-	
+
 	private void toGraphView(){
 		D.dbgv("switching to graph view");
 		((RelativeLayout) findViewById(R.id.normalViewLayou)).setVisibility(View.INVISIBLE);
@@ -291,7 +293,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private void toGLView(){
 		D.dbgv("switching to gl view  "+mGlView.getHeight()+"  "+mGlView.getWidth());
 		((RelativeLayout) findViewById(R.id.graphViewLayou)).setVisibility(View.INVISIBLE);
-		
+
 		RelativeLayout glViewLayou = ((RelativeLayout) findViewById(R.id.glViewLayou));
 		RelativeLayout normalViewLayou = ((RelativeLayout) findViewById(R.id.normalViewLayou));
 		normalViewLayou.removeView(mGlView);
@@ -299,7 +301,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		findViewById(R.id.normalViewButton2).bringToFront();
 		normalViewLayou.setVisibility(View.INVISIBLE);
 		glViewLayou.setVisibility(View.VISIBLE);
-		
+
 		RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(1170, 670);
 		l.setMargins(60, 40, 0, 0);
 		mGlView.setLayoutParams(l);
@@ -311,7 +313,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		super.onStop();
 		btUnaviable();
 	}
-	
+
 	public void btUnaviable() {
 		mBluetoothButton.setChecked(false);
 		mBtHelper.reset();

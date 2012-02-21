@@ -14,45 +14,19 @@ import android.util.Log;
 
 public class Graph implements DataListener {
 
-	private class UpdateGraph implements Runnable {
-		public static final long THREAD_REFRESH_PERIOD = 50;
-		private boolean run = true;
-		private boolean running = false;
-
-		public void run() {
-			try {
-				run = true;
-				running = true;
-				while (run) {
-					Thread.sleep(THREAD_REFRESH_PERIOD);
-					updateGraph();
-				}
-			} catch (InterruptedException e) {
-				D.dbge("Error updating graph", e);
-				running = false;
-			}
-		}
-
-		public void stop() {
-			run = false;
-			//running = false;
-		}
-
-		public boolean isRunning() {
-			return running;
-		}
-	}
-
 	private XYMultipleSeriesDataset dataset;
-	private XYSeries series;
+	private XYSeries mGx;
+	private XYSeries mGy;
+	private XYSeries mGz;
+	private XYSeries mRevs;
+	private XYSeries mTurn;
 	private GraphicalView mChartView;
-	private Thread mThread;
+	private Thread randomDataGenerator;
+	private Thread repaintGraph;
 
 	private final int MAX_POINTS = 100;
 	private XYMultipleSeriesRenderer renderer;
 	private int ticks = 0;
-	private final UpdateGraph mUpdateGraph = new UpdateGraph();
-	private Thread mThread2;
 
 	public XYMultipleSeriesRenderer getDemoRenderer() {
 		renderer = new XYMultipleSeriesRenderer();
@@ -70,6 +44,40 @@ public class Graph implements DataListener {
 		// r.setFillBelowLineColor(Color.WHITE);
 		r.setFillPoints(true);
 		renderer.addSeriesRenderer(r);
+		
+		XYSeriesRenderer r2 = new XYSeriesRenderer();
+		r2.setColor(Color.RED);
+		// r.setPointStyle(PointStyle.SQUARE);
+		// r.setFillBelowLine(true);
+		// r.setFillBelowLineColor(Color.WHITE);
+		r2.setFillPoints(true);
+		renderer.addSeriesRenderer(r2);
+		
+		XYSeriesRenderer r3 = new XYSeriesRenderer();
+		r3.setColor(Color.YELLOW);
+		// r.setPointStyle(PointStyle.SQUARE);
+		// r.setFillBelowLine(true);
+		// r.setFillBelowLineColor(Color.WHITE);
+		r3.setFillPoints(true);
+		renderer.addSeriesRenderer(r3);
+		
+		XYSeriesRenderer r4 = new XYSeriesRenderer();
+		r4.setColor(Color.GREEN);
+		// r.setPointStyle(PointStyle.SQUARE);
+		// r.setFillBelowLine(true);
+		// r.setFillBelowLineColor(Color.WHITE);
+		r4.setFillPoints(true);
+		renderer.addSeriesRenderer(r4);
+		
+		XYSeriesRenderer r5 = new XYSeriesRenderer();
+		r5.setColor(Color.MAGENTA);
+		// r.setPointStyle(PointStyle.SQUARE);
+		// r.setFillBelowLine(true);
+		// r.setFillBelowLineColor(Color.WHITE);
+		r5.setFillPoints(true);
+		renderer.addSeriesRenderer(r5);
+		
+		
 		r = new XYSeriesRenderer();
 		r.setPointStyle(PointStyle.CIRCLE);
 		r.setColor(Color.GREEN);
@@ -81,8 +89,16 @@ public class Graph implements DataListener {
 
 	public XYMultipleSeriesDataset getDemoDataset() {
 		dataset = new XYMultipleSeriesDataset();
-		series = new XYSeries("Graf 1");
-		dataset.addSeries(series);
+		mTurn = new XYSeries("Turn");
+		mRevs = new XYSeries("Revs");
+		mGx = new XYSeries("Gx");
+		mGy = new XYSeries("Gy");
+		mGz = new XYSeries("Gz");
+		dataset.addSeries(mTurn);
+		dataset.addSeries(mRevs);
+		dataset.addSeries(mGx);
+		dataset.addSeries(mGy);
+		dataset.addSeries(mGz);
 		return dataset;
 	}
 
@@ -90,7 +106,7 @@ public class Graph implements DataListener {
 
 		mChartView = m;
 
-		mThread = new Thread() {
+		randomDataGenerator = new Thread() {
 			private Random random = new Random();
 
 			public void run() {
@@ -104,14 +120,15 @@ public class Graph implements DataListener {
 				}
 			}
 		};
-		//mThread.start();
-		mThread2 = new Thread() {
+		//randomDataGenerator.start();
+		repaintGraph = new Thread() {
+			public static final long THREAD_REFRESH_PERIOD = 50;
 			private Random random = new Random();
 
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(50L);
+						Thread.sleep(THREAD_REFRESH_PERIOD);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -119,20 +136,32 @@ public class Graph implements DataListener {
 				}
 			}
 		};
-		mThread2.start();
-	}
-	public void stopThread(){
-		mUpdateGraph.stop();
+		repaintGraph.start();
 	}
 	public synchronized void updateGraph() {
 		
 	}
-
+	
 	public synchronized void updateData(float[] data) {
-		if (series.getItemCount() > MAX_POINTS)
-			series.remove(0);
+		
+		// warning ugly looking code ahead:
+		if (mTurn.getItemCount() > MAX_POINTS)
+			mTurn.remove(0);
+		if (mGx.getItemCount() > MAX_POINTS)
+			mGx.remove(0);
+		if (mGy.getItemCount() > MAX_POINTS)
+			mGy.remove(0);
+		if (mGz.getItemCount() > MAX_POINTS)
+			mGz.remove(0);
+		if (mRevs.getItemCount() > MAX_POINTS)
+			mRevs.remove(0);
 
-		series.add(ticks, data[4]);
+		mTurn.add(ticks, data[4]);
+		mGx.add(ticks, data[0]);
+		mGy.add(ticks, data[1]);
+		mGz.add(ticks, data[2]);
+		mRevs.add(ticks, data[3]);
+		
 		renderer.setXAxisMax(ticks);
 		renderer.setXAxisMin(ticks - MAX_POINTS);
 		ticks++;

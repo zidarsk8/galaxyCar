@@ -13,8 +13,12 @@ public class Car implements DataListener{
 	private final float TURN_FACTOR = 2;
 	private final float MAX_RADIUS = 20;
 
-	private final int HISTORY_SIZE = 2000*18;
+	private final float SIZE = 0.5f;
+	private final int HISTORY_SIZE = 200*18;
 
+	private final int HISTORY_SKIP = 5;
+	private int mhistpos = 0;
+	
 	// change this if the turning circle radius is not linear function of the wheel turn value
 	//private final float LINEAR = 1;
 
@@ -52,50 +56,56 @@ public class Car implements DataListener{
 		perpendicular.cross(newDirection, norm);
 		perpendicular.normalize();
 		mDirVec.normalize();
-
-		Vector3d t1 = new Vector3d();
-		Vector3d t2 = new Vector3d();
-		Vector3d t3 = new Vector3d();
-		Vector3d t4 = new Vector3d();
-
-		Vector3d center = new Vector3d((float)car.center[0],0,(float)car.center[2]);
-		center.add(mPosition);
-
-		t1.add(center,perpendicular);
-		t2.sub(center,perpendicular);
-		t3.add(t1, mDirVec);
-		t4.add(t2, mDirVec);
-
-		//dodamo histor trikotnike
-		mHistorArr[mHistoryPosition]   = (float) t1.x;
-		mHistorArr[mHistoryPosition+1] = (float) t1.y;
-		mHistorArr[mHistoryPosition+2] = (float) t1.z;
-		mHistorArr[mHistoryPosition+3] = (float) t2.x;
-		mHistorArr[mHistoryPosition+4] = (float) t2.y;
-		mHistorArr[mHistoryPosition+5] = (float) t2.z;
-		mHistorArr[mHistoryPosition+6] = (float) t3.x;
-		mHistorArr[mHistoryPosition+7] = (float) t3.y;
-		mHistorArr[mHistoryPosition+8] = (float) t3.z;
-		mHistoryPosition+=9;
-		mHistorArr[mHistoryPosition]   = (float) t2.x;
-		mHistorArr[mHistoryPosition+1] = (float) t2.y;
-		mHistorArr[mHistoryPosition+2] = (float) t2.z;
-		mHistorArr[mHistoryPosition+3] = (float) t4.x;
-		mHistorArr[mHistoryPosition+4] = (float) t4.y;
-		mHistorArr[mHistoryPosition+5] = (float) t4.z;
-		mHistorArr[mHistoryPosition+6] = (float) t3.x;
-		mHistorArr[mHistoryPosition+7] = (float) t3.y;
-		mHistorArr[mHistoryPosition+8] = (float) t3.z;
+		if(mhistpos++%HISTORY_SKIP == 0){
 
 
-		mHistoryPosition = (mHistoryPosition+9) % HISTORY_SIZE;
+			mDirVec.scale(SIZE*2);
+			perpendicular.scale(SIZE);
+
+			Vector3d t1 = new Vector3d();
+			Vector3d t2 = new Vector3d();
+			Vector3d t3 = new Vector3d();
+			Vector3d t4 = new Vector3d();
+
+			Vector3d center = new Vector3d((float)car.center[0],0,(float)car.center[2]);
+			center.add(mPosition);
+
+			t1.add(center,perpendicular);
+			t2.sub(center,perpendicular);
+			t3.add(t1, mDirVec);
+			t4.add(t2, mDirVec);
+
+			//dodamo histor trikotnike
+			mHistorArr[mHistoryPosition]   = (float) t1.x;
+			mHistorArr[mHistoryPosition+1] = 1f;
+			mHistorArr[mHistoryPosition+2] = (float) t1.z;
+			mHistorArr[mHistoryPosition+3] = (float) t2.x;
+			mHistorArr[mHistoryPosition+4] = 1f;
+			mHistorArr[mHistoryPosition+5] = (float) t2.z;
+			mHistorArr[mHistoryPosition+6] = (float) t3.x;
+			mHistorArr[mHistoryPosition+7] = 1f;
+			mHistorArr[mHistoryPosition+8] = (float) t3.z;
+			mHistoryPosition+=9;
+			mHistorArr[mHistoryPosition]   = (float) t2.x;
+			mHistorArr[mHistoryPosition+1] = 1f;
+			mHistorArr[mHistoryPosition+2] = (float) t2.z;
+			mHistorArr[mHistoryPosition+3] = (float) t4.x;
+			mHistorArr[mHistoryPosition+4] = 1f;
+			mHistorArr[mHistoryPosition+5] = (float) t4.z;
+			mHistorArr[mHistoryPosition+6] = (float) t3.x;
+			mHistorArr[mHistoryPosition+7] = 1f;
+			mHistorArr[mHistoryPosition+8] = (float) t3.z;
 
 
+			mHistoryPosition = (mHistoryPosition+9) % HISTORY_SIZE;
+
+		}
 
 		if (mTurn != 0){
 			//double radious = (MAX_RADIUS - Math.pow(mTurn * TURN_FACTOR, LINEAR));
 			double radious = MAX_RADIUS - Math.abs(mTurn) * TURN_FACTOR ;
 			double alpha = dDistance/radious; // distance of the driven arc in angle degrees
+			perpendicular.normalize();
 			perpendicular.scale(radious);
 			newDirection.normalize();
 			newDirection.scale(radious);
@@ -156,7 +166,7 @@ public class Car implements DataListener{
 		gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
 		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, history);
 		//		gl.glNormalPointer(GL10.GL_FLOAT, 0, normalBuffer[i]);
-		gl.glColor4f(0f, 0f, 255f, 1);
+		gl.glColor4f(0f, 0f, 0f, 0.5f);
 		gl.glDrawArrays(GL10.GL_TRIANGLES, 0, (history.capacity()) / 3);
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 
@@ -171,7 +181,7 @@ public class Car implements DataListener{
 		// create a floating point buffer from the ByteBuffer
 		history = vbb.asFloatBuffer();
 		mDirVec = new Vector3d(0, 0, -1);
-		mPosition = new Vector3d(0, 0, -10);
+		mPosition = new Vector3d(0, 1.5f, -10);
 		models = m;
 		//car = models.GetModel("car");
 		car = models.GetModel("car");

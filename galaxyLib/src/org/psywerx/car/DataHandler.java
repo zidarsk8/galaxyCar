@@ -30,9 +30,9 @@ public class DataHandler implements DataListener{
 				Vector3d result = new Vector3d();
 				mRotMatrix.transform(g, result);
 
-				mLastData[0] = (float) result.x;
-				mLastData[1] = (float) result.y;
-				mLastData[2] = (float) result.z - 0.4156666667f; //stationary down vector
+				mLastData[0] = (float) result.x*10;
+				mLastData[1] = (float) result.y*10;
+				mLastData[2] = ((float) result.z + 0.3856666667f)*10; //stationary down vector
 
 				for (Iterator<DataListener> i = mDataListeners.iterator(); i.hasNext();){
 					DataListener dl = i.next();
