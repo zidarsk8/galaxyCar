@@ -20,6 +20,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.os.Vibrator;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -42,6 +43,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 	private GLSurfaceView mGlView;
 	private WakeLock mWakeLock;
+	private Vibrator mVib = null;
 	private BtHelper mBtHelper;
 	private Object mChartView;
 	private VerticalSeekBar mAlphaBar;
@@ -67,6 +69,8 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 				"Sandboc lock");
 		mWakeLock.acquire();
 
+		mVib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		
 		init();
 	}
 
@@ -176,8 +180,10 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		}
 		if (mStartButton.isChecked()){
 			mBtHelper.sendStart();
+			mVib.vibrate(200);
 		}else{
 			mBtHelper.sendStop();
+			mVib.vibrate(200);
 		}
 	}
 
