@@ -39,8 +39,6 @@ public class Car implements DataListener{
 	private float[] mHistorArr = new float[HISTORY_SIZE];
 	private int mHistoryPosition = 0;
 	private FloatBuffer mHistoryBuffer;
-	private Vector3d mLastCarLook;
-	private Vector3d mLastCarPos;
 
 	public Car(ModelLoader m) {
 		ByteBuffer vbb = ByteBuffer.allocateDirect(
@@ -139,15 +137,17 @@ public class Car implements DataListener{
 
 			mPosition.add(perpendicular);
 			mDirVec.cross(perpendicular, norm);
-
+			mDirVec.normalize();
+			mDirVec.scale(10);
+			
 		} else {
 			newDirection.normalize();
 			newDirection.scale(dDistance);
 			mPosition.add(newDirection);
+			mDirVec.normalize();
+			mDirVec.scale(10);
 		}
 
-		mLastCarPos = new Vector3d(mPosition);
-		mLastCarLook = new Vector3d(mDirVec);
 
 		double xArc = newDirection.angle(new Vector3d(1, 0, 0));
 		double zArc = newDirection.angle(new Vector3d(0, 0, -1));
@@ -208,20 +208,20 @@ public class Car implements DataListener{
 		setDirection(data[3], data[4]);
 	}
 
-	public void setAlpha(float alpha) {
-	}
-
 	/**
 	 * Returns the lookAtVector used in setting up the camera
 	 * 
 	 * @return float[] lookAtVector
 	 */
-	protected float[] getLookAtVector() {
-		Vector3d a = mLastCarPos;
-		Vector3d b = mLastCarLook;
-		return new float[] { (float) a.x, (float) a.y, (float) a.z,
-				(float) a.x + (float) b.x, (float) a.y + (float) b.y,
-				(float) a.z + (float) b.z };
+	protected synchronized float[] getLookAtVector() {
+		
+		return new float[] { 
+				(float) mPosition.x - (float) mDirVec.x , 
+				(float) mPosition.y + 2, 
+				(float) mPosition.z - (float) mDirVec.z ,
+				(float) mPosition.x + (float) mDirVec.x, 
+				(float) mPosition.y + (float) mDirVec.y,
+				(float) mPosition.z + (float) mDirVec.z };
 	}
 
 }

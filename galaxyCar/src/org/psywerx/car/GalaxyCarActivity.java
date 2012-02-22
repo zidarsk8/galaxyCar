@@ -178,6 +178,7 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 				Toast.makeText(getApplicationContext(),
 						"Bluetooth is not available", Toast.LENGTH_LONG).show();
 				mBluetoothButton.setChecked(false);
+				mBtHelper.stopCar();
 			}
 			break;
 		case REQUEST_ENABLE_BT:
