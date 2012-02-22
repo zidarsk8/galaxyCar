@@ -360,6 +360,8 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 					public void onClick(View v) {
 						mDataHandler.setSmoothMode(((ToggleButton) v)
 								.isChecked());
+						mChartViewAll.repaint();
+						
 					}
 				});
 
