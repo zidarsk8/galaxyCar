@@ -1,7 +1,5 @@
 package org.psywerx.car;
 
-import java.security.InvalidParameterException;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
@@ -20,12 +18,11 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	float[] LightPosition = { 0.0f, 0.0f, 2.0f, 1.0f };
 
 	private Car car;
-	//private Model cesta;
 	private Camera camera;
 
-	private Model cesta2;
-	private SteeringWheel mSteeringWheel;
+	private Model mCesta;
 	private int[] textures = new int[1];
+	float[] mLookAtVector = new float[6];
 	
 	public int cameraPosition = 0;
 
@@ -33,7 +30,6 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		mModelLoader = m;
 		//init shapes needs to be here so we can add listeners to models (car)
 		initShapes();
-		
 	}
 
 	private void initTextures(GL10 gl) {
@@ -44,19 +40,18 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_EXP);
 		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST);
 		gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
-		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, cesta2.mBitmap, 0);
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, mCesta.mBitmap, 0);
 
 		// Use the Android GLUtils to specify a two-dimensional texture image
 		// from our bitmap
-		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, cesta2.mBitmap, 0);
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, mCesta.mBitmap, 0);
 
 		// Clean up
 		try {
-			//cesta2.mBitmap.recycle();
+			//mCesta.mBitmap.recycle();
 		} catch (IllegalArgumentException e) {
 		}
 	}
-	float[] v = new float[6];
 	public void onDrawFrame(GL10 gl) {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
@@ -95,7 +90,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 			
 			break;
 		case 3:
-			//float[] v = car.getLookAtVector();
+			//float[] mLookAtVector = car.getLookAtVector();
 			newV[0] = (float)(car.mPosition.x-car.mDirVec.x);
 			newV[1] = (float)car.mPosition.y;
 			newV[2] = (float)(car.mPosition.z-car.mDirVec.z);
@@ -105,9 +100,9 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 			
 		}
 		for(int i=0; i<6; i++){
-			v[i] = v[i]*(1-alpha) + newV[i]*alpha;
+			mLookAtVector[i] = mLookAtVector[i]*(1-alpha) + newV[i]*alpha;
 		}
-		GLU.gluLookAt(gl, v[0], v[1]+4f, v[2], v[3], v[4], v[5], 0, 1, 0);
+		GLU.gluLookAt(gl, mLookAtVector[0], mLookAtVector[1]+4f, mLookAtVector[2], mLookAtVector[3], mLookAtVector[4], mLookAtVector[5], 0, 1, 0);
 		//camera.set(0, -5, -20f);
 		
 		// Fixed camera looking at car:
@@ -115,13 +110,9 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		gl.glEnable(GL10.GL_COLOR_MATERIAL);
 		gl.glEnable(GL10.GL_LIGHTING);
 		
-		cesta2.draw(gl, textures);
+		mCesta.draw(gl, textures);
 		car.draw(gl);
 		
-		gl.glLoadIdentity();
-
-		//mSteeringWheel.draw(gl);
-
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
@@ -166,14 +157,16 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		initTextures(gl);
 
 	}
+	public void setNextCamerPosition(){
+		cameraPosition = ++cameraPosition%4;
+	}
 
 	private void initShapes() {
 		camera = new Camera();
 		car = new Car(mModelLoader, camera);
-		//cesta = mModelLoader.GetModel("cesta");
-		cesta2 = mModelLoader.GetModel("cesta2");
-		mSteeringWheel = new SteeringWheel(mModelLoader, camera);
+		mCesta = mModelLoader.GetModel("cesta2");
 	}
+	
 	public Car getCar() {
 		return car;
 	}

@@ -8,8 +8,6 @@ import java.util.LinkedList;
 import javax.microedition.khronos.opengles.GL10;
 import javax.vecmath.Vector3d;
 
-import android.view.View;
-
 public class Car implements DataListener{
 
 	private final float SPEED_FACTOR = 1f;

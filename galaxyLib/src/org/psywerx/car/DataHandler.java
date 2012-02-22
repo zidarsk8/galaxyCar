@@ -20,53 +20,66 @@ public class DataHandler implements DataListener{
 	private double mAlpha;
 	private int mRolingCount;
 	private LinkedList<float[]> mAverageFilter;
+	private boolean mSmoothMode;
 
 	private final Vector3d mOfsetVec = new Vector3d(-0.0430172172f, -0.0880380459f, 0.4048961114f);
 	private final Vector3d mDownVec = new Vector3d(0,0,-1);
 	private final Matrix3d mRotMatrix;
 
 	private boolean mRunning;
-	private class UpdateViews {
-		public void run() {
-			try {
-				mLastData[4] -= 5f; 
+	
+	public void updateViews() {
+		try {
+			mLastData[4] -= 5f; 
 
-				Vector3d g = new Vector3d(mLastData[0],mLastData[1],mLastData[2]);
-				Vector3d result = new Vector3d();
-				mRotMatrix.transform(g, result);
+			Vector3d g = new Vector3d(mLastData[0],mLastData[1],mLastData[2]);
+			Vector3d result = new Vector3d();
+			mRotMatrix.transform(g, result);
 
-				mLastData[0] = (float) result.x*10;
-				mLastData[1] = (float) result.y*10;
-				mLastData[2] = ((float) result.z + 0.3856666667f)*10; //stationary down vector
+			mLastData[0] = (float) result.x*10;
+			mLastData[1] = (float) result.y*10;
+			mLastData[2] = ((float) result.z + 0.3856666667f)*10; //stationary down vector
 
-				float[] removeFromRolingAvg = mAverageFilter.getFirst();
+			//work on alpha filter;
+			for (int i=0; i<5; i++){
+				mLastAlpha[i] = (float) (mLastAlpha[i]* (1f-mAlpha)+mLastData[i] * mAlpha);
+			}
+
+			while (mAverageFilter.size()>=mRolingCount){
+				float[] removeFromRolingAvg = mAverageFilter.removeFirst();
 				for (int i=0; i<5; i++){
-					mLastAlpha[i] = (float) (mLastAlpha[i]* (1f-mAlpha)+mLastData[i] * mAlpha);
-					mLastRolingAvg[i] = removeFromRolingAvg[i]/mRolingCount + mLastData[i]/mRolingCount;
+					mLastRolingAvg[i] -= removeFromRolingAvg[i];
 				}
-				mAverageFilter.add(mLastData);
-				while (mAverageFilter.size()>mRolingCount){
-					mAverageFilter.removeFirst();
-				}
-				
-				
-				for (Iterator<DataListener> i = mDataListeners.iterator(); i.hasNext();){
-					DataListener dl = i.next();
-					if (dl != null){
+			}
+			float[] addToRolingAvg = new float[5];
+			for (int i=0; i<5; i++){
+				addToRolingAvg[i] = mLastData[i] / mRolingCount;
+				mLastRolingAvg[i] += addToRolingAvg[i] ;
+			}
+			mAverageFilter.add(addToRolingAvg);
+
+
+
+			for (Iterator<DataListener> i = mDataListeners.iterator(); i.hasNext();){
+				DataListener dl = i.next();
+				if (dl != null){
+					//dl.updateData(mLastData);
+					if (mSmoothMode){
 						dl.updateData(mLastAlpha);
 					}else{
-						D.dbge("iterator data is null");
+						dl.updateData(mLastRolingAvg);
 					}
+				}else{
+					D.dbge("iterator data is null");
 				}
-
-			} catch (Exception e) {
-				D.dbge("updating views error", e);
-			} finally{
-				mRunning = false;
 			}
-		};
-	};
-	private final UpdateViews mUpdateViews = new UpdateViews();
+
+		} catch (Exception e) {
+			D.dbge("updating views error", e);
+		} finally{
+			mRunning = false;
+		}
+	}
 
 	public DataHandler() {
 		mHistory = new ArrayList<float[]>();
@@ -76,6 +89,10 @@ public class DataHandler implements DataListener{
 		mRotMatrix = new Matrix3d();
 		mRotMatrix.set(new AxisAngle4d(axis, mDownVec.angle(mOfsetVec))); //set rotation component
 		mAlpha = 1;
+		mRolingCount = 1;
+		mLastAlpha = new float[5];
+		mLastRolingAvg = new float[5];
+		mAverageFilter = new LinkedList<float[]>();
 	}
 
 	public void registerListener(DataListener listener) {
@@ -83,21 +100,25 @@ public class DataHandler implements DataListener{
 			mDataListeners.add(listener);
 		}
 	}
+
 	public void setAlpha(int alpha) {
-		mRolingCount = alpha/5;
-		mAlpha = Math.pow(alpha/100.0f, 2);
+		mRolingCount = Math.max(1,20-alpha/5); //raste obratno sorazmerno
+		mAlpha = Math.pow(alpha/100.0f, 2);    //se premika po kvadratni skali
 	}
-	
-	
+
+
 	public void updateData(float[] rawData) {
 		mLastData = rawData;
 		mHistory.add(rawData);
-		
+
 		if (!mRunning){
 			mRunning = true;
 			//new Thread(mUpdateViews).start();
-			mUpdateViews.run();
+			updateViews();
 		}
-		
+	}
+
+	public void setSmoothMode(boolean alpha){
+		mSmoothMode = !alpha;
 	}
 }

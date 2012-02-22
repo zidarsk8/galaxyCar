@@ -27,12 +27,23 @@
             android:background="@android:color/black"
             android:orientation="horizontal" />
 
+        
+        <ToggleButton
+            android:id="@+id/averageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/lambda_x_button"
+            android:textOff=""
+            android:textOn="" />
+        
         <org.psywerx.car.seekbar.VerticalSeekBar
             android:id="@+id/alphaBar"
             android:layout_width="wrap_content"
-            android:layout_height="400dp"
+            android:layout_height="340dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="100dp"
             android:progress="50"
             android:progressDrawable="@drawable/seekbar_progress" />
 

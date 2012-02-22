@@ -1,17 +1,12 @@
 package org.psywerx.car;
 
-import java.util.Random;
-
-import org.achartengine.GraphicalView;
 import org.achartengine.chart.PointStyle;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
-import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import android.graphics.Color;
-import android.util.Log;
 
 public class Graph implements DataListener {
 
@@ -21,9 +16,6 @@ public class Graph implements DataListener {
 	private XYSeries mGz;
 	private XYSeries mRevs;
 	private XYSeries mTurn;
-	private GraphicalView mChartView;
-	private Thread randomDataGenerator;
-	private Thread repaintGraph;
 
 	private final int MAX_POINTS = 100;
 	private XYMultipleSeriesRenderer renderer;
@@ -34,10 +26,6 @@ public class Graph implements DataListener {
 	private XYMultipleSeriesRenderer rendererTurn;
 	private XYMultipleSeriesRenderer rendererRevs;
 	private XYMultipleSeriesRenderer rendererG;
-	private GraphicalView mChartViewAll;
-	private GraphicalView mChartViewTurn;
-	private GraphicalView mChartViewRevs;
-	private GraphicalView mChartViewG;
 
 	public Graph(){
 		mTurn = new XYSeries("Turn");
@@ -146,9 +134,6 @@ public class Graph implements DataListener {
 		
 		return rendererRevs;
 	}
-	
-	
-	private static final int SERIES_NR = 1;
 
 	public XYMultipleSeriesDataset getDatasetAll() {
 		datasetAll = new XYMultipleSeriesDataset();
@@ -175,49 +160,6 @@ public class Graph implements DataListener {
 		datasetG.addSeries(mGy);
 		datasetG.addSeries(mGz);
 		return datasetG;
-	}
-
-	public void start(GraphicalView m, GraphicalView t, GraphicalView r, GraphicalView g) {
-
-		mChartViewAll = m;
-		mChartViewTurn = t;
-		mChartViewRevs = r;
-		mChartViewG = g;
-
-		randomDataGenerator = new Thread() {
-			private Random random = new Random();
-
-			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(50L);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					updateData(new float[]{random.nextFloat(), random.nextFloat(), random.nextFloat(), random.nextFloat(), random.nextFloat()});
-				}
-			}
-		};
-		//randomDataGenerator.start();
-		repaintGraph = new Thread() {
-			public static final long THREAD_REFRESH_PERIOD = 50;
-			private Random random = new Random();
-
-			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(THREAD_REFRESH_PERIOD);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					//((GraphicalView) mChartViewAll).repaint();
-				}
-			}
-		};
-		repaintGraph.start();
-	}
-	public synchronized void updateGraph() {
-		
 	}
 	
 	public synchronized void updateData(float[] data) {

@@ -113,7 +113,6 @@ public class BtHelper {
 	 * @param data csv string recieved from bluetooth (x,y,z,speed,turn)
 	 */
 	public synchronized void recieveData(String data){
-		//D.dbge("recieved "+data);
 		try {
 			final int len = 5;
 			float[] cur = new float[len];
