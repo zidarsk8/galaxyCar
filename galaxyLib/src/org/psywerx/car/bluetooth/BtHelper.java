@@ -2,7 +2,6 @@ package org.psywerx.car.bluetooth;
 
 import org.psywerx.car.D;
 import org.psywerx.car.DataHandler;
-import org.psywerx.car.DataListener;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -19,12 +18,16 @@ public class BtHelper {
 	public static final int MESSAGE_TOAST = 5;
 	public static final int MESSAGE_TOAST_FAIL = 6;
 	public static final String TOAST = "toast";
+	
 
+	private static final float mMetriNaObrat = 0.0402123859659494f;
 	private Context mContext = null;
 	private BtListener mBtListener = null;
 	private BluetoothChatService mBluetoothService = null;
 	private DataHandler mDataHandler = null;
-
+	
+	private long mTimestamp;
+	
 	private String[] arr ;
 
 	private final Handler mHandler = new Handler(){
@@ -112,15 +115,27 @@ public class BtHelper {
 	}
 
 	/**
-	 * The function checks if the csv is correct and splits the csv string into a float array, which is passed to dataHandler
+	 * The function checks if the csv is correct and splits the csv string into a float array, 
+	 * which is passed to dataHandler. 
+	 * 
+	 * format of the data output is:
+	 * accel x, 
+	 * accel y, 
+	 * accel z,
+	 * revolutions per minute,
+	 * wheel turn value,
+	 * time since last data recieved,
+	 * distance traveled since last data recieved,
 	 * 
 	 * @param data csv string recieved from bluetooth (x,y,z,speed,turn)
 	 */
 	public synchronized void recieveData(String data){
 		try {
+			long ct = System.nanoTime();
 			final int len = 5;
-			float[] cur = new float[len];
+			float[] cur = new float[len+2];
 			if ("start pressed".equals(data)){
+				mTimestamp = System.nanoTime();
 				sendData();
 			}else if ("stop pressed".equals(data)){
 				
@@ -134,6 +149,10 @@ public class BtHelper {
 				for (int i = 0; i < len; i++){
 					cur[i] = Float.parseFloat(arr[i]);
 				}
+				cur[5] = (ct-mTimestamp)/1e9f; //cas od zadnje meritve
+				//                    cas v sekundah       obratov na sekundo    koliko metrov naredi en obrat
+				cur[6] = (float)( ((ct-mTimestamp)/1e9)   *    cur[3]/60)        * mMetriNaObrat ;
+				mTimestamp = ct;
 			}
 			mDataHandler.updateData(cur);
 		} catch (Exception e) {

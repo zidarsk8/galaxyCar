@@ -28,7 +28,7 @@ public class StevecView extends View implements DataListener{
 
 	public boolean setSpeed(float speed) {
 		long ct = System.nanoTime();
-		mDistance += speed*(ct-mTimestamp)/1e10;
+		mDistance += (speed/100)*(ct-mTimestamp)/1e9 *(4f/60f); // koliko obratov je naredu * 4m/100obratov  in dobimo stevilo metrov prevozenih
 		mTimestamp = ct;
 		
 		mSpeed = (1.0f-mAlpha)*mSpeed + mAlpha * speed;
