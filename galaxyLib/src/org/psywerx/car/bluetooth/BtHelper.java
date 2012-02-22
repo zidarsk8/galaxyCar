@@ -18,16 +18,16 @@ public class BtHelper {
 	public static final int MESSAGE_TOAST = 5;
 	public static final int MESSAGE_TOAST_FAIL = 6;
 	public static final String TOAST = "toast";
-	
+
 
 	private static final float mMetriNaObrat = 0.0402123859659494f;
 	private Context mContext = null;
 	private BtListener mBtListener = null;
 	private BluetoothChatService mBluetoothService = null;
 	private DataHandler mDataHandler = null;
-	
+
 	private long mTimestamp;
-	
+
 	private String[] arr ;
 
 	private final Handler mHandler = new Handler(){
@@ -47,7 +47,7 @@ public class BtHelper {
 					break;
 				case BluetoothChatService.STATE_LISTEN:
 				case BluetoothChatService.STATE_NONE:
-					mDataHandler.updateData(new float[5]);
+					stopCar();
 					break;
 				}
 				break;
@@ -70,7 +70,7 @@ public class BtHelper {
 			case MESSAGE_TOAST_FAIL:
 				Toast.makeText(mContext, msg.getData().getString(TOAST),
 						Toast.LENGTH_SHORT).show();
-				mDataHandler.updateData(new float[5]);
+				stopCar();
 				mBtListener.btUnaviable();
 				break;
 			}
@@ -89,10 +89,10 @@ public class BtHelper {
 	}
 
 	public void reset(){
-		mBluetoothService.stop();
-		mDataHandler.setAlpha(100);
-		mDataHandler.updateData(new float[5]);
-		mDataHandler.updateData(new float[5]);
+		if (mBluetoothService != null){
+			mBluetoothService.stop();
+		}
+		stopCar();
 	}
 
 	public synchronized void sendStart(){
@@ -103,7 +103,7 @@ public class BtHelper {
 	public synchronized void sendStop(){
 		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED){
 			mBluetoothService.write("stop".getBytes());
-			mDataHandler.updateData(new float[]{0,0,0,5,0});
+			stopCar();
 		}
 	}
 
@@ -133,12 +133,12 @@ public class BtHelper {
 		try {
 			long ct = System.nanoTime();
 			final int len = 5;
-			float[] cur = new float[len+2];
+			float[] cur = new float[7];
 			if ("start pressed".equals(data)){
 				mTimestamp = System.nanoTime();
 				sendData();
 			}else if ("stop pressed".equals(data)){
-				
+
 			}else{
 				sendData();
 				arr= data.split(",");
@@ -162,6 +162,12 @@ public class BtHelper {
 
 	public BluetoothChatService getChatService(){
 		return mBluetoothService;
+	}
+
+	public void stopCar(){
+		mDataHandler.setAlpha(100);
+		mDataHandler.setSmoothMode(true);
+		mDataHandler.updateData(new float[]{0,0,0,0,0,System.nanoTime(),0});
 	}
 
 }

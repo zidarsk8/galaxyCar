@@ -163,14 +163,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 			break;
 		case 3:
-			// float[] v = car.getLookAtVector();
-			newCameraVectpor[0] = (float) (mCar.mPosition.x - mCar.mDirVec.x);
-			newCameraVectpor[1] = (float) mCar.mPosition.y;
-			newCameraVectpor[2] = (float) (mCar.mPosition.z - mCar.mDirVec.z);
-			newCameraVectpor[3] = (float) (mCar.mPosition.x + mCar.mDirVec.x);
-			newCameraVectpor[4] = (float) (mCar.mPosition.y + mCar.mDirVec.y);
-			newCameraVectpor[5] = (float) (mCar.mPosition.z + mCar.mDirVec.z);
-
+			newCameraVectpor = mCar.getLookAtVector();
 		}
 		for (int i = 0; i < 6; i++) {
 			mCameraVector[i] = mCameraVector[i] * (1 - alpha)

@@ -47,6 +47,11 @@ public class DataHandler implements DataListener{
 			mLastData[1] = (float) result.y*10;
 			mLastData[2] = ((float) result.z + 0.3856666667f)*10; //stationary down vector
 
+
+			mLastAlpha[5] = mLastData[5];
+			mLastAlpha[6] = mLastData[6];
+			mLastRolingAvg[5] = mLastData[5];
+			mLastRolingAvg[6] = mLastData[6];
 			
 			//set Alpha filter values;
 			for (int i=0; i<5; i++){
@@ -65,8 +70,8 @@ public class DataHandler implements DataListener{
 				addToRolingAvg[i] = mLastData[i] / mRolingCount;
 				mLastRolingAvg[i] += addToRolingAvg[i] ;
 			}
+			
 			mAverageFilter.add(addToRolingAvg);
-
 
 
 			for (Iterator<DataListener> i = mDataListeners.iterator(); i.hasNext();){
@@ -99,9 +104,10 @@ public class DataHandler implements DataListener{
 		mRotMatrix.set(new AxisAngle4d(axis, mDownVec.angle(mOfsetVec))); //set rotation component
 		mAlpha = 1;
 		mRolingCount = 1;
-		mLastAlpha = new float[5];
-		mLastRolingAvg = new float[5];
+		mLastAlpha = new float[7];
+		mLastRolingAvg = new float[7];
 		mAverageFilter = new LinkedList<float[]>();
+		mSmoothMode = true;
 	}
 
 	public void registerListener(DataListener listener) {
