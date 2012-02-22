@@ -211,17 +211,20 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		switch (mViewMode) {
 		case 1:
 			mGlViewLayout.removeView(mGlView);
-			mGlViewLayout.removeView(mPospeskiView);
 			mNormalViewLayout.addView(mGlView);
-			mNormalViewLayout.addView(mPospeskiView);
 
+			findViewById(R.id.backGroundOkvir).bringToFront();
 			findViewById(R.id.expandGlButton).bringToFront();
+			findViewById(R.id.expandGraphButton).bringToFront();
+			findViewById(R.id.alphaBar).bringToFront();
+			findViewById(R.id.averageButton).bringToFront();
+			mPospeskiView.bringToFront();
 			mNormalViewLayout.setVisibility(View.VISIBLE);
 			mGlViewLayout.setVisibility(View.INVISIBLE);
 
 			RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(
-					730, 400);
-			l.setMargins(500, 40, 0, 0);
+					720, 400);
+			l.setMargins(530, 40, 0, 0);
 			mGlView.setLayoutParams(l);
 			break;
 		case 2:
@@ -250,9 +253,8 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 				+ mGlView.getWidth());
 		mGraphViewLayout.setVisibility(View.INVISIBLE);
 		mNormalViewLayout.removeView(mGlView);
-		mNormalViewLayout.removeView(mPospeskiView);
 		mGlViewLayout.addView(mGlView);
-		mGlViewLayout.addView(mPospeskiView);
+		mPospeskiView.bringToFront();
 		findViewById(R.id.normalViewButton2).bringToFront();
 		findViewById(R.id.textM).bringToFront();
 		findViewById(R.id.textMS).bringToFront();
