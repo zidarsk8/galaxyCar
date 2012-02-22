@@ -11,6 +11,9 @@ import android.view.View;
 
 public class SteeringWheelView extends View implements DataListener{
 
+	/**
+	 * ANGLE_FACTOR factor for angle of rotated wheel
+	 */
 	private static final float ANGLE_FACTOR = 5;
 	private float mRotate = 0.0f;
 	private float mToAngle = 0.0f;
@@ -32,14 +35,24 @@ public class SteeringWheelView extends View implements DataListener{
 		canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.steering_wheel_small), 0, 0, null);
 	}
 
+	/**
+	 * moves the wheel to the correct angle
+	 */
 	public synchronized void rotateWheel(){
 		mRotate = (1f-mAlpha) * mRotate + mAlpha * mToAngle;
 	}
-
+	
+	/**
+	 * Get new data from listener
+	 */
 	public synchronized void updateData(float[] data) {
 		mToAngle = data[4]*ANGLE_FACTOR;
 		rotateWheel();
 	}
+	
+	/**
+	 * Get new alpha from listener
+	 */
 	public void setAlpha(float alpha) {
 		this.mAlpha = alpha;
 	}

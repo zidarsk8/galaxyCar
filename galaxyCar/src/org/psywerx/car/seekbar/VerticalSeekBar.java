@@ -30,6 +30,9 @@ public class VerticalSeekBar extends SeekBar {
         setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());
     }
 
+    /**
+     * Moves seekbar in vertical position
+     * */
     protected void onDraw(Canvas c) {
         c.rotate(-90);
         c.translate(-getHeight(), 0);
@@ -37,6 +40,9 @@ public class VerticalSeekBar extends SeekBar {
         super.onDraw(c);
     }
 
+    /**
+     * Response to touth events
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isEnabled()) {

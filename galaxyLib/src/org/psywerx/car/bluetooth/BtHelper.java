@@ -30,6 +30,9 @@ public class BtHelper {
 
 	private String[] arr ;
 
+	/**
+	 * handle feedback from BluetoothChatService
+	 */
 	private final Handler mHandler = new Handler(){
 
 		private String mConnectedDeviceName = null;
@@ -84,10 +87,19 @@ public class BtHelper {
 		mDataHandler = dl;		
 	}
 
+	/**
+	 * Connect device with bluetooth
+	 * @param device target device to connect
+	 * @param secure set security level of connection
+	 */
 	public void connect(BluetoothDevice device, boolean secure){
 		mBluetoothService.connect(device,secure);
 	}
 
+	/**
+	 * Stop bluetooth connection
+	 * Stop car
+	 */
 	public void reset(){
 		if (mBluetoothService != null){
 			mBluetoothService.stop();
@@ -95,11 +107,17 @@ public class BtHelper {
 		stopCar();
 	}
 
+	/**
+	 * Send start signal
+	 */
 	public synchronized void sendStart(){
 		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED)
 			mBluetoothService.write("start".getBytes());
 	}
 
+	/**
+	 * Send stop signal
+	 */
 	public synchronized void sendStop(){
 		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED){
 			mBluetoothService.write("stop".getBytes());
@@ -107,8 +125,11 @@ public class BtHelper {
 		}
 	}
 
+
+	/**
+	 * Send data signal and wait for feedback
+	 */
 	public synchronized void sendData(){
-		//D.dbgv("send data");
 		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED){
 			mBluetoothService.write("podatki".getBytes());
 		}
@@ -124,10 +145,10 @@ public class BtHelper {
 	 * accel z,
 	 * revolutions per minute,
 	 * wheel turn value,
-	 * time since last data recieved,
-	 * distance traveled since last data recieved,
+	 * time since last data received,
+	 * distance traveled since last data received,
 	 * 
-	 * @param data csv string recieved from bluetooth (x,y,z,speed,turn)
+	 * @param data csv string received from bluetooth (x,y,z,speed,turn)
 	 */
 	public synchronized void recieveData(String data){
 		try {
@@ -164,6 +185,9 @@ public class BtHelper {
 		return mBluetoothService;
 	}
 
+	/**
+	 * Stop the car
+	 */
 	public void stopCar(){
 		mDataHandler.setAlpha(100);
 		mDataHandler.setSmoothMode(true);
