@@ -200,7 +200,9 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		switch (mViewMode) {
 		case 1:
 			mGlViewLayout.removeView(mGlView);
+			mGlViewLayout.removeView(mPospeskiView);
 			mNormalViewLayout.addView(mGlView);
+			mNormalViewLayout.addView(mPospeskiView);
 
 			findViewById(R.id.expandGlButton).bringToFront();
 			mNormalViewLayout.setVisibility(View.VISIBLE);
@@ -232,7 +234,9 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		D.dbgv("switching to gl view  "+mGlView.getHeight()+"  "+mGlView.getWidth());
 		mGraphViewLayout.setVisibility(View.INVISIBLE);
 		mNormalViewLayout.removeView(mGlView);
+		mNormalViewLayout.removeView(mPospeskiView);
 		mGlViewLayout.addView(mGlView);
+		mGlViewLayout.addView(mPospeskiView);
 		findViewById(R.id.normalViewButton2).bringToFront();
 		findViewById(R.id.textM).bringToFront();
 		findViewById(R.id.textMS).bringToFront();
