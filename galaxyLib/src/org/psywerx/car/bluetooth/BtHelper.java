@@ -1,6 +1,7 @@
 package org.psywerx.car.bluetooth;
 
 import org.psywerx.car.D;
+import org.psywerx.car.DataHandler;
 import org.psywerx.car.DataListener;
 
 import android.bluetooth.BluetoothDevice;
@@ -22,7 +23,7 @@ public class BtHelper {
 	private Context mContext = null;
 	private BtListener mBtListener = null;
 	private BluetoothChatService mBluetoothService = null;
-	private DataListener mDataListener = null;
+	private DataHandler mDataHandler = null;
 
 	private String[] arr ;
 
@@ -43,6 +44,7 @@ public class BtHelper {
 					break;
 				case BluetoothChatService.STATE_LISTEN:
 				case BluetoothChatService.STATE_NONE:
+					mDataHandler.updateData(new float[5]);
 					break;
 				}
 				break;
@@ -65,18 +67,18 @@ public class BtHelper {
 			case MESSAGE_TOAST_FAIL:
 				Toast.makeText(mContext, msg.getData().getString(TOAST),
 						Toast.LENGTH_SHORT).show();
-				mDataListener.updateData(new float[]{0,0,0,5,0});
+				mDataHandler.updateData(new float[5]);
 				mBtListener.btUnaviable();
 				break;
 			}
 		}
 	};
 
-	public BtHelper(Context ctx, BtListener btl, DataListener dl){
+	public BtHelper(Context ctx, BtListener btl, DataHandler dl){
 		mContext = ctx;
 		mBtListener = btl;
 		mBluetoothService = new BluetoothChatService(ctx, mHandler);
-		mDataListener = dl;		
+		mDataHandler = dl;		
 	}
 
 	public void connect(BluetoothDevice device, boolean secure){
@@ -85,7 +87,9 @@ public class BtHelper {
 
 	public void reset(){
 		mBluetoothService.stop();
-		mDataListener.updateData(new float[5]);
+		mDataHandler.setAlpha(100);
+		mDataHandler.updateData(new float[5]);
+		mDataHandler.updateData(new float[5]);
 	}
 
 	public synchronized void sendStart(){
@@ -96,7 +100,7 @@ public class BtHelper {
 	public synchronized void sendStop(){
 		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED){
 			mBluetoothService.write("stop".getBytes());
-			mDataListener.updateData(new float[]{0,0,0,5,0});
+			mDataHandler.updateData(new float[]{0,0,0,5,0});
 		}
 	}
 
@@ -113,7 +117,6 @@ public class BtHelper {
 	 * @param data csv string recieved from bluetooth (x,y,z,speed,turn)
 	 */
 	public synchronized void recieveData(String data){
-		//D.dbge("recieved "+data);
 		try {
 			final int len = 5;
 			float[] cur = new float[len];
@@ -122,6 +125,7 @@ public class BtHelper {
 			}else if ("stop pressed".equals(data)){
 				
 			}else{
+				sendData();
 				arr= data.split(",");
 				if (arr.length != 5 ){
 					D.dbge("wrong data set: "+data);
@@ -130,9 +134,8 @@ public class BtHelper {
 				for (int i = 0; i < len; i++){
 					cur[i] = Float.parseFloat(arr[i]);
 				}
-				sendData();
 			}
-			mDataListener.updateData(cur);
+			mDataHandler.updateData(cur);
 		} catch (Exception e) {
 			D.dbge("error recieving data fro bluetooth",e);
 		}

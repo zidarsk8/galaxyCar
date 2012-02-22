@@ -1,5 +1,6 @@
 package org.psywerx.car;
 
+import org.achartengine.chart.PointStyle;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
@@ -180,32 +181,7 @@ public class Graph implements DataListener {
 		datasetG.addSeries(mGz);
 		return datasetG;
 	}
-
-	/**
-	 * Function used to generate random data
-	 */
-//	public void start() {
-//
-//		
-//		Thread randomDataGenerator = new Thread() {
-//			private Random random = new Random();
-//
-//			public void run() {
-//				while (true) {
-//					try {
-//						Thread.sleep(50L);
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					}
-//					updateData(new float[] { random.nextFloat(),
-//							random.nextFloat(), random.nextFloat(),
-//							random.nextFloat(), random.nextFloat() });
-//				}
-//			}
-//		};
-//		randomDataGenerator.start();
-//	}
-
+	
 	public synchronized void updateData(float[] data) {
 
 		// We need to remove data points or else the rendering becomes slow
@@ -242,9 +218,9 @@ public class Graph implements DataListener {
 		
 		ticks++;
 	}
-
-	public void setAlpha(float alpha) {
-
+	
+	public void insertWholeHistory(float[][] aa){
+		//TODO: write whole history for pretty viewing 
 	}
 
 }

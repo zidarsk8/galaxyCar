@@ -7,7 +7,7 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.opengles.GL10;
 import javax.vecmath.Vector3d;
 
-public class Car implements DataListener {
+public class Car implements DataListener{
 
 	/**
 	 * Car parameters used for calibration

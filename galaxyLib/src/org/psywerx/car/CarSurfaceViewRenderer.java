@@ -105,6 +105,9 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 		initTextures(gl);
 
 	}
+	public void setNextCamerPosition(){
+		cameraPosition = ++cameraPosition%4;
+	}
 
 	private void initTextures(GL10 gl) {
 		// Generate one texture pointer...
