@@ -6,7 +6,6 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import android.graphics.Color;
-import android.text.InputFilter.LengthFilter;
 
 public class Graph implements DataListener {
 
