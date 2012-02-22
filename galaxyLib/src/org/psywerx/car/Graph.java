@@ -6,6 +6,7 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import android.graphics.Color;
+import android.text.InputFilter.LengthFilter;
 
 public class Graph implements DataListener {
 
@@ -184,15 +185,15 @@ public class Graph implements DataListener {
 	public synchronized void updateData(float[] data) {
 
 		// We need to remove data points or else the rendering becomes slow
-		if (mTurn.getItemCount() > MAX_POINTS)
+		while(mTurn.getItemCount() > MAX_POINTS)
 			mTurn.remove(0);
-		if (mGx.getItemCount() > MAX_POINTS)
+		while(mGx.getItemCount() > MAX_POINTS)
 			mGx.remove(0);
-		if (mGy.getItemCount() > MAX_POINTS)
+		while(mGy.getItemCount() > MAX_POINTS)
 			mGy.remove(0);
-		if (mGz.getItemCount() > MAX_POINTS)
+		while(mGz.getItemCount() > MAX_POINTS)
 			mGz.remove(0);
-		if (mRevs.getItemCount() > MAX_POINTS)
+		while(mRevs.getItemCount() > MAX_POINTS)
 			mRevs.remove(0);
 
 		mGx.add(ticks, data[0]);
@@ -218,8 +219,19 @@ public class Graph implements DataListener {
 		ticks++;
 	}
 	
-	public void insertWholeHistory(float[][] aa){
-		//TODO: write whole history for pretty viewing 
+	public void insertWholeHistory(float[][] history){
+		
+		XYSeries[] sets = {mGx, mGy, mGz, mRevs, mTurn};
+		XYMultipleSeriesRenderer[] renderers = {rendererG, rendererRevs, rendererTurn};
+		
+		for(int i=0; i < history.length; i++){
+			for(int j=0; j < history[0].length; j++){
+				sets[i].add(i, history[i][j]);
+			}
+		}
+		for (int i=0; i < renderers.length; i++){
+			renderers[i].setXAxisMax(history[0].length);
+			renderers[i].setXAxisMin(0);
+		}
 	}
-
 }
