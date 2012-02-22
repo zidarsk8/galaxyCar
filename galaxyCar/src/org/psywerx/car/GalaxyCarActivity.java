@@ -341,6 +341,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	}
 
 	private void startRepaintingThread() {
+		mRefreshThread = true;
 		new Thread(){
 			public void run() {
 				while(mRefreshThread){

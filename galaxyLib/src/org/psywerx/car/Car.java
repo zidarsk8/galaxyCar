@@ -10,7 +10,9 @@ import javax.vecmath.Vector3d;
 
 public class Car implements DataListener{
 
-	private final float SPEED_FACTOR = 1f;
+	//4  metre na minuto damo v m/s
+	//brez *10 naj bi blo prou, samo tko leps zgleda
+	private final float SPEED_FACTOR = (4f/60f)*10; 
 	private final float TURN_FACTOR = 2;
 	private final float MAX_RADIUS = 20;
 
