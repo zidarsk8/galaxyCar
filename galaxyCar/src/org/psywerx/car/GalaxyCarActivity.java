@@ -233,6 +233,12 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		mNormalViewLayout.removeView(mGlView);
 		mGlViewLayout.addView(mGlView);
 		findViewById(R.id.normalViewButton2).bringToFront();
+		findViewById(R.id.textM).bringToFront();
+		findViewById(R.id.textMS).bringToFront();
+		findViewById(R.id.textRPM).bringToFront();
+		findViewById(R.id.textMn).bringToFront();
+		findViewById(R.id.textMSn).bringToFront();
+		findViewById(R.id.textRPMn).bringToFront();
 		mNormalViewLayout.setVisibility(View.INVISIBLE);
 		mGlViewLayout.setVisibility(View.VISIBLE);
 		RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(1170, 670);

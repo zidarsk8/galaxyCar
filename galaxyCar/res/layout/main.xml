@@ -27,7 +27,6 @@
             android:background="@android:color/black"
             android:orientation="horizontal" />
 
-        
         <ToggleButton
             android:id="@+id/averageButton"
             android:layout_width="wrap_content"
@@ -37,7 +36,7 @@
             android:background="@drawable/lambda_x_button"
             android:textOff=""
             android:textOn="" />
-        
+
         <org.psywerx.car.seekbar.VerticalSeekBar
             android:id="@+id/alphaBar"
             android:layout_width="wrap_content"
@@ -178,13 +177,85 @@
             android:src="@drawable/alubg" >
         </ImageView>
 
+        <TextView
+            android:id="@+id/textRPM"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1120dp"
+            android:layout_marginTop="520dp"
+            android:text="rpm"
+            android:textColor="#000000"
+            android:textSize="50dp"
+            android:typeface="monospace" />
+
+        <TextView
+            android:id="@+id/textMS"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1120dp"
+            android:layout_marginTop="570dp"
+            android:text="m/s"
+            android:textColor="#000000"
+            android:textSize="50dp"
+            android:typeface="monospace" />
+        `
+
+        <TextView
+            android:id="@+id/textM"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1120dp"
+            android:layout_marginTop="620dp"
+            android:text="m"
+            android:textColor="#000000"
+            android:textSize="50dp"
+            android:typeface="monospace" />
+
+        <TextView
+            android:id="@+id/textRPMn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="950dp"
+            android:layout_marginTop="520dp"
+            android:gravity="right"
+            android:text="55"
+            android:textColor="#000000"
+            android:textSize="50dp"
+            android:typeface="monospace" />
+
+        <TextView
+            android:id="@+id/textMSn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="950dp"
+            android:layout_marginTop="570dp"
+            android:gravity="right"
+            android:text="23"
+            android:textColor="#000000"
+            android:textSize="50dp"
+            android:typeface="monospace" />
+        `
+
+        <TextView
+            android:id="@+id/textMn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="950dp"
+            android:layout_marginTop="620dp"
+            android:gravity="right"
+            android:text="1234"
+            android:textColor="#000000"
+            android:textSize="50dp"
+            android:typeface="monospace" />
+
         <Button
             android:id="@+id/normalViewButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="70dp"
             android:layout_marginTop="50dp"
-            android:background="@drawable/expand_button" />
+            android:background="@drawable/expand_button"
+            android:typeface="serif" />
     </RelativeLayout>
 
 </RelativeLayout>
