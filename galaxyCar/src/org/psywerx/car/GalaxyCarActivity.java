@@ -124,7 +124,6 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 		setButtonListeners();
 
-		startRepaintingThread();
 	}
 
 
@@ -171,13 +170,11 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		switch (requestCode) {
 		case REQUEST_CONNECT_DEVICE:
 			if (resultCode == Activity.RESULT_OK) {
-				String address = data.getExtras().getString(
-						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				BluetoothDevice device = mBluetoothAdapter
-						.getRemoteDevice(address);
+				String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+				BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
 				mBtHelper.connect(device, false);
-			}
-			else {
+				startRepaintingThread();
+			}else {
 				Toast.makeText(getApplicationContext(),
 						"Bluetooth is not available", Toast.LENGTH_LONG).show();
 				mBluetoothButton.setChecked(false);				
