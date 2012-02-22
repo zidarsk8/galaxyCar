@@ -195,9 +195,9 @@ public class Graph implements DataListener {
 		rendererRevs.setXAxisMin(ticks - MAX_POINTS);
 		ticks++;
 	}
-
-	public void setAlpha(float alpha) {
-
+	
+	public void insertWholeHistory(float[][] aa){
+		//TODO: write whole history for pretty viewing 
 	}
 
 }

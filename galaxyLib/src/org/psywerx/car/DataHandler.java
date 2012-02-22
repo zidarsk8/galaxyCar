@@ -13,7 +13,9 @@ public class DataHandler implements DataListener{
 
 	private ArrayList<DataListener> mDataListeners = new ArrayList<DataListener>();
 
-	private ArrayList<float[]> mHistory;
+	private static final int MAX_HISTORY_SIZE = 10000;
+
+	private LinkedList<float[]> mHistory;
 	private float[] mLastData;
 	private float[] mLastAlpha;
 	private float[] mLastRolingAvg;
@@ -27,7 +29,7 @@ public class DataHandler implements DataListener{
 	private final Matrix3d mRotMatrix;
 
 	private boolean mRunning;
-	
+
 	public void updateViews() {
 		try {
 			mLastData[4] -= 5f; 
@@ -82,7 +84,7 @@ public class DataHandler implements DataListener{
 	}
 
 	public DataHandler() {
-		mHistory = new ArrayList<float[]>();
+		mHistory = new LinkedList<float[]>();
 		Vector3d axis = new Vector3d();
 		axis.cross(mOfsetVec, new Vector3d(0,0,-1));
 
@@ -110,6 +112,9 @@ public class DataHandler implements DataListener{
 	public void updateData(float[] rawData) {
 		mLastData = rawData;
 		mHistory.add(rawData);
+		if (mHistory.size()>MAX_HISTORY_SIZE){
+			mHistory.removeFirst();
+		}
 
 		if (!mRunning){
 			mRunning = true;
@@ -121,4 +126,35 @@ public class DataHandler implements DataListener{
 	public void setSmoothMode(boolean alpha){
 		mSmoothMode = !alpha;
 	}
+
+	public float[][] getWholeHistoryAlpha(){
+		float[][] h = new float[mHistory.size()][5];
+		
+		int lIndex = 0;
+		for (Iterator<float[]> ii = mHistory.iterator(); ii.hasNext();){
+			float[] dl = ii.next();
+			//work on alpha filter;
+			for (int i=0; i<5; i++){
+				h[lIndex][i] = (float) (h[lIndex][i]* (1f-mAlpha)+dl[i] * mAlpha);
+			}
+			lIndex++;
+		}
+		return h;
+	}
+
+	public float[][] getWholeHistoryRolingAvg(){
+		float[][] ra = new float[mHistory.size()][5]; //rolling average
+		
+		int li = 0; //list index
+		for (Iterator<float[]> ii = mHistory.iterator(); ii.hasNext();){
+			float[] dl = ii.next();
+			//work on alpha filter;
+			for (int i=0; i<5; i++){
+				ra[li][i] = dl[i]; //TODO: calculate rolling average
+			}
+			li++;
+		}
+		return ra;
+	}
+
 }
