@@ -39,7 +39,7 @@ public class PhoneCarActivity extends Activity {
 
 				@Override
 				public void onClick(View v) {
-					mCarSurface.nextCameraPosition();
+					mCarSurface.setNextCameraPosition();
 				}
 			});
 		}

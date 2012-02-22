@@ -290,9 +290,7 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 	private void setButtonListeners(){
 		mGlView.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				svr.setNextCamerPosition();
-				//svr.cameraPosition = (svr.cameraPosition + 1)%4;
-
+				svr.setNextCameraPosition();
 			}
 		});
 		((Button) findViewById(R.id.expandGlButton)).setOnClickListener(new View.OnClickListener() {
