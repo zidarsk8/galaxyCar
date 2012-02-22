@@ -15,17 +15,15 @@ import android.graphics.Bitmap;
  */
 public class Model {
 
-	public FloatBuffer vertexBuffer[];
-	public FloatBuffer normalBuffer[];
-	public FloatBuffer textureBuffer;
-	public float textureScale = 1;
-	protected float[] center = { 0f, 0f, 0f };
-	// private float angle = 0;
-	public float colors[][];
-	public int count;
-	public Bitmap mBitmap = null;
-	// private float[] rot = {0f, 0f, 0f};
-	public float[] vertices;
+	protected FloatBuffer mVertexBuffer[];
+	protected FloatBuffer mNormalBuffer[];
+	protected FloatBuffer mTextureBuffer;
+	protected float mTextureScale = 1;
+	protected float[] mCenter = { 0f, 0f, 0f };
+	protected float mColors[][];
+	protected int mCount;
+	protected Bitmap mBitmap = null;
+	protected float[] mVertices;
 
 	/**
 	 * Draw a model
@@ -35,13 +33,13 @@ public class Model {
 	public void draw(GL10 gl) {
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 
-		for (int i = 0; i < vertexBuffer.length; i++) {
+		for (int i = 0; i < mVertexBuffer.length; i++) {
 			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
-			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer[i]);
-			gl.glNormalPointer(GL10.GL_FLOAT, 0, normalBuffer[i]);
-			gl.glColor4f(colors[i][0], colors[i][1], colors[i][2], 1);
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer[i]);
+			gl.glNormalPointer(GL10.GL_FLOAT, 0, mNormalBuffer[i]);
+			gl.glColor4f(mColors[i][0], mColors[i][1], mColors[i][2], 1);
 			gl.glDrawArrays(GL10.GL_TRIANGLES, 0,
-					(vertexBuffer[i].capacity()) / 3);
+					(mVertexBuffer[i].capacity()) / 3);
 		}
 	}
 
@@ -55,14 +53,14 @@ public class Model {
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
-		for (int i = 0; i < vertexBuffer.length; i++) {
+		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mTextureBuffer);
+		for (int i = 0; i < mVertexBuffer.length; i++) {
 			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
-			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer[i]);
-			gl.glNormalPointer(GL10.GL_FLOAT, 0, normalBuffer[i]);
-			gl.glColor4f(colors[i][0], colors[i][1], colors[i][2], 1);
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer[i]);
+			gl.glNormalPointer(GL10.GL_FLOAT, 0, mNormalBuffer[i]);
+			gl.glColor4f(mColors[i][0], mColors[i][1], mColors[i][2], 1);
 			gl.glDrawArrays(GL10.GL_TRIANGLES, 0,
-					(vertexBuffer[i].capacity()) / 3);
+					(mVertexBuffer[i].capacity()) / 3);
 		}
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
@@ -77,11 +75,11 @@ public class Model {
 	 * @param skew
 	 */
 	public void rotate(GL10 gl, float pitch, float yaw, float skew) {
-		gl.glTranslatef(center[0], center[1], center[2]);
+		gl.glTranslatef(mCenter[0], mCenter[1], mCenter[2]);
 		gl.glRotatef(-pitch, 1, 0, 0);
 		gl.glRotatef(-yaw, 0, 1, 0);
 		gl.glRotatef(-skew, 0, 0, 1);
-		gl.glTranslatef(-center[0], -center[1], -center[2]);
+		gl.glTranslatef(-mCenter[0], -mCenter[1], -mCenter[2]);
 	}
 
 }

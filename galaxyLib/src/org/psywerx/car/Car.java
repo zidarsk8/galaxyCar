@@ -84,8 +84,8 @@ public class Car implements DataListener{
 			Vector3d t3 = new Vector3d();
 			Vector3d t4 = new Vector3d();
 
-			Vector3d center = new Vector3d((float) car.center[0], 0,
-					(float) car.center[2]);
+			Vector3d center = new Vector3d((float) car.mCenter[0], 0,
+					(float) car.mCenter[2]);
 			center.add(mPosition);
 
 			t1.add(center, perpendicular);

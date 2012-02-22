@@ -42,7 +42,7 @@ public class ModelLoader{
 		
 		//add cesta model
 		Model road = InitModel("world");
-		road.textureScale = 2;
+		road.mTextureScale = 2;
 		addTexture("kvadrat.png", road);
 		mModels.put("road", road);
 	}
@@ -60,20 +60,20 @@ public class ModelLoader{
 			bitmap = BitmapFactory.decodeStream(is);
 			model.mBitmap = bitmap;
 			is.close();
-			float[] texture = new float[model.vertices.length*2/3];
-			for (int i = 0,j = 0; i < model.vertices.length; i++) {
+			float[] texture = new float[model.mVertices.length*2/3];
+			for (int i = 0,j = 0; i < model.mVertices.length; i++) {
 				if(i%3==1) continue;
-				texture[j++] = model.vertices[i]/model.textureScale;
+				texture[j++] = model.mVertices[i]/model.mTextureScale;
 			}
 			D.dbgd(Arrays.toString(texture));
 			
 			ByteBuffer byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
 			byteBuf.order(ByteOrder.nativeOrder());
-			model.textureBuffer = byteBuf.asFloatBuffer();
+			model.mTextureBuffer = byteBuf.asFloatBuffer();
 			
 			
-			model.textureBuffer.put(texture);
-			model.textureBuffer.position(0);
+			model.mTextureBuffer.put(texture);
+			model.mTextureBuffer.position(0);
 			
 
 		} catch (IOException e) {
@@ -115,20 +115,20 @@ public class ModelLoader{
 			//m.count = lineCount;
 			int i = 0;
 			
-			m.colors = new float[mLineCount][];
+			m.mColors = new float[mLineCount][];
 			String[] concatSplit = concat.split(";");
 			
 			for (String con : concatSplit){
 				String[] modString = con.split(",");
-				m.colors[i] = new float[modString.length];
+				m.mColors[i] = new float[modString.length];
 				int j = 0;
 				for (String a : modString){
-					m.colors[i][j++] = Float.parseFloat(a);
+					m.mColors[i][j++] = Float.parseFloat(a);
 				}
 				i++;
 			}
-			m.vertexBuffer = InitBuffer(model, "v", m);
-			m.normalBuffer = InitBuffer(model, "n", m);
+			m.mVertexBuffer = InitBuffer(model, "v", m);
+			m.mNormalBuffer = InitBuffer(model, "n", m);
 			
 		}catch(Exception e){
 			D.dbge(e.toString());
@@ -168,7 +168,7 @@ public class ModelLoader{
 			}
 			x += buff[0]; y += buff[1]; z += buff[2];
 			if(type == "v")
-				m.vertices = buff;
+				m.mVertices = buff;
 			vbb = ByteBuffer.allocateDirect(
 					// (# of coordinate values * 4 bytes per float)
 					buff.length * 4);
@@ -183,7 +183,7 @@ public class ModelLoader{
 			i++;
 		}
 		if(type == "v"){
-			m.center = new float[]{x/i, y/i, z/i};
+			m.mCenter = new float[]{x/i, y/i, z/i};
 		}
 		return vertexBuffer;
 	}
