@@ -11,30 +11,13 @@ import android.view.View;
 
 public class SteeringWheelView extends View implements DataListener{
 
+	/**
+	 * ANGLE_FACTOR factor for angle of rotated wheel
+	 */
 	private static final float ANGLE_FACTOR = 5;
 	private float mRotate = 0.0f;
 	private float mToAngle = 0.0f;
 	private float mAlpha = 0.1f;
-
-//	private class RotateWheel implements Runnable{
-//		private boolean run = true;
-//		public void run() {
-//			try {
-//				run = true;
-//				while (run){
-//					Thread.sleep(GalaxyCarActivity.THREAD_REFRESH_PERIOD);
-//					//D.dbgv("repainting wheel thread !!");
-//					rotateWheel();
-//				}
-//			} catch (InterruptedException e) {
-//				D.dbge("error in drawing wheel thread", e);
-//			}
-//		}
-//		public void stop(){
-//			run = false;
-//		}
-//	};
-//	private final RotateWheel mRotateThread = new RotateWheel();
 
 	public SteeringWheelView(Context context) {
 		super(context);
@@ -48,21 +31,28 @@ public class SteeringWheelView extends View implements DataListener{
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		//super.onDraw(canvas);
 		canvas.rotate(mRotate,128,128);
 		canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.steering_wheel_small), 0, 0, null);
 	}
 
+	/**
+	 * moves the wheel to the correct angle
+	 */
 	public synchronized void rotateWheel(){
 		mRotate = (1f-mAlpha) * mRotate + mAlpha * mToAngle;
-		//D.dbgv("rotating wheel for: "+mRotate);
-		//postInvalidate();
 	}
-
+	
+	/**
+	 * Get new data from listener
+	 */
 	public synchronized void updateData(float[] data) {
 		mToAngle = data[4]*ANGLE_FACTOR;
 		rotateWheel();
 	}
+	
+	/**
+	 * Get new alpha from listener
+	 */
 	public void setAlpha(float alpha) {
 		this.mAlpha = alpha;
 	}

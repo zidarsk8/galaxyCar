@@ -15,6 +15,11 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class StevecView extends View implements DataListener{
+	
+	/**
+	 * MIN_ROTATE minimum rotate angle for speed dial
+	 * MAX_ROTATE maximum rotate angle for speed dial
+	 */
 	private final int MIN_ROTATE = -30;
 	private final int MAX_ROTATE = 180;
 	private final DecimalFormat FORMATTER = new DecimalFormat("0000");
@@ -26,9 +31,14 @@ public class StevecView extends View implements DataListener{
 	private double mDistance = 0;
 	private long mTimestamp = 0;
 
+	/**
+	 * update speed and distance meters
+	 * @param speed set new speed value
+	 * @return true if speed can be set, false otherwise
+	 */
 	public boolean setSpeed(float speed) {
 		long ct = System.nanoTime();
-		mDistance += speed*(ct-mTimestamp)/1e10;
+		mDistance += (speed/100)*(ct-mTimestamp)/1e9 *(4f/60f); // koliko obratov je naredu * 4m/100obratov  in dobimo stevilo metrov prevozenih
 		mTimestamp = ct;
 		
 		mSpeed = (1.0f-mAlpha)*mSpeed + mAlpha * speed;
@@ -59,13 +69,17 @@ public class StevecView extends View implements DataListener{
 		canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.cagr), 45, 124, null);
 		canvas.restore();
 	}
-
+	
+	/**
+	 * Get new data from listener
+	 */
 	public void updateData(float[] data) {
-		//D.dbgv("updating stevec view with speed: "+data[3]);
-		setSpeed(data[3]);
-		
+		setSpeed(data[3]);	
 	}
 
+	/**
+	 * Get new alpha from listener
+	 */
 	public void setAlpha(float alpha) {
 		this.mAlpha = alpha;
 	}

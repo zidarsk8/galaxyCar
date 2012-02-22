@@ -14,6 +14,9 @@ import android.view.View;
 
 public class PospeskiView extends View implements DataListener{
 
+	/**
+	 * SIZE_FACTOR factor for circle radius for z direction
+	 */
 	private final float SIZE_FACTOR = 3f;
 	private Paint mPaint = null;
 	private Bitmap mPic = null;
@@ -35,6 +38,13 @@ public class PospeskiView extends View implements DataListener{
 		setXYZ(0,0,0);
 	}
 
+	/**
+	 * Set the position of the g-force dot
+	 * @param x 
+	 * @param y
+	 * @param z
+	 * @return true if dot can be set, false otherwise
+	 */
 	public boolean setXYZ(float x, float y, float z) {
 		if ( x < -1 || x > 1 || y < -1 || y > 1 || z < -1 || z > 1 ){
 			return false;
@@ -44,7 +54,6 @@ public class PospeskiView extends View implements DataListener{
 		mY = (1f-mAlpha) * mY + mAlpha* (((y+1) * mHeigh ) / 2);
 		mZ = (1f-mAlpha) * mZ + mAlpha* (Math.abs(z*SIZE_FACTOR) + 4);
 
-		//postInvalidate();
 		return true;
 	}
 
@@ -55,10 +64,16 @@ public class PospeskiView extends View implements DataListener{
 		canvas.drawCircle(mX, mY, mZ, mPaint);
 	}
 
+	/**
+	 * Get new data from listener
+	 */
 	public void updateData(float[] data) {
 		setXYZ(data[0], data[1], data[2]);
 	}
 
+	/**
+	 * Get new alpha from listener
+	 */
 	public void setAlpha(float alpha) {
 		this.mAlpha = alpha;
 	}
