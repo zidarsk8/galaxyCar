@@ -15,81 +15,107 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+/**
+ * 
+ * Loads models from .csv source
+ * 
+ * @author smotko
+ *
+ */
 public class ModelLoader{
-	
-	protected float mTrackWidth = 0.2f;
-	protected float[][] mModels;
-	protected float[][] mNormals;
-	public HashMap<String, Model> models = new HashMap<String, Model>();
-	private int lineCount;
-	private Context ctx;
 
-	public ModelLoader(Context ctx){
-		// TODO: go over all the .csv files in assets and generate models on based on csv file name
-		this.ctx = ctx;
+	/**
+	 * HashMap with all the models used
+	 */
+	public HashMap<String, Model> mModels = new HashMap<String, Model>();
+	
+	private Context mContext;
+	protected float[][] mModel;
+	protected float[][] mNormals;
+	private int mLineCount;
+
+	public ModelLoader(Context context){
+		this.mContext = context;
 		
 		//add car model
-		models.put("car", InitModel("car"));
-		
-		//add steering_wheel
-		models.put("steering_wheel", InitModel("steering_wheel"));
+		mModels.put("car", InitModel("car"));
 		
 		//add cesta model
-		Model cesta = InitModel("world");
-		cesta.textureScale = 2;
-		addTexture("kvadrat.png", cesta);
-		models.put("cesta2", cesta);
+		Model road = InitModel("world");
+		road.textureScale = 2;
+		addTexture("kvadrat.png", road);
+		mModels.put("road", road);
 	}
-	private void addTexture(String tex, Model mo) {
+	/**
+	 * Function used to add texture to the model
+	 * 
+	 * @param textureName name
+	 * @param model to apply the texture to
+	 */
+	private void addTexture(String textureName, Model model) {
 		try {
-			InputStream is = ctx.getAssets().open(tex,AssetManager.ACCESS_STREAMING);
+			InputStream is = mContext.getAssets().open(textureName,AssetManager.ACCESS_STREAMING);
 			Bitmap bitmap = null;
 			//BitmapFactory is an Android graphics utility for images
 			bitmap = BitmapFactory.decodeStream(is);
-			mo.mBitmap = bitmap;
+			model.mBitmap = bitmap;
 			is.close();
-			float[] texture = new float[mo.vertices.length*2/3];
-			for (int i = 0,j = 0; i < mo.vertices.length; i++) {
+			float[] texture = new float[model.vertices.length*2/3];
+			for (int i = 0,j = 0; i < model.vertices.length; i++) {
 				if(i%3==1) continue;
-				texture[j++] = mo.vertices[i]/mo.textureScale;
+				texture[j++] = model.vertices[i]/model.textureScale;
 			}
 			D.dbgd(Arrays.toString(texture));
 			
 			ByteBuffer byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
 			byteBuf.order(ByteOrder.nativeOrder());
-			mo.textureBuffer = byteBuf.asFloatBuffer();
+			model.textureBuffer = byteBuf.asFloatBuffer();
 			
 			
-			mo.textureBuffer.put(texture);
-			mo.textureBuffer.position(0);
+			model.textureBuffer.put(texture);
+			model.textureBuffer.position(0);
 			
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 
+	 * Function used to get the model
+	 * 
+	 * @param model name
+	 * @return
+	 */
 	public Model GetModel(String model){
-		return models.get(model);
+		return mModels.get(model);
 	}
 
+	/**
+	 * Internal function used to initialize the model
+	 * 
+	 * @param model
+	 * @return
+	 */
 	private Model InitModel(String model){
 		
 		Model m = new Model();
 
 		try{
-			InputStreamReader src = new InputStreamReader(ctx.getAssets().open(model+".c.csv",AssetManager.ACCESS_STREAMING));
+			InputStreamReader src = new InputStreamReader(mContext.getAssets().open(model+".c.csv",AssetManager.ACCESS_STREAMING));
 			BufferedReader brc = new BufferedReader(src);
 			String line;
 			String concat = "";
-			lineCount = 0;
+			mLineCount = 0;
 			while ((line = brc.readLine()) != null){
-				lineCount++;
+				mLineCount++;
 				concat += line+";";
 			}
 			//m.count = lineCount;
 			int i = 0;
 			
-			m.colors = new float[lineCount][];
+			m.colors = new float[mLineCount][];
 			String[] concatSplit = concat.split(";");
 			
 			for (String con : concatSplit){
@@ -101,8 +127,6 @@ public class ModelLoader{
 				}
 				i++;
 			}
-			
-			
 			m.vertexBuffer = InitBuffer(model, "v", m);
 			m.normalBuffer = InitBuffer(model, "n", m);
 			
@@ -112,15 +136,24 @@ public class ModelLoader{
 		return m;
 	}
 
-
+	/**
+	 * Internal function to initialize buffers
+	 * 
+	 * @param model
+	 * @param type of the buffer
+	 * @param m
+	 * @return initialized float buffer
+	 * @throws NumberFormatException
+	 * @throws IOException
+	 */
 	private FloatBuffer[] InitBuffer(String model, String type, Model m) throws NumberFormatException, IOException {
 		
-		InputStreamReader src = new InputStreamReader(ctx.getAssets().open(model+"."+type+".csv",AssetManager.ACCESS_STREAMING));
+		InputStreamReader src = new InputStreamReader(mContext.getAssets().open(model+"."+type+".csv",AssetManager.ACCESS_STREAMING));
 		BufferedReader brc = new BufferedReader(src);
 		
 		String line;
 		
-		FloatBuffer[] vertexBuffer = new FloatBuffer[lineCount];
+		FloatBuffer[] vertexBuffer = new FloatBuffer[mLineCount];
 		int i = 0;
 		
 		float x = 0,y = 0,z = 0;
@@ -153,6 +186,5 @@ public class ModelLoader{
 			m.center = new float[]{x/i, y/i, z/i};
 		}
 		return vertexBuffer;
-
 	}
 }

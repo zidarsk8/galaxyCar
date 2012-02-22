@@ -43,7 +43,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 
 	private void initShapes() {
 		mCar = new Car(mModelLoader);
-		mRoad = mModelLoader.GetModel("cesta2");
+		mRoad = mModelLoader.GetModel("road");
 	}
 
 	public void onDrawFrame(GL10 gl) {
