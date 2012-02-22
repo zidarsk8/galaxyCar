@@ -30,10 +30,15 @@ public class DataHandler implements DataListener{
 
 	private boolean mRunning;
 
+	/**
+	 * This function takes in raw data and does the folowing:
+	 * Cal
+	 */
 	public void updateViews() {
 		try {
 			mLastData[4] -= 5f; 
 
+			//rotate the accelerometer so that the z access points down.
 			Vector3d g = new Vector3d(mLastData[0],mLastData[1],mLastData[2]);
 			Vector3d result = new Vector3d();
 			mRotMatrix.transform(g, result);
@@ -42,11 +47,13 @@ public class DataHandler implements DataListener{
 			mLastData[1] = (float) result.y*10;
 			mLastData[2] = ((float) result.z + 0.3856666667f)*10; //stationary down vector
 
-			//work on alpha filter;
+			
+			//set Alpha filter values;
 			for (int i=0; i<5; i++){
 				mLastAlpha[i] = (float) (mLastAlpha[i]* (1f-mAlpha)+mLastData[i] * mAlpha);
 			}
-
+			
+			//set rolling average values
 			while (mAverageFilter.size()>=mRolingCount){
 				float[] removeFromRolingAvg = mAverageFilter.removeFirst();
 				for (int i=0; i<5; i++){
