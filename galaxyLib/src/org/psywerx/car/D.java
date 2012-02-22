@@ -13,9 +13,9 @@ public class D {
 
 
 	/** 
-	 *      * print verbose
-	 *           * @param m debug message
-	 *                */
+	 * print verbose
+	 * @param m debug message
+	 */
 	public static void dbgv(String m){ 
 		if (!showDBGV) return;
 		StackTraceElement e = new Exception().getStackTrace()[1];
@@ -24,9 +24,9 @@ public class D {
 	}   
 
 	/** 
-	 *      * print info
-	 *           * @param m debug message
-	 *                */
+	 * print info
+	 * @param m debug message
+	 */
 	public static void dbgi(String m){
 		if (!showDBGI) return;
 		StackTraceElement e = new Exception().getStackTrace()[1];

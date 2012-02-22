@@ -30,9 +30,24 @@ public class DataHandler implements DataListener{
 
 	private boolean mRunning;
 
+	public DataHandler() {
+		mHistory = new LinkedList<float[]>();
+		Vector3d axis = new Vector3d();
+		axis.cross(mOfsetVec, new Vector3d(0,0,-1));
+
+		mRotMatrix = new Matrix3d();
+		mRotMatrix.set(new AxisAngle4d(axis, mDownVec.angle(mOfsetVec))); //set rotation component
+		mAlpha = 1;
+		mRolingCount = 1;
+		mLastAlpha = new float[7];
+		mLastRolingAvg = new float[7];
+		mAverageFilter = new LinkedList<float[]>();
+		mSmoothMode = true;
+	}
+	
 	/**
-	 * This function takes in raw data and does the folowing:
-	 * Cal
+	 * This function takes in raw data and does the following:
+	 * 
 	 */
 	public void updateViews() {
 		try {
@@ -77,7 +92,6 @@ public class DataHandler implements DataListener{
 			for (Iterator<DataListener> i = mDataListeners.iterator(); i.hasNext();){
 				DataListener dl = i.next();
 				if (dl != null){
-					//dl.updateData(mLastData);
 					if (mSmoothMode){
 						dl.updateData(mLastAlpha);
 					}else{
@@ -93,21 +107,6 @@ public class DataHandler implements DataListener{
 		} finally{
 			mRunning = false;
 		}
-	}
-
-	public DataHandler() {
-		mHistory = new LinkedList<float[]>();
-		Vector3d axis = new Vector3d();
-		axis.cross(mOfsetVec, new Vector3d(0,0,-1));
-
-		mRotMatrix = new Matrix3d();
-		mRotMatrix.set(new AxisAngle4d(axis, mDownVec.angle(mOfsetVec))); //set rotation component
-		mAlpha = 1;
-		mRolingCount = 1;
-		mLastAlpha = new float[7];
-		mLastRolingAvg = new float[7];
-		mAverageFilter = new LinkedList<float[]>();
-		mSmoothMode = true;
 	}
 
 	public void registerListener(DataListener listener) {
@@ -131,7 +130,6 @@ public class DataHandler implements DataListener{
 
 		if (!mRunning){
 			mRunning = true;
-			//new Thread(mUpdateViews).start();
 			updateViews();
 		}
 	}
