@@ -1,1 +1,7 @@
-Hello world
+BlueTooth contains a simple bluetooth server which simulates the car.
+
+Converter has all the 3d models and the python script to conver them into a usable file.
+
+galaxyCar is the main project
+
+galaxyLib has all the librirary files needed to run galaxyCar
