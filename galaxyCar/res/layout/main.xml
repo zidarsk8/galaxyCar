@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/image"
-            android:src="@drawable/graph_robovi_full_mal_center" />
+            android:src="@drawable/bg_gl_graph" />
         
         <ToggleButton
             android:id="@+id/averageButton"
@@ -190,7 +190,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/image"
-            android:src="@drawable/gl_robovi_full" />
+            android:src="@drawable/bg_gl" />
 
         <TextView
             android:id="@+id/textRPM"
