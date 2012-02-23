@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -65,6 +66,7 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 	private RelativeLayout mGraphViewLayout;
 	private RelativeLayout mGlViewLayout;
 	private RelativeLayout mNormalViewLayout;
+	private ToggleButton mAvarageButton;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -245,8 +247,14 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		mGlViewLayout.setVisibility(View.INVISIBLE);
 		mViewMode = 2;
 		if(!mBluetoothButton.isChecked()){
-			//mGraph.insertWholeHistory(mDataHandler.getWholeHistoryAlpha());
-			mGraph.insertWholeHistory(mDataHandler.getWholeHistoryAlpha());
+			Toast.makeText(getApplicationContext(),
+					"Calculating history...", Toast.LENGTH_SHORT).show();
+			mDataHandler.setAlpha(mAlphaBar.getProgress());
+			mDataHandler.setSmoothMode(mAvarageButton.isChecked());
+			if(mAvarageButton.isChecked())
+				mGraph.insertWholeHistory(mDataHandler.getWholeHistoryRolingAvg());
+			else
+				mGraph.insertWholeHistory(mDataHandler.getWholeHistoryAlpha());
 		}
 	}
 	/**
@@ -258,6 +266,7 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		mGraphViewLayout.setVisibility(View.INVISIBLE);
 		mNormalViewLayout.removeView(mGlView);
 		mGlViewLayout.addView(mGlView);
+		findViewById(R.id.backGroundOkvirGl).bringToFront();
 		mPospeskiView.bringToFront();
 		findViewById(R.id.normalViewButton2).bringToFront();
 		findViewById(R.id.textM).bringToFront();
@@ -268,13 +277,24 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		findViewById(R.id.textRPMn).bringToFront();
 		mNormalViewLayout.setVisibility(View.INVISIBLE);
 		mGlViewLayout.setVisibility(View.VISIBLE);
-		RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(1170,
-				670);
-		l.setMargins(60, 40, 0, 0);
+		RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(1230,
+				650);
+		l.setMargins(20, 40, 0, 0);
 		mGlView.setLayoutParams(l);
 		mViewMode = 1;
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+			if(mViewMode != 0){
+				toNormalView();
+				return true;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -359,15 +379,13 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 						toNormalView();
 					}
 				});
-		((ToggleButton) findViewById(R.id.averageButton))
-				.setOnClickListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						mDataHandler.setSmoothMode(((ToggleButton) v)
-								.isChecked());
-						mChartViewAll.repaint();
-						
-					}
-				});
+		mAvarageButton = ((ToggleButton) findViewById(R.id.averageButton));
+		mAvarageButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				mDataHandler.setSmoothMode(((ToggleButton) v).isChecked());
+				mChartViewAll.repaint();
+			}
+		});
 
 		mStartButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -384,6 +402,7 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 					public void onProgressChanged(SeekBar seekBar,
 							int progress, boolean fromUser) {
 						mDataHandler.setAlpha(progress);
+						mChartViewAll.repaint();
 					}
 
 					public void onStartTrackingTouch(SeekBar seekBar) {
@@ -403,6 +422,7 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		mRefreshThread = true;
 		new Thread() {
 			public void run() {
+				mRefreshThread = false;
 				while (mRefreshThread) {
 					try {
 						switch (mViewMode) {

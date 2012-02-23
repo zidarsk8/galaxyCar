@@ -14,12 +14,13 @@ public class Car implements DataListener{
 	 */
 	//4  metre na minuto damo v m/s
 	//brez *10 naj bi blo prou, samo tko leps zgleda
-	private final float SPEED_FACTOR = (4f/60f)*10; 
-	private final float TURN_FACTOR = 2;
-	private final float MAX_RADIUS = 20;
+	private static final float mMetriNaObrat = 0.0402123859659494f;
+	private final float SPEED_FACTOR = mMetriNaObrat /60 *500; 
+	private final float TURN_FACTOR = 5;
+	private final float MAX_RADIUS = 35;
 
 	private final float SIZE = 0.5f;
-	private final int HISTORY_SIZE = 200 * 18;
+	private final int HISTORY_SIZE = 500 * 18;
 	private final int HISTORY_SKIP = 5;
 
 	private int mHistPos = 0;
@@ -39,7 +40,12 @@ public class Car implements DataListener{
 	private float[] mHistorArr = new float[HISTORY_SIZE];
 	private int mHistoryPosition = 0;
 	private FloatBuffer mHistoryBuffer;
-
+	private float mTime;
+	private float mDistance;
+	
+	public static int turnLeft = 250;
+	public static int turnRight = 360+250;
+	
 	public Car(ModelLoader m) {
 		ByteBuffer vbb = ByteBuffer.allocateDirect(
 		// (# of coordinate values * 4 bytes per float)
@@ -62,10 +68,13 @@ public class Car implements DataListener{
 		long time = System.nanoTime();
 		double elapsed = (time - mTimestamp) / 1e9f;
 		mTimestamp = time;
+		// (float)( ((ct-mTimestamp)/1e9)   *    cur[3]/60)        * mMetriNaObrat ;
 		double dDistance = mSpeed * elapsed * SPEED_FACTOR; // m/s
 
+		//D.dbgv(String.format("d = %.9f      m = %.9f     ratio = %.9f ", dDistance, mDistance, (dDistance/mDistance)));
+		
 		if (mSpeed == 0) {
-			return;
+ 			return;
 		}
 		Vector3d norm = new Vector3d(0, (mTurn < 0 ? -1 : 1), 0);
 		Vector3d newDirection = new Vector3d(mDirVec);
@@ -75,9 +84,9 @@ public class Car implements DataListener{
 		perpendicular.normalize();
 		mDirVec.normalize();
 		if (mHistPos++ % HISTORY_SKIP == 0) {
-
-			mDirVec.scale(SIZE * 2);
-			perpendicular.scale(SIZE);
+			float sc = SIZE * (20/(mSpeed+1));
+			mDirVec.scale(sc*2);
+			perpendicular.scale(sc);
 
 			Vector3d t1 = new Vector3d();
 			Vector3d t2 = new Vector3d();
@@ -196,16 +205,14 @@ public class Car implements DataListener{
 
 	}
 
-	private synchronized void setDirection(float speed, float s) {
-		mSpeed = speed;
-		mTurn = s;
-	}
-
 	/**
 	 * Called when bluetooth receives new data and updates the car position
 	 */
-	public void updateData(float[] data) {
-		setDirection(data[3], data[4]);
+	public synchronized void updateData(float[] data) {
+		mSpeed = data[3];
+		mTurn = data[4];
+		mTime = data[5];
+		mDistance = data[6];
 	}
 
 	/**
