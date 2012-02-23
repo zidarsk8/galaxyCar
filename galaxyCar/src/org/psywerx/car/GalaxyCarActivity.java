@@ -277,9 +277,9 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		findViewById(R.id.textRPMn).bringToFront();
 		mNormalViewLayout.setVisibility(View.INVISIBLE);
 		mGlViewLayout.setVisibility(View.VISIBLE);
-		RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(1170,
-				670);
-		l.setMargins(60, 40, 0, 0);
+		RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(1230,
+				650);
+		l.setMargins(20, 40, 0, 0);
 		mGlView.setLayoutParams(l);
 		mViewMode = 1;
 	}
