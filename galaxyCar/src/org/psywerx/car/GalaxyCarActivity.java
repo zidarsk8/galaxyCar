@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -283,6 +284,17 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		mViewMode = 1;
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+			if(mViewMode != 0){
+				toNormalView();
+				return true;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
 	@Override
 	protected void onStop() {
 		super.onStop();
