@@ -119,6 +119,8 @@
         
     </RelativeLayout>
 
+<!-- layout for graph view  -->    
+
     <RelativeLayout
         android:id="@+id/graphViewLayou"
         android:layout_width="fill_parent"
@@ -136,40 +138,50 @@
 
         <LinearLayout
             android:id="@+id/chartGL2"
-            android:layout_width="565dp"
-            android:layout_height="400dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="40dp"
+            android:layout_width="545dp"
+            android:layout_height="375dp"
+            android:layout_marginLeft="90dp"
+            android:layout_marginTop="55dp"
             android:background="@android:color/black"
             android:orientation="horizontal" />
 
         <LinearLayout
             android:id="@+id/chartGL3"
-            android:layout_width="565dp"
-            android:layout_height="400dp"
-            android:layout_marginLeft="665dp"
-            android:layout_marginTop="40dp"
+            android:layout_width="600dp"
+            android:layout_height="375dp"
+            android:layout_marginLeft="645dp"
+            android:layout_marginTop="55dp"
             android:background="@android:color/black"
             android:orientation="horizontal" />
 
         <LinearLayout
             android:id="@+id/chartGL4"
-            android:layout_width="1170dp"
-            android:layout_height="230dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="480dp"
+            android:layout_width="605dp"
+            android:layout_height="245dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="440dp"
             android:background="@android:color/black"
             android:orientation="horizontal" />
 
+        <ImageView
+            android:id="@+id/imageView123"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/image"
+            android:src="@drawable/bg_graph" >
+        </ImageView>
+        
         <Button
             android:id="@+id/normalViewButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="55dp"
             android:background="@drawable/expand_button" />
     </RelativeLayout>
 
+<!-- layout for open gl view  -->    
+    
     <RelativeLayout
         android:id="@+id/glViewLayou"
         android:layout_width="fill_parent"
@@ -177,7 +189,7 @@
         android:visibility="invisible" >
 
         <ImageView
-            android:id="@+id/imageView123"
+            android:id="@+id/imageView1234"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:contentDescription="@string/image"
@@ -267,8 +279,8 @@
             android:id="@+id/normalViewButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="55dp"
             android:background="@drawable/expand_button"
             android:typeface="serif" />
     </RelativeLayout>
