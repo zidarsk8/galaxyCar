@@ -265,6 +265,7 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		mGraphViewLayout.setVisibility(View.INVISIBLE);
 		mNormalViewLayout.removeView(mGlView);
 		mGlViewLayout.addView(mGlView);
+		findViewById(R.id.backGroundOkvirGl).bringToFront();
 		mPospeskiView.bringToFront();
 		findViewById(R.id.normalViewButton2).bringToFront();
 		findViewById(R.id.textM).bringToFront();
