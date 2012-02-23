@@ -42,7 +42,10 @@ public class Car implements DataListener{
 	private FloatBuffer mHistoryBuffer;
 	private float mTime;
 	private float mDistance;
-
+	
+	public static int turnLeft = 250;
+	public static int turnRight = 360+250;
+	
 	public Car(ModelLoader m) {
 		ByteBuffer vbb = ByteBuffer.allocateDirect(
 		// (# of coordinate values * 4 bytes per float)

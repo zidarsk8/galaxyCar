@@ -168,9 +168,47 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/image"
-            android:src="@drawable/bg_graph" >
-        </ImageView>
-
+            android:src="@drawable/bg_graph" />
+        
+        <org.psywerx.car.view.ZavojViewRight
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_marginLeft="690dp"            
+            android:layout_marginTop="482dp" />
+      	
+        <TextView 
+            android:id="@+id/textNrLeft"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="691dp"            
+            android:layout_marginTop="614dp"
+            android:gravity="right"
+            android:text="0"
+            android:textColor="#000000"
+            android:textSize="25dp"
+            android:typeface="monospace" />
+            />
+        
+        <org.psywerx.car.view.ZavojViewRight
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_marginLeft="856dp"            
+            android:layout_marginTop="482dp"
+            />
+        
+        <TextView 
+            android:id="@+id/textNrRight"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="855dp"            
+            android:layout_marginTop="614dp"
+            android:gravity="right"
+            android:text="0"
+            android:textColor="#000000"
+            android:textSize="25dp"
+            android:typeface="monospace" />
+            />
+        
         <Button
             android:id="@+id/normalViewButton"
             android:layout_width="wrap_content"
