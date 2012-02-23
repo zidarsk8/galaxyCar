@@ -1,5 +1,7 @@
 package org.psywerx.car;
 
+import java.util.Arrays;
+
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
@@ -220,17 +222,23 @@ public class Graph implements DataListener {
 	
 	public void insertWholeHistory(float[][] history){
 		
+		
 		XYSeries[] sets = {mGx, mGy, mGz, mRevs, mTurn};
+		
+		for (int i = 0; i < sets.length; i++) {
+			sets[i].clear();
+		}
+		
 		XYMultipleSeriesRenderer[] renderers = {rendererG, rendererRevs, rendererTurn};
 		
 		for(int i=0; i < history.length; i++){
-			for(int j=0; j < history[0].length; j++){
-				sets[i].add(i, history[i][j]);
+			for(int j=0; j < history[i].length; j++){
+				sets[j].add(i, history[i][j]);
 			}
 		}
-		for (int i=0; i < renderers.length; i++){
-			renderers[i].setXAxisMax(history[0].length);
-			renderers[i].setXAxisMin(0);
+		for (int i=0; i < renderers.length && history.length > 0; i++){
+			renderers[i].setXAxisMin(history.length-250);
+			renderers[i].setXAxisMax(Math.max(history.length, 250));
 		}
 	}
 }

@@ -244,6 +244,10 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		mGraphViewLayout.setVisibility(View.VISIBLE);
 		mGlViewLayout.setVisibility(View.INVISIBLE);
 		mViewMode = 2;
+		if(!mBluetoothButton.isChecked()){
+			//mGraph.insertWholeHistory(mDataHandler.getWholeHistoryAlpha());
+			mGraph.insertWholeHistory(mDataHandler.getWholeHistoryAlpha());
+		}
 	}
 	/**
 	 * Shows opengl view in fullscreen
