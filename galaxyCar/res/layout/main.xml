@@ -247,6 +247,7 @@
             android:gravity="right"
             android:text="55"
             android:textColor="#000000"
+            android:background="#000"
             android:textSize="50dp"
             android:typeface="monospace" />
 

@@ -14,7 +14,7 @@ public class CarSurfaceViewRenderer implements GLSurfaceView.Renderer {
 	/**
 	 * Initialize the light parameters
 	 */
-	private final float[] mLightAmbient = { 0.8f, 0.8f, 0.8f, 1.0f };
+	private final float[] mLightAmbient = { 0.4f, 0.4f, 0.4f, 1.0f };
 	private final float[] mLightDiffuse = { 0.9f, 0.9f, 0.9f, 1.0f };
 	private final float[] mLightPosition = { 0.0f, 0.0f, 2.0f, 1.0f };
 
