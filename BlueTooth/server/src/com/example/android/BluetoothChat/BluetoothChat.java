@@ -334,29 +334,37 @@ public class BluetoothChat extends Activity {
 		}
 		int speed = 30;
 		long cur = System.nanoTime()-timestamp;
+		double[] a = {
+				5,
+				5  +  Math.PI*10,
+				5  +  Math.PI*10  +  15,
+				5  +  Math.PI*10  +  15  +  3*Math.PI*18/2,
+				5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46,
+				5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2,
+				5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12,
+			    5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*1,
+			    5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*1 + 8,
+			    5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*1 + 8 + 5.7,
+			    5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*1 + 8 + 6 + 9,
+		};
+		
 		cur /= 1e8;
-		cur %= 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2  +  46  +  3*Math.PI*16/2  +  Math.PI*12  +  Math.PI*10 + 8;
-		//D.dbgv("time "+cur );
-		if       (cur < 5  ){
-			mChatService.write(("0.2332,0.1,0.41,"+speed+",5").getBytes());
-		}else if (cur < 5  +  Math.PI*10){
-			mChatService.write(("0.2332,0.1,0.41,"+speed+",10").getBytes());
-		}else if (cur < 5  +  Math.PI*10  +  15){
-			mChatService.write(("0.2332,0.1,0.41,"+speed+",5").getBytes());
-		}else if (cur < 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2){
-			mChatService.write(("0.2332,0.1,0.41,"+speed+",3").getBytes());
-		}else if (cur < 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2  +  46){
-			mChatService.write(("0.2332,0.1,0.41,"+speed+",5").getBytes());
-		}else if (cur < 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2  +  46  +  Math.PI*16/2){
-			mChatService.write(("0.2332,0.1,0.41,"+speed+",3").getBytes());
-		}else if (cur < 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2  +  46  +  Math.PI*16/2  +  Math.PI*12){
-			mChatService.write(("0.2332,0.1,0.41,"+speed+",1").getBytes());
-		}else if (cur < 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*10){
-			mChatService.write(("0.2332,0.1,0.41,"+speed+",0").getBytes());
-		}else if (cur < 5  +  Math.PI*10  +  15  +  3*Math.PI*16/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*10 + 8){
-			mChatService.write(("0.2332,0.1,0.41,"+speed+",5").getBytes());
-		}else {
-			mChatService.write(("0.2332,0.1,0.41,"+speed+",0").getBytes());
+		cur %= a[a.length-1];
+		
+		double ff = Math.sin(2*Math.PI*((cur-a[3])/(a[4]-a[3])))*15;
+		
+		if       (cur < a[0]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",5").getBytes());
+		}else if (cur < a[1]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",10").getBytes());
+		}else if (cur < a[2]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",5").getBytes());
+		}else if (cur < a[3]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",2").getBytes());
+		}else if (cur < a[4]){ mChatService.write(("0.2332,0.1,0.41,"+(speed+ff)+",5").getBytes());
+		}else if (cur < a[5]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",3").getBytes());
+		}else if (cur < a[6]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",1").getBytes());
+		}else if (cur < a[7]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",0").getBytes());
+		}else if (cur < a[8]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",5").getBytes());
+		}else if (cur < a[9]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",0").getBytes());
+		}else if (cur < a[10]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",5").getBytes());
+		}else {                mChatService.write(("0.2332,0.1,0.41,"+speed+",0").getBytes());
 		}
 	}
 

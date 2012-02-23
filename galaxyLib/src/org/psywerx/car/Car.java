@@ -16,8 +16,8 @@ public class Car implements DataListener{
 	//brez *10 naj bi blo prou, samo tko leps zgleda
 	private static final float mMetriNaObrat = 0.0402123859659494f;
 	private final float SPEED_FACTOR = mMetriNaObrat /60 *500; 
-	private final float TURN_FACTOR = 5;
-	private final float MAX_RADIUS = 35;
+	private final float TURN_FACTOR = 4;
+	private final float MAX_RADIUS = 30;
 
 	private final float SIZE = 0.5f;
 	private final int HISTORY_SIZE = 500 * 18;
@@ -40,8 +40,6 @@ public class Car implements DataListener{
 	private float[] mHistorArr = new float[HISTORY_SIZE];
 	private int mHistoryPosition = 0;
 	private FloatBuffer mHistoryBuffer;
-	private float mTime;
-	private float mDistance;
 	
 	public static int turnLeft = 250;
 	public static int turnRight = 360+250;
@@ -84,7 +82,7 @@ public class Car implements DataListener{
 		perpendicular.normalize();
 		mDirVec.normalize();
 		if (mHistPos++ % HISTORY_SKIP == 0) {
-			float sc = SIZE * (20/(mSpeed+1));
+			float sc = SIZE * (50/(mSpeed+15));
 			mDirVec.scale(sc*2);
 			perpendicular.scale(sc);
 
@@ -211,8 +209,6 @@ public class Car implements DataListener{
 	public synchronized void updateData(float[] data) {
 		mSpeed = data[3];
 		mTurn = data[4];
-		mTime = data[5];
-		mDistance = data[6];
 	}
 
 	/**
