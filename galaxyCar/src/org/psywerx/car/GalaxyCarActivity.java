@@ -422,6 +422,7 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		mRefreshThread = true;
 		new Thread() {
 			public void run() {
+				mRefreshThread = false;
 				while (mRefreshThread) {
 					try {
 						switch (mViewMode) {

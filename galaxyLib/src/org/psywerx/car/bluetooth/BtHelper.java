@@ -110,7 +110,7 @@ public class BtHelper {
 	/**
 	 * Send start signal
 	 */
-	public synchronized void sendStart(){
+	public void sendStart(){
 		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED)
 			mBluetoothService.write("start".getBytes());
 	}
@@ -118,7 +118,7 @@ public class BtHelper {
 	/**
 	 * Send stop signal
 	 */
-	public synchronized void sendStop(){
+	public void sendStop(){
 		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED){
 			mBluetoothService.write("stop".getBytes());
 			stopCar();
@@ -129,10 +129,8 @@ public class BtHelper {
 	/**
 	 * Send data signal and wait for feedback
 	 */
-	public synchronized void sendData(){
-		if (mBluetoothService.getState() == BluetoothChatService.STATE_CONNECTED){
-			mBluetoothService.write("podatki".getBytes());
-		}
+	public void sendData(){
+		mBluetoothService.write("podatki".getBytes());
 	}
 
 	/**
@@ -150,7 +148,7 @@ public class BtHelper {
 	 * 
 	 * @param data csv string received from bluetooth (x,y,z,speed,turn)
 	 */
-	public synchronized void recieveData(String data){
+	public void recieveData(String data){
 		try {
 			long ct = System.nanoTime();
 			final int len = 5;
@@ -173,6 +171,7 @@ public class BtHelper {
 				cur[5] = (ct-mTimestamp)/1e9f; //cas od zadnje meritve
 				//                    cas v sekundah       obratov na sekundo    koliko metrov naredi en obrat
 				cur[6] = (float)( ((ct-mTimestamp)/1e9)   *    cur[3]/60)        * mMetriNaObrat ;
+				D.dbgv(String.format("%10d   %10d    %.9f    %.9f   %.9f",ct,mTimestamp,((ct-mTimestamp)/1e9),cur[6],mMetriNaObrat));
 				mTimestamp = ct;
 			}
 			mDataHandler.updateData(cur);
