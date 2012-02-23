@@ -49,13 +49,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/image"
-            android:src="@drawable/graph_robovi_full_mal" />
+            android:src="@drawable/graph_robovi_full_mal_center" />
         
         <ToggleButton
             android:id="@+id/averageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="35dp"
             android:layout_marginTop="55dp"
             android:background="@drawable/lambda_x_button"
             android:textOff=""
@@ -105,7 +105,7 @@
             android:id="@+id/expandGraphButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="90dp"
+            android:layout_marginLeft="100dp"
             android:layout_marginTop="55dp"
             android:background="@drawable/expand_button" />
 
@@ -113,7 +113,7 @@
             android:id="@+id/expandGlButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="530dp"
+            android:layout_marginLeft="545dp"
             android:layout_marginTop="55dp"
             android:background="@drawable/expand_button" />
         
@@ -184,6 +184,13 @@
             android:scaleType="fitXY"
             android:src="@drawable/alubg" >
         </ImageView>
+        
+        <ImageView
+            android:id="@+id/backGroundOkvirGl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/image"
+            android:src="@drawable/gl_robovi_full" />
 
         <TextView
             android:id="@+id/textRPM"
