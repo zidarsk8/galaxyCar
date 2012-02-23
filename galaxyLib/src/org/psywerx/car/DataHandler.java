@@ -97,9 +97,9 @@ public class DataHandler implements DataListener{
 				DataListener dl = i.next();
 				if (dl != null){
 					if (mSmoothMode){
-						dl.updateData(mLastAlpha);
-					}else{
 						dl.updateData(mLastRolingAvg);
+					}else{
+						dl.updateData(mLastAlpha);
 					}
 				}else{
 					D.dbge("iterator data is null");
@@ -135,7 +135,7 @@ public class DataHandler implements DataListener{
 	}
 
 	public void setSmoothMode(boolean alpha){
-		mSmoothMode = !alpha;
+		mSmoothMode = alpha;
 	}
 	public float[][] getWholeHistory(){
 		float[][] h = new float[mHistory.size()][5];
@@ -152,14 +152,14 @@ public class DataHandler implements DataListener{
 		return h;
 	}
 	public float[][] getWholeHistoryAlpha(){
-		float[][] h = new float[mHistory.size()][5];
+		float[][] h = new float[mHistory.size()+1][5];
 		
-		int lIndex = 0;
+		int lIndex = 1;
 		for (Iterator<float[]> ii = mHistory.iterator(); ii.hasNext();){
 			float[] dl = ii.next();
 			//work on alpha filter;
 			for (int i=0; i<5; i++){
-				h[lIndex][i] = (float) (h[lIndex][i]* (1f-mAlpha)+dl[i] * mAlpha);
+				h[lIndex][i] = (float) (h[lIndex-1][i]* (1f-mAlpha)+dl[i] * mAlpha);
 			}
 			lIndex++;
 		}

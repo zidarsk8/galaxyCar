@@ -65,6 +65,7 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 	private RelativeLayout mGraphViewLayout;
 	private RelativeLayout mGlViewLayout;
 	private RelativeLayout mNormalViewLayout;
+	private ToggleButton mAvarageButton;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -245,8 +246,14 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		mGlViewLayout.setVisibility(View.INVISIBLE);
 		mViewMode = 2;
 		if(!mBluetoothButton.isChecked()){
-			//mGraph.insertWholeHistory(mDataHandler.getWholeHistoryAlpha());
-			mGraph.insertWholeHistory(mDataHandler.getWholeHistoryAlpha());
+			Toast.makeText(getApplicationContext(),
+					"Calculating history...", Toast.LENGTH_SHORT).show();
+			mDataHandler.setAlpha(mAlphaBar.getProgress());
+			mDataHandler.setSmoothMode(mAvarageButton.isChecked());
+			if(mAvarageButton.isChecked())
+				mGraph.insertWholeHistory(mDataHandler.getWholeHistoryRolingAvg());
+			else
+				mGraph.insertWholeHistory(mDataHandler.getWholeHistoryAlpha());
 		}
 	}
 	/**
@@ -359,15 +366,13 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 						toNormalView();
 					}
 				});
-		((ToggleButton) findViewById(R.id.averageButton))
-				.setOnClickListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						mDataHandler.setSmoothMode(((ToggleButton) v)
-								.isChecked());
-						mChartViewAll.repaint();
-						
-					}
-				});
+		mAvarageButton = ((ToggleButton) findViewById(R.id.averageButton));
+		mAvarageButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				mDataHandler.setSmoothMode(((ToggleButton) v).isChecked());
+				mChartViewAll.repaint();
+			}
+		});
 
 		mStartButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -384,6 +389,7 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 					public void onProgressChanged(SeekBar seekBar,
 							int progress, boolean fromUser) {
 						mDataHandler.setAlpha(progress);
+						mChartViewAll.repaint();
 					}
 
 					public void onStartTrackingTouch(SeekBar seekBar) {
