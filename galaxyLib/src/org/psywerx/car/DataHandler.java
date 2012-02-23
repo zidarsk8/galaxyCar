@@ -61,7 +61,11 @@ public class DataHandler implements DataListener{
 			mLastData[0] = (float) result.x*10;
 			mLastData[1] = (float) result.y*10;
 			mLastData[2] = ((float) result.z + 0.3856666667f)*10; //stationary down vector
-
+			
+			mHistory.add(mLastData.clone());
+			if (mHistory.size()>MAX_HISTORY_SIZE){
+				mHistory.removeFirst();
+			}
 
 			mLastAlpha[5] = mLastData[5];
 			mLastAlpha[6] = mLastData[6];
@@ -123,10 +127,6 @@ public class DataHandler implements DataListener{
 
 	public void updateData(float[] rawData) {
 		mLastData = rawData;
-		mHistory.add(rawData);
-		if (mHistory.size()>MAX_HISTORY_SIZE){
-			mHistory.removeFirst();
-		}
 
 		if (!mRunning){
 			mRunning = true;
@@ -137,7 +137,20 @@ public class DataHandler implements DataListener{
 	public void setSmoothMode(boolean alpha){
 		mSmoothMode = !alpha;
 	}
-
+	public float[][] getWholeHistory(){
+		float[][] h = new float[mHistory.size()][5];
+		
+		int lIndex = 0;
+		for (Iterator<float[]> ii = mHistory.iterator(); ii.hasNext();){
+			float[] dl = ii.next();
+			//work on alpha filter;
+			for (int i=0; i<5; i++){
+				h[lIndex][i] = (float) dl[i];
+			}
+			lIndex++;
+		}
+		return h;
+	}
 	public float[][] getWholeHistoryAlpha(){
 		float[][] h = new float[mHistory.size()][5];
 		
