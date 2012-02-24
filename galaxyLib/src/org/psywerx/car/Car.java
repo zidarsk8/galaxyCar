@@ -41,8 +41,8 @@ public class Car implements DataListener{
 	private int mHistoryPosition = 0;
 	private FloatBuffer mHistoryBuffer;
 	
-	public static int turnLeft = 0;
-	public static int turnRight = 0;
+	public static double turnLeft = 0;
+	public static double turnRight = 0;
 	public long mStartTimer = 0;
 	public double mPrevozeno = 0;
 	public double avgSpeed = 0;
