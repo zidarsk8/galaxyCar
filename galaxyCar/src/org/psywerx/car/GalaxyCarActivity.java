@@ -86,6 +86,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private TextView mTextTimeDriven;
 	
 	private long mTimeDriven;
+	private long mTimeDrivenEnd;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -172,8 +173,10 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		if (mStartButton.isChecked()) {
 			mBtHelper.sendStart();
 			mTimeDriven = System.nanoTime();
+			mTimeDrivenEnd = 0;
 			mVibrator.vibrate(200);
 		} else {
+			mTimeDrivenEnd = System.nanoTime();
 			mBtHelper.sendStop();
 			mVibrator.vibrate(200);
 		}
@@ -498,7 +501,10 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 										mZavjoLevoText.setText(""+(Car.turnLeft));
 										mTextAvgSpeed.setText(""+mCar.avgSpeed);
 										mTextDrivenM.setText(""+mCar.mPrevozeno);
-										mTextTimeDriven.setText(""+(System.nanoTime()-mTimeDriven)/1e9);
+										float tDrvb = 0;
+										if(mTimeDriven > 0) 
+											tDrvb = ((mTimeDrivenEnd > 0 ? mTimeDrivenEnd : System.nanoTime())-mTimeDriven)/1e9f;
+										mTextTimeDriven.setText(String.format("%.1f", tDrvb));
 										//TODO: izpisi
 										// povprecna hitrost = mCar.avgSpeed/mCar.avgSpeedCounter
 										// prevozeno kilometrov = mCar.mPrevozeno
