@@ -31,8 +31,8 @@ public class PospeskiView extends View implements DataListener{
 		super(context, attrs);
 
 		mPic = BitmapFactory.decodeResource(getResources(), R.drawable.gmeter);
-		mWidth = mPic.getWidth();
-		mHeigh = mPic.getHeight();
+		mWidth = mPic.getWidth()/2;
+		mHeigh = mPic.getHeight()/2;
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setColor(Color.WHITE);
 		setXYZ(0,0,0);
@@ -50,8 +50,8 @@ public class PospeskiView extends View implements DataListener{
 			return false;
 		}
 
-		mX = x/5 + mWidth; //((1f-mAlpha) * mX + mAlpha* (((x+1) * mWidth ) / 2)/10f);
-		mY = y/5 + mHeigh; //((1f-mAlpha) * mY + mAlpha* (((y+1) * mHeigh ) / 2)/10f);
+		mX = x*10 + mWidth; //((1f-mAlpha) * mX + mAlpha* (((x+1) * mWidth ) / 2)/10f);
+		mY = y*10 + mHeigh; //((1f-mAlpha) * mY + mAlpha* (((y+1) * mHeigh ) / 2)/10f);
 		mZ = (z*SIZE_FACTOR) + 10; //((1f-mAlpha) * mZ + mAlpha* (Math.abs(z*SIZE_FACTOR) + 4)/10f);
 
 		return true;

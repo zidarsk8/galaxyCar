@@ -501,7 +501,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 										mZavjoLevoText.setText(""+((int)Car.turnLeft/360));
 										mTextAvgSpeed.setText(String.format("%.1f",(float)(mCar.avgSpeed/mCar.avgSpeedCounter)));
 										mTextMaxSpeed.setText(String.format("%.1f", (float)mCar.maxSpeed));
-										mTextDrivenM.setText(String.format("%.0f",(float)mCar.mPrevozeno/10));
+										mTextDrivenM.setText(String.format("%.0f",(float)mCar.mPrevozeno));
 										float tDrvb = 0;
 										if(mTimeDriven > 0) 
 											tDrvb = ((mTimeDrivenEnd > 0 ? mTimeDrivenEnd : System.nanoTime())-mTimeDriven)/1e9f;

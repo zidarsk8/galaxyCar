@@ -20,7 +20,7 @@ public class Car implements DataListener{
 	private final float MAX_RADIUS = 30;
 
 	private final float SIZE = 0.5f;
-	private final int HISTORY_SIZE = 500 * 18;
+	private final int HISTORY_SIZE = 200 * 18;
 	private final int HISTORY_SKIP = 8;
 
 	private int mHistPos = 0;
@@ -162,8 +162,9 @@ public class Car implements DataListener{
 			mDirVec.normalize();
 			mDirVec.scale(10);
 			if (mTurn < 0){
-				turnRight += alpha;
+				turnLeft += alpha*180/(Math.PI);
 			}else{
+				turnRight += alpha*180/(Math.PI);
 			}
 		} else {
 			newDirection.normalize();
