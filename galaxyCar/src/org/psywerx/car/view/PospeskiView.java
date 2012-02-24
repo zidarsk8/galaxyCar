@@ -50,9 +50,9 @@ public class PospeskiView extends View implements DataListener{
 			return false;
 		}
 
-		mX = (1f-mAlpha) * mX + mAlpha* (((x+1) * mWidth ) / 2);
-		mY = (1f-mAlpha) * mY + mAlpha* (((y+1) * mHeigh ) / 2);
-		mZ = (1f-mAlpha) * mZ + mAlpha* (Math.abs(z*SIZE_FACTOR) + 4);
+		mX = ((1f-mAlpha) * mX + mAlpha* (((x+1) * mWidth ) / 2)/10f);
+		mY = ((1f-mAlpha) * mY + mAlpha* (((y+1) * mHeigh ) / 2)/10f);
+		mZ = ((1f-mAlpha) * mZ + mAlpha* (Math.abs(z*SIZE_FACTOR) + 4)/10f);
 
 		return true;
 	}

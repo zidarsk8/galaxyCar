@@ -19,6 +19,7 @@ package com.example.android.BluetoothChat;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Random;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -55,7 +56,7 @@ public class BluetoothChat extends Activity {
 	public static final String TOAST = "toast";
 
 	private static final int REQUEST_ENABLE_BT = 3;
-	private static int mTimeout = 100;
+	private static int mTimeout = 5;
 
 	// Layout Views
 	private TextView mTitle;
@@ -350,21 +351,27 @@ public class BluetoothChat extends Activity {
 		
 		cur /= 1e8;
 		cur %= a[a.length-1];
-		
+		Random randomGenerator = new Random();
 		double ff = Math.sin(2*Math.PI*((cur-a[3])/(a[4]-a[3])))*15;
-		
-		if       (cur < a[0]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",5").getBytes());
-		}else if (cur < a[1]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",10").getBytes());
-		}else if (cur < a[2]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",5").getBytes());
-		}else if (cur < a[3]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",2").getBytes());
-		}else if (cur < a[4]){ mChatService.write(("0.2332,0.1,0.41,"+(speed+ff)+",5").getBytes());
-		}else if (cur < a[5]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",3").getBytes());
-		}else if (cur < a[6]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",1").getBytes());
-		}else if (cur < a[7]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",0").getBytes());
-		}else if (cur < a[8]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",5").getBytes());
-		}else if (cur < a[9]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",0").getBytes());
-		}else if (cur < a[10]){ mChatService.write(("0.2332,0.1,0.41,"+speed+",5").getBytes());
-		}else {                mChatService.write(("0.2332,0.1,0.41,"+speed+",0").getBytes());
+		float x,y,z;
+		x = -0.0430172172f;
+		y = -0.0880380459f;
+		z = 0.4048961114f;
+		String ss = ""+(x+Math.random()*0.4-0.2)+","+
+					   (y+Math.random()*0.4-0.2)+","+
+				       (z+Math.random()*0.4-0.2)+",";
+		if       (cur < a[0]){ mChatService.write((ss+speed+",5").getBytes());
+		}else if (cur < a[1]){ mChatService.write((ss+speed+",10").getBytes());
+		}else if (cur < a[2]){ mChatService.write((ss+speed+",5").getBytes());
+		}else if (cur < a[3]){ mChatService.write((ss+speed+",2").getBytes());
+		}else if (cur < a[4]){ mChatService.write((ss+(speed+ff)+",5").getBytes());
+		}else if (cur < a[5]){ mChatService.write((ss+speed+",3").getBytes());
+		}else if (cur < a[6]){ mChatService.write((ss+speed+",1").getBytes());
+		}else if (cur < a[7]){ mChatService.write((ss+speed+",0").getBytes());
+		}else if (cur < a[8]){ mChatService.write((ss+speed+",5").getBytes());
+		}else if (cur < a[9]){ mChatService.write((ss+speed+",0").getBytes());
+		}else if (cur < a[10]){mChatService.write((ss+speed+",5").getBytes());
+		}else {                mChatService.write((ss+speed+",0").getBytes());
 		}
 	}
 
