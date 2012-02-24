@@ -21,7 +21,7 @@ public class ZavojViewRight extends View{
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.save();
-		canvas.rotate((float)Car.turnRight / (float)Math.PI * 180  , mImage.getWidth()/2, mImage.getHeight()/2);
+		canvas.rotate((float)Car.turnRight/* / (float)Math.PI * 180  */, mImage.getWidth()/2, mImage.getHeight()/2);
 		canvas.drawBitmap(mImage, 0, 0, null);
 		canvas.restore();
 	}

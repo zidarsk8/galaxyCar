@@ -497,8 +497,8 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 								runOnUiThread(new Runnable() {
 									public void run() {
 										/* na ui threadu mormo samo text stimat*/
-										mZavjoDesnoText.setText(""+(Car.turnRight));
-										mZavjoLevoText.setText(""+(Car.turnLeft));
+										mZavjoDesnoText.setText(""+((int)Car.turnRight/360));
+										mZavjoLevoText.setText(""+((int)Car.turnLeft/360));
 										mTextAvgSpeed.setText(""+mCar.avgSpeed);
 										mTextDrivenM.setText(""+mCar.mPrevozeno);
 										float tDrvb = 0;

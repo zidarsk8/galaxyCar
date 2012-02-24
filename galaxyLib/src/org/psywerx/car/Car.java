@@ -161,9 +161,9 @@ public class Car implements DataListener{
 			mDirVec.normalize();
 			mDirVec.scale(10);
 			if (mTurn < 0){
-				turnLeft += alpha;
-			}else{
 				turnRight += alpha;
+			}else{
+				turnLeft += alpha;
 			}
 		} else {
 			newDirection.normalize();
