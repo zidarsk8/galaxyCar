@@ -167,17 +167,24 @@ public class DataHandler implements DataListener{
 	}
 
 	public float[][] getWholeHistoryRolingAvg(){
-		float[][] ra = new float[mHistory.size()][5]; //rolling average
+		float[][] ra = getWholeHistory();
+		float[][] res = new float[ra.length][5];
 		
-		int li = 0; //list index
-		for (Iterator<float[]> ii = mHistory.iterator(); ii.hasNext();){
-			float[] dl = ii.next();
-			//work on alpha filter;
-			for (int i=0; i<5; i++){
-				ra[li][i] = dl[i]; //TODO: calculate rolling average
+		for (int i = mRolingCount; i < res.length; i++) {
+			for (int j = i; j > res.length - mRolingCount ; j--) {
+				res[i][0] += ra[j][0];
+				res[i][1] += ra[j][1];
+				res[i][2] += ra[j][2];
+				res[i][3] += ra[j][3];
+				res[i][4] += ra[j][4];
 			}
-			li++;
+			res[i][0] /= mRolingCount;
+			res[i][1] /= mRolingCount;
+			res[i][2] /= mRolingCount;
+			res[i][3] /= mRolingCount;
+			res[i][4] /= mRolingCount;
 		}
+		
 		return ra;
 	}
 

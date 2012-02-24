@@ -14,14 +14,14 @@ public class Car implements DataListener{
 	 */
 	//4  metre na minuto damo v m/s
 	//brez *10 naj bi blo prou, samo tko leps zgleda
-	private static final float mMetriNaObrat = 0.0402123859659494f;
-	private final float SPEED_FACTOR = mMetriNaObrat /60 *500; 
+	public static final float METRI_NA_OBRAT = 0.0402123859659494f;
+	private final float SPEED_FACTOR = METRI_NA_OBRAT /60 *500; 
 	private final float TURN_FACTOR = 4;
 	private final float MAX_RADIUS = 30;
 
 	private final float SIZE = 0.5f;
 	private final int HISTORY_SIZE = 500 * 18;
-	private final int HISTORY_SKIP = 5;
+	private final int HISTORY_SKIP = 8;
 
 	private int mHistPos = 0;
 
@@ -33,16 +33,18 @@ public class Car implements DataListener{
 
 	protected float yaw = 180, pitch = 0, skew = 0;
 
-	private float mSpeed = 0;
-	private float mTurn = 0;
+	public float mSpeed = 0;
+	public float mTurn = 0;
 	private long mTimestamp = 0;
 
 	private float[] mHistorArr = new float[HISTORY_SIZE];
 	private int mHistoryPosition = 0;
 	private FloatBuffer mHistoryBuffer;
 	
-	public static int turnLeft = 250;
-	public static int turnRight = 360+250;
+	public static int turnLeft = 0;
+	public static int turnRight = 0;
+	public long mStartTimer = 0;
+	public double mPrevozeno = 0;
 	
 	public Car(ModelLoader m) {
 		ByteBuffer vbb = ByteBuffer.allocateDirect(
@@ -57,6 +59,7 @@ public class Car implements DataListener{
 		models = m;
 		car = models.GetModel("car");
 		mTimestamp = System.nanoTime();
+		mStartTimer = mTimestamp;
 	}
 
 	/**
@@ -66,14 +69,17 @@ public class Car implements DataListener{
 		long time = System.nanoTime();
 		double elapsed = (time - mTimestamp) / 1e9f;
 		mTimestamp = time;
-		// (float)( ((ct-mTimestamp)/1e9)   *    cur[3]/60)        * mMetriNaObrat ;
+		// (float)( ((ct-mTimestamp)/1e9)   *    cur[3]/60)        * METRI_NA_OBRAT ;
 		double dDistance = mSpeed * elapsed * SPEED_FACTOR; // m/s
 
+		mPrevozeno += dDistance/500*60;
 		//D.dbgv(String.format("d = %.9f      m = %.9f     ratio = %.9f ", dDistance, mDistance, (dDistance/mDistance)));
 		
 		if (mSpeed == 0) {
  			return;
 		}
+		
+		
 		Vector3d norm = new Vector3d(0, (mTurn < 0 ? -1 : 1), 0);
 		Vector3d newDirection = new Vector3d(mDirVec);
 		Vector3d perpendicular = new Vector3d(); // perpendicular to direction
@@ -82,7 +88,7 @@ public class Car implements DataListener{
 		perpendicular.normalize();
 		mDirVec.normalize();
 		if (mHistPos++ % HISTORY_SKIP == 0) {
-			float sc = SIZE * (50/(mSpeed+15));
+			float sc = SIZE * (40/(mSpeed+15));
 			mDirVec.scale(sc*2);
 			perpendicular.scale(sc);
 
@@ -146,7 +152,11 @@ public class Car implements DataListener{
 			mDirVec.cross(perpendicular, norm);
 			mDirVec.normalize();
 			mDirVec.scale(10);
-			
+			if (mTurn < 0){
+				turnLeft += alpha;
+			}else{
+				turnRight += alpha;
+			}
 		} else {
 			newDirection.normalize();
 			newDirection.scale(dDistance);

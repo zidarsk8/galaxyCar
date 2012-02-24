@@ -9,6 +9,8 @@ import org.psywerx.car.seekbar.VerticalSeekBar;
 import org.psywerx.car.view.PospeskiView;
 import org.psywerx.car.view.SteeringWheelView;
 import org.psywerx.car.view.StevecView;
+import org.psywerx.car.view.ZavojViewLeft;
+import org.psywerx.car.view.ZavojViewRight;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -28,6 +30,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -35,7 +38,7 @@ import android.widget.ToggleButton;
  * Main application activity
  * 
  */
-public class GalaxyCarActivity extends Activity implements BtListener {
+public class GalaxyCarActivity extends Activity implements BtListener{
 
 	// Intent request codes
 	public static final long THREAD_REFRESH_PERIOD = 50;
@@ -67,6 +70,14 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 	private RelativeLayout mGlViewLayout;
 	private RelativeLayout mNormalViewLayout;
 	private ToggleButton mAvarageButton;
+	private ZavojViewLeft mZavjoLevo;
+	private ZavojViewRight mZavjoDesno;
+	private TextView mZavjoLevoText;
+	private TextView mZavjoDesnoText;
+	private TextView mTextMSn;
+	private TextView mTextMn;
+	private TextView mTextRPMn;
+	private Car mCar;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -100,6 +111,13 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		mSteeringWheelView = (SteeringWheelView) findViewById(R.id.steeringWheel);
 		mStevecView = (StevecView) findViewById(R.id.stevec);
 		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		mZavjoLevo = (ZavojViewLeft) findViewById(R.id.zavojLevo);
+		mZavjoDesno = (ZavojViewRight) findViewById(R.id.zavojDesno);
+		mZavjoLevoText = (TextView) findViewById(R.id.textNrLeft);
+		mZavjoDesnoText = (TextView) findViewById(R.id.textNrRight);
+		mTextMSn = (TextView) findViewById(R.id.textMSn);
+		mTextMn = (TextView) findViewById(R.id.textMn);
+		mTextRPMn = (TextView) findViewById(R.id.textRPMn);
 
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -120,7 +138,8 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 		mGlView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
 		// add data handlers to each view or class
-		mDataHandler.registerListener(mCarSurfaceView.getCar());
+		mCar = mCarSurfaceView.getCar();
+		mDataHandler.registerListener(mCar);
 		mDataHandler.registerListener(mStevecView);
 		mDataHandler.registerListener(mSteeringWheelView);
 		mDataHandler.registerListener(mPospeskiView);
@@ -251,10 +270,14 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 					"Calculating history...", Toast.LENGTH_SHORT).show();
 			mDataHandler.setAlpha(mAlphaBar.getProgress());
 			mDataHandler.setSmoothMode(mAvarageButton.isChecked());
-			if(mAvarageButton.isChecked())
-				mGraph.insertWholeHistory(mDataHandler.getWholeHistoryRolingAvg());
-			else
-				mGraph.insertWholeHistory(mDataHandler.getWholeHistoryAlpha());
+			float[][] history;
+			if(mAvarageButton.isChecked()){
+				history = mDataHandler.getWholeHistoryRolingAvg();
+			} else {
+				history = mDataHandler.getWholeHistoryAlpha();
+			}
+			
+			mGraph.insertWholeHistory(history);
 		}
 	}
 	/**
@@ -418,11 +441,14 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 	 * Repaint thread repaints the pospeski, steeringWheel, stevec and chart
 	 * views
 	 */
+	
+	
 	private void startRepaintingThread() {
 		mRefreshThread = true;
+		
 		new Thread() {
 			public void run() {
-				mRefreshThread = false;
+				int skip = 0;
 				while (mRefreshThread) {
 					try {
 						switch (mViewMode) {
@@ -434,13 +460,32 @@ public class GalaxyCarActivity extends Activity implements BtListener {
 							mChartViewAll.repaint();
 							break;
 						case 1:
-							Thread.sleep(100);
+							Thread.sleep(300);
+							runOnUiThread(new Runnable() {
+								public void run() {
+									/* na ui threadu mormo samo text stimat*/
+									mTextRPMn.setText(String.format("%.1f",mCar.mSpeed));
+									mTextMn.setText(String.format("%.0f",mCar.mPrevozeno));
+									mTextMSn.setText(String.format("%.1f",mCar.mSpeed*Car.METRI_NA_OBRAT));
+								}
+							});
 							break;
 						case 2:
 							Thread.sleep(50);
 							mChartViewRevs.repaint();
 							mChartViewTurn.repaint();
 							mChartViewG.repaint();
+							if (++skip%3 == 0){
+								mZavjoDesno.postInvalidate();
+								mZavjoLevo.postInvalidate();
+								runOnUiThread(new Runnable() {
+									public void run() {
+										/* na ui threadu mormo samo text stimat*/
+										mZavjoDesnoText.setText(""+(Car.turnRight));
+										mZavjoLevoText.setText(""+(Car.turnLeft));
+									}
+								});
+							}
 							break;
 						default:
 							Thread.sleep(100);

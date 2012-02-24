@@ -170,7 +170,8 @@
             android:contentDescription="@string/image"
             android:src="@drawable/bg_graph" />
         
-        <org.psywerx.car.view.ZavojViewRight
+        <org.psywerx.car.view.ZavojViewLeft
+            android:id="@+id/zavojLevo"
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_marginLeft="690dp"            
@@ -190,6 +191,7 @@
             />
         
         <org.psywerx.car.view.ZavojViewRight
+            android:id="@+id/zavojDesno"
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_marginLeft="856dp"            
