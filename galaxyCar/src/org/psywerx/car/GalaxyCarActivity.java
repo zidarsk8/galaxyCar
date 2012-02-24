@@ -483,6 +483,14 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 										/* na ui threadu mormo samo text stimat*/
 										mZavjoDesnoText.setText(""+(Car.turnRight));
 										mZavjoLevoText.setText(""+(Car.turnLeft));
+										//TODO: izpisi
+										// povprecna hitrost = mCar.avgSpeed/mCar.avgSpeedCounter
+										// prevozeno kilometrov = mCar.mPrevozeno
+										// max hitrost = mCar.maxSpeed
+										// se neki se spomn !
+										
+		//TODO: dodat staticni tekst zravn okn k pove kaj kera cifra pome (levi desni zavoj ... itd
+										
 									}
 								});
 							}

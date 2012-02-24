@@ -45,6 +45,9 @@ public class Car implements DataListener{
 	public static int turnRight = 0;
 	public long mStartTimer = 0;
 	public double mPrevozeno = 0;
+	public double avgSpeed = 0;
+	public double maxSpeed = 0;
+	public double avgSpeedCounter = 0;
 	
 	public Car(ModelLoader m) {
 		ByteBuffer vbb = ByteBuffer.allocateDirect(
@@ -72,13 +75,17 @@ public class Car implements DataListener{
 		// (float)( ((ct-mTimestamp)/1e9)   *    cur[3]/60)        * METRI_NA_OBRAT ;
 		double dDistance = mSpeed * elapsed * SPEED_FACTOR; // m/s
 
+		if (mSpeed == 0) { return; }
+		
+		/**
+		 * racuanje stvari za prikaz
+		 */
 		mPrevozeno += dDistance/500*60;
-		//D.dbgv(String.format("d = %.9f      m = %.9f     ratio = %.9f ", dDistance, mDistance, (dDistance/mDistance)));
-		
-		if (mSpeed == 0) {
- 			return;
+		avgSpeedCounter += elapsed;
+		avgSpeed += mSpeed*elapsed;
+		if (mSpeed < maxSpeed){
+			maxSpeed = mSpeed;
 		}
-		
 		
 		Vector3d norm = new Vector3d(0, (mTurn < 0 ? -1 : 1), 0);
 		Vector3d newDirection = new Vector3d(mDirVec);
@@ -88,6 +95,7 @@ public class Car implements DataListener{
 		perpendicular.normalize();
 		mDirVec.normalize();
 		if (mHistPos++ % HISTORY_SKIP == 0) {
+			
 			float sc = SIZE * (40/(mSpeed+15));
 			mDirVec.scale(sc*2);
 			perpendicular.scale(sc);
