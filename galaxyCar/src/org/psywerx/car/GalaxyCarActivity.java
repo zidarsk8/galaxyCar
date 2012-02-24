@@ -130,7 +130,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		mTextAvgSpeed = (TextView) findViewById(R.id.textAvgSpeed);
 		mTextMaxSpeed = (TextView) findViewById(R.id.textMaxSpeed);
 		mTextDrivenM = (TextView) findViewById(R.id.textDrivenM);
-		mTextTimeDriven = (TextView) findViewById(R.id.textDrivenM);
+		mTextTimeDriven = (TextView) findViewById(R.id.textTimeDriven);
 
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -470,10 +470,10 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 						switch (mViewMode) {
 						case 0:
 							Thread.sleep(100);
-//							mPospeskiView.postInvalidate();
-//							mSteeringWheelView.postInvalidate();
-//							mStevecView.postInvalidate();
-//							mChartViewAll.repaint();
+							mPospeskiView.postInvalidate();
+							mSteeringWheelView.postInvalidate();
+							mStevecView.postInvalidate();
+							mChartViewAll.repaint();
 							break;
 						case 1:
 							Thread.sleep(300);
@@ -497,10 +497,11 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 								runOnUiThread(new Runnable() {
 									public void run() {
 										/* na ui threadu mormo samo text stimat*/
-										mZavjoDesnoText.setText(""+(Car.turnRight));
-										mZavjoLevoText.setText(""+(Car.turnLeft));
-										mTextAvgSpeed.setText(""+mCar.avgSpeed);
-										mTextDrivenM.setText(""+mCar.mPrevozeno);
+										mZavjoDesnoText.setText(String.format("%.0f",(float)(Car.turnRight)));
+										mZavjoLevoText.setText(String.format("%.0f",(float)(Car.turnLeft)));
+										mTextAvgSpeed.setText(String.format("%.1f",(float)(mCar.avgSpeed/mCar.avgSpeedCounter)));
+										mTextMaxSpeed.setText(String.format("%.1f", (float)mCar.maxSpeed));
+										mTextDrivenM.setText(String.format("%.1f",(float)mCar.mPrevozeno/100));
 										float tDrvb = 0;
 										if(mTimeDriven > 0) 
 											tDrvb = ((mTimeDrivenEnd > 0 ? mTimeDrivenEnd : System.nanoTime())-mTimeDriven)/1e9f;

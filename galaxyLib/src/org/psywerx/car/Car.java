@@ -83,7 +83,8 @@ public class Car implements DataListener{
 		mPrevozeno += dDistance/500*60;
 		avgSpeedCounter += elapsed;
 		avgSpeed += mSpeed*elapsed;
-		if (mSpeed < maxSpeed){
+		
+		if (mSpeed > maxSpeed){
 			maxSpeed = mSpeed;
 		}
 		
