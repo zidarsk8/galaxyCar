@@ -1,5 +1,7 @@
 package org.psywerx.car;
 
+import java.util.Random;
+
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.psywerx.car.bluetooth.BtHelper;
@@ -78,6 +80,12 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private TextView mTextMn;
 	private TextView mTextRPMn;
 	private Car mCar;
+	private TextView mTextAvgSpeed;
+	private TextView mTextMaxSpeed;
+	private TextView mTextDrivenM;
+	private TextView mTextTimeDriven;
+	
+	private long mTimeDriven;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -118,6 +126,10 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		mTextMSn = (TextView) findViewById(R.id.textMSn);
 		mTextMn = (TextView) findViewById(R.id.textMn);
 		mTextRPMn = (TextView) findViewById(R.id.textRPMn);
+		mTextAvgSpeed = (TextView) findViewById(R.id.textAvgSpeed);
+		mTextMaxSpeed = (TextView) findViewById(R.id.textMaxSpeed);
+		mTextDrivenM = (TextView) findViewById(R.id.textDrivenM);
+		mTextTimeDriven = (TextView) findViewById(R.id.textDrivenM);
 
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -159,6 +171,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		}
 		if (mStartButton.isChecked()) {
 			mBtHelper.sendStart();
+			mTimeDriven = System.nanoTime();
 			mVibrator.vibrate(200);
 		} else {
 			mBtHelper.sendStop();
@@ -454,10 +467,10 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 						switch (mViewMode) {
 						case 0:
 							Thread.sleep(100);
-							mPospeskiView.postInvalidate();
-							mSteeringWheelView.postInvalidate();
-							mStevecView.postInvalidate();
-							mChartViewAll.repaint();
+//							mPospeskiView.postInvalidate();
+//							mSteeringWheelView.postInvalidate();
+//							mStevecView.postInvalidate();
+//							mChartViewAll.repaint();
 							break;
 						case 1:
 							Thread.sleep(300);
@@ -483,6 +496,9 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 										/* na ui threadu mormo samo text stimat*/
 										mZavjoDesnoText.setText(""+(Car.turnRight));
 										mZavjoLevoText.setText(""+(Car.turnLeft));
+										mTextAvgSpeed.setText(""+mCar.avgSpeed);
+										mTextDrivenM.setText(""+mCar.mPrevozeno);
+										mTextTimeDriven.setText(""+(System.nanoTime()-mTimeDriven)/1e9);
 										//TODO: izpisi
 										// povprecna hitrost = mCar.avgSpeed/mCar.avgSpeedCounter
 										// prevozeno kilometrov = mCar.mPrevozeno

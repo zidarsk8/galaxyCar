@@ -14,6 +14,11 @@
     <string name="title_paired_devices">Paired Devices</string>
     <string name="title_other_devices">Other Available Devices</string>
     <string name="button_scan">Scan for devices</string>
+    <string name="left">Left</string>
+    <string name="L">left</string>
+    <string name="right">right</string>
+    <string name="avgsppd">avrage speed</string>
+    <string name="mspeed">max speed</string>
     
     
 </resources>
