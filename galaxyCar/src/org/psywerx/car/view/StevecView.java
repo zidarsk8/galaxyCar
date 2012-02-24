@@ -2,6 +2,7 @@ package org.psywerx.car.view;
 
 import java.text.DecimalFormat;
 
+import org.psywerx.car.Car;
 import org.psywerx.car.DataListener;
 import org.psywerx.car.R;
 
@@ -63,7 +64,7 @@ public class StevecView extends View implements DataListener{
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.speedgaugeclean), 0, 0, null);
-		canvas.drawText(FORMATTER.format(mDistance), 85, 187, mTextPaint);
+		canvas.drawText(FORMATTER.format(Car.mPrevozeno), 85, 187, mTextPaint);
 		canvas.save();
 		canvas.rotate(mRotate,130,129);
 		canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.cagr), 45, 124, null);

@@ -44,7 +44,7 @@ public class Car implements DataListener{
 	public static double turnLeft = 0;
 	public static double turnRight = 0;
 	public long mStartTimer = 0;
-	public double mPrevozeno = 0;
+	public static double mPrevozeno = 0;
 	public double avgSpeed = 0;
 	public double maxSpeed = 0;
 	public double avgSpeedCounter = 0;
@@ -164,7 +164,6 @@ public class Car implements DataListener{
 			if (mTurn < 0){
 				turnRight += alpha;
 			}else{
-				turnLeft += alpha;
 			}
 		} else {
 			newDirection.normalize();
