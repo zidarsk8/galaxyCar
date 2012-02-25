@@ -261,7 +261,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		private int dataType = 0;
 		private boolean run = false;
 		private Context ctx;
-		
+
 		public void run() {
 			try {
 				run = true;
@@ -269,31 +269,40 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 					switch (dataType) {
 					case 1:
 						if (mStartButton.isChecked()){
-							Thread.sleep(500);
+							Thread.sleep(35);
 							mBtHelper.recieveData(getTestLoopData());
 						}else{
 							mBtHelper.stopCar();
+							Thread.sleep(500);
 						}
 						break;
 					case 2:
 						while (run){
-							InputStreamReader is = new InputStreamReader(ctx.getAssets().open("circlelog.csv"));
-							BufferedReader br = new BufferedReader(is);
-							String line;
-							while ((line = br.readLine()) != null){
-								Thread.sleep(350);
-								mBtHelper.recieveData(line);
+							if (mStartButton.isChecked()){
+								InputStreamReader is = new InputStreamReader(ctx.getAssets().open("circlelog.csv"));
+								BufferedReader br = new BufferedReader(is);
+								String line;
+								while ((line = br.readLine()) != null){
+									Thread.sleep(350);
+									mBtHelper.recieveData(line);
+								}
+							}else {
+								Thread.sleep(500);
 							}
 						}
 						break;
 					case 3:
 						while (run){
-							InputStreamReader is = new InputStreamReader(ctx.getAssets().open("circlelog35ms.csv"));
-							BufferedReader br = new BufferedReader(is);
-							String line;
-							while ((line = br.readLine()) != null){
-								Thread.sleep(35);
-								mBtHelper.recieveData(line);
+							if (mStartButton.isChecked()){
+								InputStreamReader is = new InputStreamReader(ctx.getAssets().open("circlelog35ms.csv"));
+								BufferedReader br = new BufferedReader(is);
+								String line;
+								while ((line = br.readLine()) != null){
+									Thread.sleep(35);
+									mBtHelper.recieveData(line);
+								}
+							}else {
+								Thread.sleep(500);
 							}
 						}
 						break;
@@ -302,7 +311,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 						break;
 					}
-					
+
 				}
 			} catch (Exception e) {
 				D.dbge(e.toString(),e);
@@ -337,12 +346,12 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 				5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46,
 				5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2,
 				5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12,
-			    5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*1,
-			    5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*1 + 8,
-			    5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*1 + 8 + 5.7,
-			    5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*1 + 8 + 6 + 9,
+				5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*1,
+				5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*1 + 8,
+				5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*1 + 8 + 5.7,
+				5  +  Math.PI*10  +  15  +  3*Math.PI*18/2  +  46  +  Math.PI*16/2  +  Math.PI*12  +  Math.PI*1 + 8 + 6 + 9,
 		};
-		
+
 		cur /= 1e8;
 		cur %= a[a.length-1];
 		double ff = Math.sin(2*Math.PI*((cur-a[3])/(a[4]-a[3])))*15;
@@ -351,8 +360,8 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		y = -0.0880380459f;
 		z = 0.4048961114f;
 		String ss = ""+(x+Math.random()*0.4-0.2)+","+
-					   (y+Math.random()*0.4-0.2)+","+
-				       (z+Math.random()*0.4-0.2)+",";
+				(y+Math.random()*0.4-0.2)+","+
+				(z+Math.random()*0.4-0.2)+",";
 		if       (cur < a[0]){ return ss+speed+",5" ;
 		}else if (cur < a[1]){ return ss+speed+",10" ;
 		}else if (cur < a[2]){ return ss+speed+",5" ;
@@ -367,10 +376,10 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		}else {                return ss+speed+",0" ;
 		}
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * Switches from full screen opengl/graph views
 	 * to the normal "all in one" view
