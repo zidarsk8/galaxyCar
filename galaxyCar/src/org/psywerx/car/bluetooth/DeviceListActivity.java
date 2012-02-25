@@ -79,9 +79,9 @@ public class DeviceListActivity extends Activity {
         ListView newDevicesListView = (ListView) findViewById(R.id.new_devices);
         newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
 
-        mNewDevicesArrayAdapter.add("1 test dataset 1\n 350ms");
-        mNewDevicesArrayAdapter.add("2 test dataset 2\n 35ms");
-        mNewDevicesArrayAdapter.add("3 simulated dataset\n 35ms");
+        mNewDevicesArrayAdapter.add("1 simulated dataset\n 35ms");
+        mNewDevicesArrayAdapter.add("2 test dataset 1\n 350ms");
+        mNewDevicesArrayAdapter.add("3 test dataset 2\n 35ms");
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 //        newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 //

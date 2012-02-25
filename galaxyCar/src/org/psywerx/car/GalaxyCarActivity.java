@@ -1,5 +1,8 @@
 package org.psywerx.car;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.psywerx.car.bluetooth.BtHelper;
@@ -132,6 +135,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 		mDataHandler = new DataHandler();
 		mDataSimulator = new SimulationDataGenerator();
+		mDataSimulator.setCtx(getApplicationContext());
 		mBtHelper = new BtHelper(getApplicationContext(), this, mDataHandler);
 
 		mCarSurfaceView = new CarSurfaceViewRenderer(new ModelLoader(this));
@@ -227,6 +231,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 				mDataSimulator.setDataType(Integer.parseInt(address.substring(0, 1)));
 				new Thread(mDataSimulator).start();
 
+				//timestamp = System.nanoTime();
 				startRepaintingThread();
 			} else {
 				Toast.makeText(getApplicationContext(),
@@ -255,7 +260,8 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	private class SimulationDataGenerator implements Runnable{
 		private int dataType = 0;
 		private boolean run = false;
-
+		private Context ctx;
+		
 		public void run() {
 			try {
 				run = true;
@@ -265,13 +271,31 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 						if (mStartButton.isChecked()){
 							Thread.sleep(500);
 							mBtHelper.recieveData(getTestLoopData());
+						}else{
+							mBtHelper.stopCar();
 						}
 						break;
 					case 2:
-						
+						while (run){
+							InputStreamReader is = new InputStreamReader(ctx.getAssets().open("circlelog35ms.csv"));
+							BufferedReader br = new BufferedReader(is);
+							String line;
+							while ((line = br.readLine()) != null){
+								Thread.sleep(35);
+								mBtHelper.recieveData(line);
+							}
+						}
 						break;
 					case 3:
-
+						while (run){
+							InputStreamReader is = new InputStreamReader(ctx.getAssets().open("circlelog.csv"));
+							BufferedReader br = new BufferedReader(is);
+							String line;
+							while ((line = br.readLine()) != null){
+								Thread.sleep(350);
+								mBtHelper.recieveData(line);
+							}
+						}
 						break;
 
 					default:
@@ -290,6 +314,9 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 		public void setDataType(int dataType) {
 			this.dataType = dataType;
 		}
+		public void setCtx(Context ctx) {
+			this.ctx = ctx;
+		}
 	};
 
 
@@ -297,6 +324,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 	protected String getTestLoopData(){
 		if (timestamp == 0) {
+			//return "0,0,0,5,0";
 			timestamp = System.nanoTime();
 		}
 		int speed = 30;

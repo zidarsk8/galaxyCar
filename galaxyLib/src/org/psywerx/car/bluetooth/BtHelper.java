@@ -148,7 +148,7 @@ public class BtHelper {
 	 * 
 	 * @param data csv string received from bluetooth (x,y,z,speed,turn)
 	 */
-	public void recieveData(String data){
+	public synchronized void recieveData(String data){
 		try {
 			long ct = System.nanoTime();
 			final int len = 5;
