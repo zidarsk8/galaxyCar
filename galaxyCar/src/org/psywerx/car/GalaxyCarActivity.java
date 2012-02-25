@@ -277,22 +277,22 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 						break;
 					case 2:
 						while (run){
-							InputStreamReader is = new InputStreamReader(ctx.getAssets().open("circlelog35ms.csv"));
+							InputStreamReader is = new InputStreamReader(ctx.getAssets().open("circlelog.csv"));
 							BufferedReader br = new BufferedReader(is);
 							String line;
 							while ((line = br.readLine()) != null){
-								Thread.sleep(35);
+								Thread.sleep(350);
 								mBtHelper.recieveData(line);
 							}
 						}
 						break;
 					case 3:
 						while (run){
-							InputStreamReader is = new InputStreamReader(ctx.getAssets().open("circlelog.csv"));
+							InputStreamReader is = new InputStreamReader(ctx.getAssets().open("circlelog35ms.csv"));
 							BufferedReader br = new BufferedReader(is);
 							String line;
 							while ((line = br.readLine()) != null){
-								Thread.sleep(350);
+								Thread.sleep(35);
 								mBtHelper.recieveData(line);
 							}
 						}
