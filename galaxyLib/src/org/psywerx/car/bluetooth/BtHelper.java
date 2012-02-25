@@ -171,7 +171,7 @@ public class BtHelper {
 				cur[5] = (ct-mTimestamp)/1e9f; //cas od zadnje meritve
 				//                    cas v sekundah       obratov na sekundo    koliko metrov naredi en obrat
 				cur[6] = (float)( ((ct-mTimestamp)/1e9)   *    cur[3]/60)        * mMetriNaObrat ;
-				//D.dbgv(String.format("%10d   %10d    %.9f    %.9f   %.9f",ct,mTimestamp,((ct-mTimestamp)/1e9),cur[6],METRI_NA_OBRAT));
+				D.dbgv(String.format("%.5f  %.5f  %.5f  %.5f  %.5f  ",cur[0],cur[1],cur[2],cur[3],cur[4]));
 				mTimestamp = ct;
 			}
 			mDataHandler.updateData(cur);

@@ -351,7 +351,6 @@ public class BluetoothChat extends Activity {
 		
 		cur /= 1e8;
 		cur %= a[a.length-1];
-		Random randomGenerator = new Random();
 		double ff = Math.sin(2*Math.PI*((cur-a[3])/(a[4]-a[3])))*15;
 		float x,y,z;
 		x = -0.0430172172f;
