@@ -29,19 +29,13 @@ public class StevecView extends View implements DataListener{
 	private float mRotate = 0;
 	private float mSpeed = 0;
 	private float mAlpha = 0.3f;
-	private double mDistance = 0;
-	private long mTimestamp = 0;
 
 	/**
 	 * update speed and distance meters
 	 * @param speed set new speed value
 	 * @return true if speed can be set, false otherwise
 	 */
-	public boolean setSpeed(float speed) {
-		long ct = System.nanoTime();
-		mDistance += (speed/100)*(ct-mTimestamp)/1e9 *(4f/60f); // koliko obratov je naredu * 4m/100obratov  in dobimo stevilo metrov prevozenih
-		mTimestamp = ct;
-		
+	public boolean setSpeed(float speed) {		
 		mSpeed = (1.0f-mAlpha)*mSpeed + mAlpha * speed;
 		float temp = -30+2.3f*mSpeed;
 		if (temp < MIN_ROTATE || temp > MAX_ROTATE)
@@ -53,7 +47,6 @@ public class StevecView extends View implements DataListener{
 	
 	public StevecView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		mTimestamp = System.nanoTime();
 		mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mTextPaint.setColor(Color.LTGRAY);
 		mTextPaint.setTextSize(29);

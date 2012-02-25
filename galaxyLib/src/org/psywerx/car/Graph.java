@@ -24,7 +24,7 @@ public class Graph implements DataListener {
 	private XYSeries mGz;
 	private XYSeries mRevs;
 	private XYSeries mTurn;
-	
+
 	/**
 	 *  Graph styles and renderers
 	 */
@@ -40,14 +40,14 @@ public class Graph implements DataListener {
 	private int ticks = 0;
 
 	public Graph() {
-		
+
 		// Init the series
 		mTurn = new XYSeries("Turn");
 		mRevs = new XYSeries("Revs");
 		mGx = new XYSeries("Gx");
 		mGy = new XYSeries("Gy");
 		mGz = new XYSeries("Gz");
-		
+
 	}
 
 	public XYMultipleSeriesRenderer getRendererAll() {
@@ -60,7 +60,7 @@ public class Graph implements DataListener {
 		renderer.setLegendTextSize(15);
 		renderer.setPointSize(5f);
 		renderer.setMargins(new int[] { 20, 30, 15, 0 });
-		
+
 		XYSeriesRenderer r1 = new XYSeriesRenderer();
 		r1.setFillPoints(true);
 		renderer.addSeriesRenderer(r1);
@@ -117,7 +117,7 @@ public class Graph implements DataListener {
 	}
 
 	public XYMultipleSeriesRenderer getRendererTurn() {
-		
+
 		// Init the renderer
 		rendererTurn = new XYMultipleSeriesRenderer();
 		rendererTurn.setInScroll(false);
@@ -127,7 +127,7 @@ public class Graph implements DataListener {
 		rendererTurn.setLegendTextSize(15);
 		rendererTurn.setPointSize(5f);
 		rendererTurn.setMargins(new int[] { 20, 30, 15, 0 });
-		
+
 		XYSeriesRenderer r = new XYSeriesRenderer();
 		r.setColor(Color.BLUE);
 		r.setFillPoints(true);
@@ -136,7 +136,7 @@ public class Graph implements DataListener {
 	}
 
 	public XYMultipleSeriesRenderer getRendererRevs() {
-		
+
 		rendererRevs = new XYMultipleSeriesRenderer();
 		rendererRevs.setInScroll(false);
 		rendererRevs.setAxisTitleTextSize(16);
@@ -145,7 +145,7 @@ public class Graph implements DataListener {
 		rendererRevs.setLegendTextSize(15);
 		rendererRevs.setPointSize(5f);
 		rendererRevs.setMargins(new int[] { 20, 30, 15, 0 });
-		
+
 		XYSeriesRenderer r = new XYSeriesRenderer();
 		r.setColor(Color.RED);
 		r.setFillPoints(true);
@@ -182,55 +182,57 @@ public class Graph implements DataListener {
 		datasetG.addSeries(mGz);
 		return datasetG;
 	}
-	
+
 	public synchronized void updateData(float[] data) {
+		try {
 
-		// We need to remove data points or else the rendering becomes slow
-		while(mTurn.getItemCount() > MAX_POINTS)
-			mTurn.remove(0);
-		while(mGx.getItemCount() > MAX_POINTS)
-			mGx.remove(0);
-		while(mGy.getItemCount() > MAX_POINTS)
-			mGy.remove(0);
-		while(mGz.getItemCount() > MAX_POINTS)
-			mGz.remove(0);
-		while(mRevs.getItemCount() > MAX_POINTS)
-			mRevs.remove(0);
+			// We need to remove data points or else the rendering becomes slow
+			while(mTurn.getItemCount() >= MAX_POINTS)
+				mTurn.remove(0);
+			while(mGx.getItemCount() >= MAX_POINTS)
+				mGx.remove(0);
+			while(mGy.getItemCount() >= MAX_POINTS)
+				mGy.remove(0);
+			while(mGz.getItemCount() >= MAX_POINTS)
+				mGz.remove(0);
+			while(mRevs.getItemCount() >= MAX_POINTS)
+				mRevs.remove(0);
 
-		mGx.add(ticks, data[0]);
-		mGy.add(ticks, data[1]);
-		mGz.add(ticks, data[2]);
-		mRevs.add(ticks, data[3]);
-		mTurn.add(ticks, data[4]);
+//			mGx.add(ticks, data[0]);
+//			mGy.add(ticks, data[1]);
+//			mGz.add(ticks, data[2]);
+			mRevs.add(ticks, data[3]);
+			mTurn.add(ticks, data[4]);
+//
 
-		
-		// Set the X axis to always point to the beginning and end of the graph
-		renderer.setXAxisMax(ticks);
-		renderer.setXAxisMin(ticks - MAX_POINTS);
+//			// Set the X axis to always point to the beginning and end of the graph
+//			renderer.setXAxisMax(ticks);
+//			renderer.setXAxisMin(ticks - MAX_POINTS);
+//
+//			rendererG.setXAxisMax(ticks);
+//			rendererG.setXAxisMin(ticks - MAX_POINTS);
+//
+//			rendererTurn.setXAxisMax(ticks);
+//			rendererTurn.setXAxisMin(ticks - MAX_POINTS);
+//
+//			rendererRevs.setXAxisMax(ticks);
+//			rendererRevs.setXAxisMin(ticks - MAX_POINTS);
 
-		rendererG.setXAxisMax(ticks);
-		rendererG.setXAxisMin(ticks - MAX_POINTS);
-
-		rendererTurn.setXAxisMax(ticks);
-		rendererTurn.setXAxisMin(ticks - MAX_POINTS);
-
-		rendererRevs.setXAxisMax(ticks);
-		rendererRevs.setXAxisMin(ticks - MAX_POINTS);
-		
-		ticks++;
+			ticks++;
+		} catch (Exception e) {
+			D.dbge(e.toString(), e);
+		}
 	}
-	
+
 	public void insertWholeHistory(float[][] history){
-		
-		
 		XYSeries[] sets = {mGx, mGy, mGz, mRevs, mTurn};
-		
+
 		for (int i = 0; i < sets.length; i++) {
 			sets[i].clear();
 		}
-		
+
 		XYMultipleSeriesRenderer[] renderers = {rendererG, rendererRevs, rendererTurn};
-		
+
 		for(int i=0; i < history.length; i++){
 			for(int j=0; j < history[i].length; j++){
 				sets[j].add(i, history[i][j]);

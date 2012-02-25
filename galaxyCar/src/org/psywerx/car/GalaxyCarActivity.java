@@ -172,13 +172,13 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 			return;
 		}
 		if (mStartButton.isChecked()) {
-			mBtHelper.sendStart();
+			//mBtHelper.sendStart();
 			mTimeDriven = System.nanoTime();
 			mTimeDrivenEnd = 0;
 			mVibrator.vibrate(200);
 		} else {
 			mTimeDrivenEnd = System.nanoTime();
-			mBtHelper.sendStop();
+			//mBtHelper.sendStop();
 			mVibrator.vibrate(200);
 		}
 	}
@@ -269,11 +269,14 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 					switch (dataType) {
 					case 1:
 						if (mStartButton.isChecked()){
-							Thread.sleep(35);
+							if (mViewMode != 1){
+								Thread.sleep(100);
+							}
+							Thread.sleep(50);
 							mBtHelper.recieveData(getTestLoopData());
 						}else{
+							Thread.sleep(700);
 							mBtHelper.stopCar();
-							Thread.sleep(500);
 						}
 						break;
 					case 2:
@@ -282,12 +285,17 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 								InputStreamReader is = new InputStreamReader(ctx.getAssets().open("circlelog.csv"));
 								BufferedReader br = new BufferedReader(is);
 								String line;
-								while ((line = br.readLine()) != null){
+								while ((line = br.readLine()) != null && mStartButton.isChecked()){
+									D.dbgv("start pressed --- updating data");
+									if (mViewMode != 1){
+										Thread.sleep(100);
+									}
 									Thread.sleep(350);
 									mBtHelper.recieveData(line);
 								}
 							}else {
-								Thread.sleep(500);
+								Thread.sleep(700);
+								mBtHelper.stopCar();
 							}
 						}
 						break;
@@ -297,12 +305,16 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 								InputStreamReader is = new InputStreamReader(ctx.getAssets().open("circlelog35ms.csv"));
 								BufferedReader br = new BufferedReader(is);
 								String line;
-								while ((line = br.readLine()) != null){
-									Thread.sleep(35);
+								while ((line = br.readLine()) != null && mStartButton.isChecked()){
+									if (mViewMode != 1){
+										Thread.sleep(100);
+									}
+									Thread.sleep(50);
 									mBtHelper.recieveData(line);
 								}
 							}else {
-								Thread.sleep(500);
+								Thread.sleep(700);
+								mBtHelper.stopCar();
 							}
 						}
 						break;
@@ -311,7 +323,6 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 
 						break;
 					}
-
 				}
 			} catch (Exception e) {
 				D.dbge(e.toString(),e);
@@ -435,6 +446,18 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 			}
 
 			mGraph.insertWholeHistory(history);
+			
+
+			mZavjoDesnoText.setText(""+((int)Car.turnRight/360));
+			mZavjoLevoText.setText(""+((int)Car.turnLeft/360));
+			mTextAvgSpeed.setText(String.format("%.1f",(float)(mCar.avgSpeed/mCar.avgSpeedCounter)));
+			mTextMaxSpeed.setText(String.format("%.1f", (float)mCar.maxSpeed));
+			mTextDrivenM.setText(String.format("%.0f",(float)Car.mPrevozeno));
+			float tDrvb = 0;
+			if(mTimeDriven > 0) 
+				tDrvb = ((mTimeDrivenEnd > 0 ? mTimeDrivenEnd : System.nanoTime())-mTimeDriven)/1e9f;
+			mTextTimeDriven.setText(String.format("%.1f", tDrvb));
+			
 		}
 	}
 	/**
@@ -486,7 +509,7 @@ public class GalaxyCarActivity extends Activity implements BtListener{
 	 */
 	public void btUnaviable() {
 		mBluetoothButton.setChecked(false);
-		mBtHelper.reset();
+		mBtHelper.stopCar();
 		mStartButton.setChecked(false);
 		mRefreshThread = false;
 		mDataSimulator.stop();

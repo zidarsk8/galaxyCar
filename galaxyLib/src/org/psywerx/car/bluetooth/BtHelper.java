@@ -148,7 +148,10 @@ public class BtHelper {
 	 * 
 	 * @param data csv string received from bluetooth (x,y,z,speed,turn)
 	 */
+	private boolean run = false;
 	public synchronized void recieveData(String data){
+		if (run) return;
+		run = true;
 		try {
 			long ct = System.nanoTime();
 			final int len = 5;
@@ -161,23 +164,22 @@ public class BtHelper {
 			}else{
 				sendData();
 				arr= data.split(",");
-				if (arr.length != 5 ){
-					D.dbge("wrong data set: "+data);
-					return;
+				if (arr.length == 5 ){
+					for (int i = 0; i < len; i++){
+						cur[i] = Float.parseFloat(arr[i]);
+					}
+					cur[5] = (ct-mTimestamp)/1e9f; //cas od zadnje meritve
+					//                    cas v sekundah       obratov na sekundo    koliko metrov naredi en obrat
+					cur[6] = (float)( ((ct-mTimestamp)/1e9)   *    cur[3]/60)        * mMetriNaObrat ;
+					D.dbgv(String.format("%.5f  %.5f  %.5f  %.5f  %.5f  ",cur[0],cur[1],cur[2],cur[3],cur[4]));
+					mTimestamp = ct;
 				}
-				for (int i = 0; i < len; i++){
-					cur[i] = Float.parseFloat(arr[i]);
-				}
-				cur[5] = (ct-mTimestamp)/1e9f; //cas od zadnje meritve
-				//                    cas v sekundah       obratov na sekundo    koliko metrov naredi en obrat
-				cur[6] = (float)( ((ct-mTimestamp)/1e9)   *    cur[3]/60)        * mMetriNaObrat ;
-				D.dbgv(String.format("%.5f  %.5f  %.5f  %.5f  %.5f  ",cur[0],cur[1],cur[2],cur[3],cur[4]));
-				mTimestamp = ct;
 			}
 			mDataHandler.updateData(cur);
 		} catch (Exception e) {
 			D.dbge("error recieving data fro bluetooth",e);
 		}
+		run = false;
 	}
 
 	public BluetoothChatService getChatService(){

@@ -25,7 +25,6 @@ public class PospeskiView extends View implements DataListener{
 	private float mZ = 0;
 	private int mWidth = 0;
 	private int mHeigh = 0;
-	private float mAlpha = 0.1f;
 
 	public PospeskiView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -71,10 +70,4 @@ public class PospeskiView extends View implements DataListener{
 		setXYZ(data[0], data[1], data[2]);
 	}
 
-	/**
-	 * Get new alpha from listener
-	 */
-	public void setAlpha(float alpha) {
-		this.mAlpha = alpha;
-	}
 }

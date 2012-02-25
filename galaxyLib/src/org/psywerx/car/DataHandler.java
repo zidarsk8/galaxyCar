@@ -8,6 +8,8 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Vector3d;
 
+import android.R.string;
+
 
 public class DataHandler implements DataListener{
 
@@ -50,67 +52,6 @@ public class DataHandler implements DataListener{
 	 * 
 	 */
 	public void updateViews() {
-		try {
-			mLastData[4] -= 5f; 
-
-			//rotate the accelerometer so that the z access points down.
-			Vector3d g = new Vector3d(mLastData[0],mLastData[1],mLastData[2]);
-			Vector3d result = new Vector3d();
-			mRotMatrix.transform(g, result);
-
-			mLastData[0] = (float) result.x*10;
-			mLastData[1] = (float) result.y*10;
-			mLastData[2] = ((float) result.z + 0.3856666667f)*10; //stationary down vector
-			
-			mHistory.add(mLastData.clone());
-			if (mHistory.size()>MAX_HISTORY_SIZE){
-				mHistory.removeFirst();
-			}
-
-			mLastAlpha[5] = mLastData[5];
-			mLastAlpha[6] = mLastData[6];
-			mLastRolingAvg[5] = mLastData[5];
-			mLastRolingAvg[6] = mLastData[6];
-			
-			//set Alpha filter values;
-			for (int i=0; i<5; i++){
-				mLastAlpha[i] = (float) (mLastAlpha[i]* (1f-mAlpha)+mLastData[i] * mAlpha);
-			}
-			
-			//set rolling average values
-			while (mAverageFilter.size()>=mRolingCount){
-				float[] removeFromRolingAvg = mAverageFilter.removeFirst();
-				for (int i=0; i<5; i++){
-					mLastRolingAvg[i] -= removeFromRolingAvg[i];
-				}
-			}
-			float[] addToRolingAvg = new float[5];
-			for (int i=0; i<5; i++){
-				addToRolingAvg[i] = mLastData[i] / mRolingCount;
-				mLastRolingAvg[i] += addToRolingAvg[i] ;
-			}
-			
-			mAverageFilter.add(addToRolingAvg);
-
-
-			for (Iterator<DataListener> i = mDataListeners.iterator(); i.hasNext();){
-				DataListener dl = i.next();
-				if (dl != null){
-					if (mSmoothMode){
-						dl.updateData(mLastRolingAvg);
-					}else{
-						dl.updateData(mLastAlpha);
-					}
-				}else{
-					D.dbge("iterator data is null");
-				}
-			}
-
-		} catch (Exception e) {
-			D.dbge("updating views error", e);
-		} finally{
-			mRunning = false;
-		}
 	}
 
 	public void registerListener(DataListener listener) {
@@ -125,12 +66,70 @@ public class DataHandler implements DataListener{
 	}
 
 
-	public void updateData(float[] rawData) {
+	public synchronized void updateData(float[] rawData) {
 		mLastData = rawData;
 
 		if (!mRunning){
 			mRunning = true;
-			updateViews();
+			try {
+				mLastData[4] -= 5f; 
+
+				//rotate the accelerometer so that the z access points down.
+				Vector3d g = new Vector3d(mLastData[0],mLastData[1],mLastData[2]);
+				Vector3d result = new Vector3d();
+				mRotMatrix.transform(g, result);
+
+				mLastData[0] = (float) result.x*10;
+				mLastData[1] = (float) result.y*10;
+				mLastData[2] = ((float) result.z + 0.3856666667f)*10; //stationary down vector
+				
+				mHistory.add(mLastData.clone());
+				if (mHistory.size()>MAX_HISTORY_SIZE){
+					mHistory.removeFirst();
+				}
+
+				mLastAlpha[5] = mLastData[5];
+				mLastAlpha[6] = mLastData[6];
+				mLastRolingAvg[5] = mLastData[5];
+				mLastRolingAvg[6] = mLastData[6];
+				
+				//set Alpha filter values;
+				for (int i=0; i<5; i++){
+					mLastAlpha[i] = (float) (mLastAlpha[i]* (1f-mAlpha)+mLastData[i] * mAlpha);
+				}
+				
+				//set rolling average values
+				while (mAverageFilter.size()>=mRolingCount){
+					float[] removeFromRolingAvg = mAverageFilter.removeFirst();
+					for (int i=0; i<5; i++){
+						mLastRolingAvg[i] -= removeFromRolingAvg[i];
+					}
+				}
+				float[] addToRolingAvg = new float[5];
+				for (int i=0; i<5; i++){
+					addToRolingAvg[i] = mLastData[i] / mRolingCount;
+					mLastRolingAvg[i] += addToRolingAvg[i] ;
+				}
+				
+				mAverageFilter.add(addToRolingAvg);
+
+				for (Iterator<DataListener> i = mDataListeners.iterator(); i.hasNext();){
+					DataListener dl = i.next();
+					if (dl != null){
+						if (mSmoothMode){
+							dl.updateData(mLastRolingAvg);
+						}else{
+							dl.updateData(mLastAlpha);
+						}
+					}else{
+						D.dbge("iterator data is null");
+					}
+				}
+			} catch (Exception e) {
+				D.dbge("updating views error", e);
+			} finally{
+				mRunning = false;
+			}
 		}
 	}
 
